@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化學闖關 · 必修化學實力評量</title>
+<style>
+:root{
+  --ink:#1a2e35;          /* 深墨綠黑 */
+  --paper:#f7f4ec;        /* 米黃紙 */
+  --paper-line:#dcd6c4;
+  --flask:#2ec4b6;        /* 燒瓶青 */
+  --flask-deep:#1a9e93;
+  --amber:#ff9f1c;        /* 琥珀橙 */
+  --amber-deep:#e07b00;
+  --coral:#e63946;        /* 反應紅 */
+  --violet:#7b6cf6;       /* 試劑紫 */
+  --grape:#5a4fcf;
+  --leaf:#43aa8b;         /* 通過綠 */
+  --sky:#4cc9f0;
+  --shadow:rgba(26,46,53,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.7;
+  min-height:100vh;
+  background-image:
+    linear-gradient(var(--paper-line) 1px,transparent 1px);
+  background-size:100% 34px;
+  background-position:0 -1px;
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 120px}
+
+/* ---------- 頂部 ---------- */
+header.top{
+  position:sticky;top:0;z-index:40;
+  background:var(--ink);
+  color:var(--paper);
+  margin:0 -18px 0;
+  padding:12px 18px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 3px 0 var(--flask-deep),0 6px 18px var(--shadow);
+}
+.logo-flask{width:30px;height:30px;flex:none}
+header.top h1{font-size:1.02rem;font-weight:800;letter-spacing:.5px}
+header.top .sub{font-size:.72rem;opacity:.7;font-weight:500;margin-top:-2px}
+.streak{margin-left:auto;font-size:.8rem;background:rgba(255,159,28,.2);border:1.5px solid var(--amber);color:var(--amber);padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap}
+
+/* ---------- 首頁 ---------- */
+.hero{text-align:center;padding:34px 10px 20px}
+.hero .eyebrow{font-size:.78rem;letter-spacing:3px;color:var(--flask-deep);font-weight:700;text-transform:uppercase}
+.hero h2{font-size:2rem;font-weight:900;margin:8px 0 4px;line-height:1.25}
+.hero h2 .hl{color:var(--amber-deep);position:relative;white-space:nowrap}
+.hero h2 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:2px;height:9px;background:rgba(255,159,28,.32);z-index:-1;border-radius:2px}
+.hero p{color:#5c6b6f;font-size:.95rem;max-width:440px;margin:6px auto 0}
+
+.progress-orb{display:flex;justify-content:center;gap:16px;margin:26px 0 8px;flex-wrap:wrap}
+.orb{text-align:center}
+.orb .num{font-size:1.5rem;font-weight:900;color:var(--flask-deep)}
+.orb .lab{font-size:.68rem;color:#7c8a8e;letter-spacing:1px}
+
+/* ---------- 回目卡片 ---------- */
+.grid{display:grid;gap:14px;margin-top:20px}
+.chapter{
+  position:relative;
+  background:#fff;
+  border:2px solid var(--ink);
+  border-radius:16px;
+  padding:16px 16px 14px 58px;
+  cursor:pointer;
+  box-shadow:4px 4px 0 var(--ink);
+  transition:transform .12s,box-shadow .12s;
+  overflow:hidden;
+}
+.chapter:hover,.chapter:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--flask-deep);outline:none}
+.chapter:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.chapter .badge{
+  position:absolute;left:12px;top:14px;
+  width:34px;height:34px;border-radius:50%;
+  background:var(--flask);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.05rem;
+  border:2px solid var(--ink);
+}
+.chapter h3{font-size:1rem;font-weight:800;margin-bottom:2px;padding-right:60px}
+.chapter .meta{font-size:.76rem;color:#7c8a8e}
+.chapter .done-tag{position:absolute;right:12px;top:14px;font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:20px}
+.chapter .done-tag.none{background:#eee;color:#999}
+.chapter .done-tag.part{background:rgba(255,159,28,.18);color:var(--amber-deep)}
+.chapter .done-tag.full{background:rgba(67,170,139,.18);color:var(--leaf)}
+.chapter .bar{height:6px;background:#ece8dc;border-radius:6px;margin-top:10px;overflow:hidden}
+.chapter .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--flask),var(--leaf));width:0;border-radius:6px;transition:width .5s}
+
+.reset-all{display:block;margin:26px auto 0;background:none;border:1.5px dashed #b9b3a1;color:#8a8676;font-size:.78rem;padding:7px 16px;border-radius:20px;cursor:pointer}
+.reset-all:hover{border-color:var(--coral);color:var(--coral)}
+
+/* ---------- 測驗頁 ---------- */
+.quiz-head{display:flex;align-items:center;gap:10px;padding:16px 0 6px}
+.back-btn{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:2px 2px 0 var(--ink)}
+.back-btn:hover{background:var(--paper)}
+.quiz-head .qh-title{font-weight:800;font-size:.9rem;line-height:1.3}
+.quiz-head .qh-title small{display:block;color:#7c8a8e;font-weight:500;font-size:.72rem}
+
+.qbar-outer{height:9px;background:#e7e3d6;border-radius:8px;overflow:hidden;margin:4px 0 2px}
+.qbar-inner{height:100%;background:linear-gradient(90deg,var(--amber),var(--coral));width:0;transition:width .4s;border-radius:8px}
+.qcount{font-size:.74rem;color:#7c8a8e;text-align:right;margin-bottom:8px}
+
+.card{
+  background:#fff;border:2px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 var(--ink);
+  padding:20px 18px;margin-bottom:16px;
+  animation:pop .3s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+.qtype{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:1px;padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.qtype.single{background:rgba(46,196,182,.16);color:var(--flask-deep)}
+.qtype.multi{background:rgba(123,108,246,.16);color:var(--grape)}
+.qtype.essay{background:rgba(255,159,28,.16);color:var(--amber-deep)}
+.qstem{font-size:1.02rem;font-weight:600;line-height:1.75;margin-bottom:8px;white-space:pre-wrap}
+
+.figure{
+  background:#f3f6f4;border-left:4px solid var(--flask);
+  border-radius:0 10px 10px 0;
+  padding:11px 14px;margin:12px 0;font-size:.86rem;color:#3d5158;
+}
+.figure b{color:var(--flask-deep);display:block;font-size:.72rem;letter-spacing:1px;margin-bottom:3px}
+
+.options{display:grid;gap:9px;margin-top:14px}
+.opt{
+  display:flex;align-items:flex-start;gap:11px;
+  background:#fff;border:2px solid #d9d3c3;border-radius:12px;
+  padding:11px 13px;cursor:pointer;text-align:left;font-size:.94rem;
+  transition:border-color .12s,background .12s,transform .08s;
+  font-family:inherit;color:var(--ink);width:100%;
+}
+.opt:hover{border-color:var(--flask);background:#f5fbfa}
+.opt:active{transform:scale(.99)}
+.opt .key{
+  flex:none;width:26px;height:26px;border-radius:8px;
+  background:var(--paper);border:2px solid #cfc9b8;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.82rem;color:#7c8a8e;
+}
+.opt.sel{border-color:var(--violet);background:#f4f2ff}
+.opt.sel .key{background:var(--violet);color:#fff;border-color:var(--violet)}
+.opt.correct{border-color:var(--leaf);background:#eefaf4}
+.opt.correct .key{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.opt.wrong{border-color:var(--coral);background:#fdeeee}
+.opt.wrong .key{background:var(--coral);color:#fff;border-color:var(--coral)}
+.opt.locked{cursor:default;pointer-events:none}
+.opt .mark{margin-left:auto;font-weight:900;font-size:1rem}
+
+.multi-hint{font-size:.74rem;color:var(--grape);margin-top:8px;font-weight:600}
+
+.actions{display:flex;gap:10px;margin-top:16px}
+.btn{
+  flex:1;border:2px solid var(--ink);border-radius:13px;
+  padding:12px;font-weight:800;font-size:.95rem;cursor:pointer;
+  font-family:inherit;box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s;
+}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.primary{background:var(--amber);color:var(--ink)}
+.btn.primary:hover{background:var(--amber-deep);color:#fff}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.ghost:hover{background:var(--paper)}
+.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:2px 2px 0 #aaa;border-color:#aaa}
+
+/* essay reveal */
+.essay-ans{background:#fff8ec;border:2px dashed var(--amber);border-radius:12px;padding:12px 14px;margin-top:14px}
+.essay-ans .lab{font-size:.7rem;font-weight:800;color:var(--amber-deep);letter-spacing:1px}
+.essay-ans .val{font-weight:700;margin-top:2px}
+
+/* explanation */
+.explain{
+  margin-top:14px;border-radius:13px;overflow:hidden;
+  border:2px solid var(--ink);
+  animation:pop .3s ease;
+}
+.explain .head{padding:9px 14px;font-weight:800;font-size:.9rem;display:flex;align-items:center;gap:8px;color:#fff}
+.explain.ok .head{background:var(--leaf)}
+.explain.no .head{background:var(--coral)}
+.explain .body{background:#fff;padding:13px 15px;font-size:.92rem;line-height:1.8}
+.explain .body .ansline{font-weight:800;margin-bottom:7px;color:var(--ink)}
+.explain .body .ansline em{font-style:normal;color:var(--leaf);font-weight:900}
+
+/* 講白話按鈕 + 面板 */
+.baby-btn{
+  display:inline-flex;align-items:center;gap:7px;margin-top:14px;
+  background:#fff3d6;border:2px solid var(--amber);color:var(--amber-deep);
+  border-radius:22px;padding:9px 18px;font-weight:800;font-size:.92rem;
+  cursor:pointer;font-family:inherit;box-shadow:2px 2px 0 var(--amber-deep);
+  transition:transform .1s,box-shadow .1s;
+}
+.baby-btn:hover{background:#ffe9b0}
+.baby-btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--amber-deep)}
+.baby-panel{
+  margin-top:12px;border-radius:14px;overflow:hidden;
+  border:2px solid var(--amber);animation:pop .3s ease;
+}
+.baby-panel .bhead{
+  background:linear-gradient(90deg,var(--amber),#ffbe5c);
+  color:#5a3d00;padding:9px 15px;font-weight:900;font-size:.92rem;
+  display:flex;align-items:center;gap:8px;
+}
+.baby-panel .bbody{
+  background:#fffdf6;padding:14px 16px;font-size:.98rem;line-height:1.95;
+}
+.baby-panel .bbody br{content:"";display:block;margin:2px 0}
+
+/* 完成頁 */
+.finish{text-align:center;padding:30px 10px}
+.finish .emoji{font-size:3.4rem;animation:bounce .7s ease}
+@keyframes bounce{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.finish h2{font-size:1.7rem;font-weight:900;margin:8px 0}
+.scorebox{display:inline-flex;align-items:baseline;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:14px 26px;margin:14px 0}
+.scorebox .big{font-size:2.6rem;font-weight:900;color:var(--flask-deep)}
+.scorebox .small{font-size:1rem;color:#7c8a8e;font-weight:700}
+.finish .line{color:#5c6b6f;margin:6px 0 18px;font-weight:600}
+.finish .btn{max-width:220px;margin:6px auto;display:block}
+
+/* toast 鼓勵 */
+.toast{
+  position:fixed;left:50%;top:22%;transform:translateX(-50%) scale(.6);
+  background:var(--ink);color:#fff;padding:14px 26px;border-radius:16px;
+  font-weight:800;font-size:1.1rem;z-index:80;opacity:0;pointer-events:none;
+  box-shadow:0 8px 30px rgba(0,0,0,.3);border:2px solid var(--flask);
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{animation:toastpop 1.3s ease forwards}
+@keyframes toastpop{
+  0%{opacity:0;transform:translateX(-50%) scale(.5)}
+  15%{opacity:1;transform:translateX(-50%) scale(1.08)}
+  30%{transform:translateX(-50%) scale(1)}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateX(-50%) scale(.9) translateY(-10px)}
+}
+/* 泡泡 */
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:70}
+.bubble{position:absolute;bottom:-30px;border-radius:50%;opacity:.85;animation:rise linear forwards}
+@keyframes rise{to{transform:translateY(-110vh) rotate(360deg);opacity:0}}
+
+footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg class="logo-flask" viewBox="0 0 40 40" fill="none">
+    <path d="M16 5v10L7 31a3 3 0 0 0 2.6 4.5h20.8A3 3 0 0 0 33 31l-9-16V5" stroke="#f7f4ec" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M12.5 25c3-1.5 5 1.5 8 0s5 1 7.2 0L33 31a3 3 0 0 1-2.6 4.5H9.6A3 3 0 0 1 7 31l5.5-6z" fill="#2ec4b6"/>
+    <circle cx="17" cy="30" r="1.6" fill="#f7f4ec"/><circle cx="23" cy="32" r="1.3" fill="#f7f4ec"/>
+    <path d="M14 5h12" stroke="#ff9f1c" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>
+  <div>
+    <h1>化學闖關實驗室</h1>
+    <div class="sub">必修化學 · 實力評量 8 回</div>
+  </div>
+  <div class="streak" id="streakChip">🔥 連對 0</div>
+</header>
+
+<div class="wrap">
+  <!-- 首頁 -->
+  <main id="home">
+    <section class="hero">
+      <div class="eyebrow">Chemistry Quest</div>
+      <h2>把每一題<br>都<span class="hl">變成你會的</span></h2>
+      <p>選一回，逐題作答。答錯不扣分，每題都有詳解；看不懂還能按 🍼「講白話」，用生活比喻講到你懂。</p>
+      <div class="progress-orb">
+        <div class="orb"><div class="num" id="orbDone">0</div><div class="lab">已完成題數</div></div>
+        <div class="orb"><div class="num" id="orbTotal">142</div><div class="lab">總題數</div></div>
+        <div class="orb"><div class="num" id="orbAcc">—</div><div class="lab">答對率</div></div>
+      </div>
+    </section>
+    <div class="grid" id="chapterGrid"></div>
+    <button class="reset-all" id="resetAll">清除所有進度紀錄</button>
+  </main>
+
+  <!-- 測驗頁 -->
+  <main id="quiz" class="hidden">
+    <div class="quiz-head">
+      <button class="back-btn" id="backBtn">← 回目錄</button>
+      <div class="qh-title" id="qhTitle"></div>
+    </div>
+    <div class="qbar-outer"><div class="qbar-inner" id="qbar"></div></div>
+    <div class="qcount" id="qcount"></div>
+    <div id="cardMount"></div>
+  </main>
+
+  <footer class="foot">泰宇版 必修化學實力評量 · 共 142 題 · 練習用途</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="bubbles" id="bubbles"></div>
+
+<script>
+// 必修化學 實力評量 — 完整題庫（8 回）
+// 每題：id, type(single/multi), q(題幹), options[], answer[], explain(教學詳解), figure(圖片文字描述, 可選)
+
+const EXAMS = [
+{
+  id: 1, code: "5711", title: "物質的分類與分離方法 ＋ 物質的狀態與相圖",
+  subtitle: "第 1 回", score: "5 / 8",
+  questions: [
+    { id:"1-1", type:"single", q:"下列有關常見物質分類的敘述，何者正確？",
+      options:["酒為純乙醇組成，屬純物質","合金由兩種以上元素組成，屬化合物","某一物質的沸點不固定，屬混合物","冰、水、水蒸氣共存時，屬混合物","鹽酸屬於純物質"],
+      answer:["C"],
+      explain:"沸點不固定 → 表示不只一種成分，屬混合物。<br>(A)酒是乙醇＋水，屬混合物。(B)合金是混合物，不是化合物。(D)冰、水、水蒸氣只是 H₂O 的三種狀態，仍是同一種純物質。(E)鹽酸是 HCl 溶於水，屬混合物。" },
+
+    { id:"1-2", type:"single", q:"有甲、乙、丙、丁四種液體，甲與乙都是無色透明，丙是紅色液體，丁是混濁白色。將四者置於蒸發皿加熱後，甲無任何殘餘物，乙留有白色固體，丙留有紅色固體，丁有白色固體。則何者可能為純物質？",
+      options:["甲","乙","丙","丁","都不是"],
+      answer:["A"],
+      explain:"蒸發後留下固體 → 表示原本溶有溶質，是混合物。乙、丙、丁三種都有固體殘留，都是混合物。只有甲蒸發後完全沒有殘餘物，才可能是純物質。" },
+
+    { id:"1-3", type:"single", q:"昌喵在網路上搜尋到有關純化方法的原理敘述，何者是正確的呢？",
+      options:["傾析法是利用物質顆粒大小的差異來分離物質","過濾法是利用物質沸點高低差異來分離物質","層析是利用物質於兩相間附著力的差異來分離物質","萃取是利用物質在兩種互溶溶劑中的溶解度差異來分離物質","蒸餾是利用物質的熔點差異來分離物質"],
+      answer:["C"],
+      explain:"層析：利用物質對固定相／移動相「附著力（吸附力）」不同而分離，正確。<br>(A)傾析法是利用難溶而易沉降，把上層澄清液倒出。(B)過濾是利用顆粒大小。(D)萃取的兩溶劑必須「互不相溶」。(E)蒸餾是利用「沸點」差異。" },
+
+    { id:"1-4", type:"single", q:"阿皓欲從含有砂粒的食鹽水中分離出食鹽，適合用下列哪幾種純化方法？（甲)過濾法；(乙)傾析法；(丙)蒸餾法；(丁)色層分析法；(戊)結晶法。",
+      options:["甲乙","甲戊","丙丁","乙丁","丁戊"],
+      answer:["B"],
+      explain:"先用「過濾（甲）」把不溶的砂粒濾掉，得到食鹽水；再用「結晶（戊）」把水蒸發、讓食鹽結晶析出。故選甲、戊。（也可用甲＋丙蒸餾，但選項只有甲戊符合。）" },
+
+    { id:"1-5", type:"single", q:"下列各組物質中各有一個是純物質，另一個是混合物。(甲) NaCl(aq) 與 H₂O(l)；(乙)空氣與 N₂(g)；(丙)金銅合金與 Au(s)；(丁)柴油（沸點 180～410℃）與純己烷（沸點 69℃）。水哥在高中實驗室用實驗方法區別純物質與混合物，在 50～150℃間測其沸點就可以區別出來者為？",
+      options:["甲乙","乙丙","乙丁","甲丙","甲丁"],
+      answer:["E"],
+      explain:"要在 50～150℃這個溫度範圍內「加熱沸騰測沸點」才能區別。<br>甲組：NaCl(aq)與H₂O在此範圍會沸騰（水100℃），可測。丁組：純己烷69℃會沸騰、柴油在此範圍不會完全沸騰但可觀察差異——關鍵是兩者在 50～150℃間都能觀察沸騰行為。乙組空氣與N₂沸點極低（－196℃附近），此範圍皆為氣體無法測；丙組合金與Au皆為固體（此範圍不熔化）。故只有甲、丁可行。" },
+
+    { id:"1-6", type:"single", q:"強哥在紙上以圖示的方式來表示物質的狀態和組成，則附圖中何者代表氣態混合物？",
+      options:["(A)","(B)","(C)","(D)","(E)"],
+      answer:["D"],
+      figure:"五張粒子示意圖：(A)容器中有大量分散的小圓點且分佈稀疏＝氣態，但只有一種粒子（單一元素氣體）。(B)底部整齊密堆排列的粒子＝固態。(C)兩兩相連的雙原子分子（同一種），分散＝氣態純物質(雙原子分子)。(D)分散的粒子中同時有『大圓』與『小圓』兩種不同粒子、彼此不相連，稀疏分佈＝氣態且含兩種成分＝氣態混合物。(E)分散的單一種小圓點＝氣態純物質(單原子)。",
+      explain:"氣態：粒子分散、間距大。混合物：含有『兩種以上』不同粒子。(D)圖中同時有大、小兩種不相連的粒子且分散，符合『氣態混合物』。" },
+
+    { id:"1-7", type:"single", q:"電解碘化鉀水溶液時，碘會在陽極形成，並溶於碘化鉀溶液中而呈紅棕色，今將陽極的溶液取出，與適量的正己烷混合，結果碘溶入正己烷呈現紫色溶液，請問上述將碘與碘化鉀溶液分離的方法稱為？",
+      options:["再結晶","傾析","過濾","層析","萃取"],
+      answer:["E"],
+      explain:"碘在『水』與『正己烷』兩種互不相溶的溶劑中溶解度不同，加入正己烷後碘轉移到正己烷層 → 這是『萃取』。" },
+
+    { id:"1-8", type:"single", q:"利用溫度為橫軸，壓力為縱軸，建構出物質三相圖，是科學家藉以認識物質的方法之一。據此，下列何者最可能是水的三相圖？",
+      options:["(A)","(B)","(C)","(D)","(E)"],
+      answer:["B"],
+      figure:"五張壓力(縱)–溫度(橫)三相圖。一般物質三相圖的『固–液平衡線』(熔化曲線)斜率為正(向右上傾)。水很特別：它的固–液線斜率為『負』(向左上傾斜)，也就是壓力越大、熔點越低。(B)圖中三相點分出三條線，其中固–液交界線是往左上方傾斜(負斜率)，符合水的特殊性質。",
+      explain:"水的三相圖與眾不同：固–液共存線(熔化曲線)斜率為『負』——壓力越大，熔點越低（因為冰的密度比水小）。(B)的固液線向左上傾斜，正是水的特徵。" },
+
+    { id:"1-9", type:"single", q:"某化合物甲的三相圖如右所示，若於室溫 25℃、1 atm 下加壓緊握，則甲物質的狀態有何變化？",
+      options:["固態變氣態","固態變液態","液態變固態","液態變氣態","始終是氣態"],
+      answer:["C"],
+      figure:"三相圖：縱軸壓力標有 1 atm 與 2 atm，橫軸溫度標有 20、40、60℃。三相點附近有兩條線分岔，其中『固–液線』為正斜率(向右上)。在 25℃、1 atm 的點落在『液態區』；沿著 25℃垂直往上加壓(1 atm → 更高壓)，會穿過固–液線進入『固態區』。",
+      explain:"此化合物固–液線為正斜率（一般物質）。在 25℃、1 atm 時為液態；『定溫加壓』(往上移動)會越過固–液線進入固態 → 液態變固態。" },
+
+    { id:"1-10", type:"single", q:"二氧化碳在特定的溫壓範圍下，可形成超臨界流體。下列過程中，何者可能使用此項技術？",
+      options:["製造低糖珍珠奶茶","製造低鹽泡麵","製造低咖啡因的咖啡豆","製造低卡路里食品","製造彈珠汽水"],
+      answer:["C"],
+      explain:"超臨界 CO₂ 具有像氣體般的擴散性與像液體般的溶解力，工業上用來『萃取』咖啡豆中的咖啡因，製造低咖啡因咖啡。此技術已是現今生活工藝技術，唯成本較高尚未普及。" },
+
+    { id:"1-11", type:"multi", q:"董哥分析了某瓶氣體，發現其只含一種原子，則這瓶氣體（應選 2 項）",
+      options:["必為混合物","必為純物質","必以元素狀態存在","可能為混合物，可能為純物質","可能以化合物狀態存在"],
+      answer:["C","D"],
+      explain:"只含『一種原子』(一種元素)：一定以『元素』狀態存在(C對，不可能是化合物，因化合物需≥2種元素)。<br>但可以是純物質(如只有 O₂)，也可以是混合物(如 O₂ 與 O₃ 混合，兩者都只含氧原子) → 故『可能純可能混』(D對)。" },
+
+    { id:"1-12", type:"multi", q:"下列有關物質的敘述，哪些正確？（應選 2 項）",
+      options:["水是純物質，但可電解成氫和氧","石油是混合物，而汽油是化合物","葡萄糖水是由葡萄糖和水組成的純物質","鑽石是純物質，但不是化合物","氫和氧只能形成一種化合物"],
+      answer:["A","D"],
+      explain:"(A)對：水是純物質(化合物)，電解可分解成 H₂、O₂。<br>(D)對：鑽石是純物質，但只由碳一種元素組成 → 是『元素』不是化合物。<br>(B)汽油也是混合物。(C)葡萄糖水是混合物。(E)氫氧可形成 H₂O 和 H₂O₂ 兩種化合物。" },
+
+    { id:"1-13", type:"multi", q:"有關物質性質的敘述，下列哪些不恰當？（應選 3 項）",
+      options:["適當的溫度、壓力下，物質可呈現固、液、氣三種狀態","純物質無法再分解出純物質","定溫定壓下，純物質具有固定的密度","常壓下，CO₂ 無液態狀態，則 CO₂ 不是純物質","組成均勻的物質即為純物質"],
+      answer:["B","D","E"],
+      explain:"題目問『不恰當』的。<br>(B)錯：化合物可再分解出元素(純物質)，如 H₂O₂ 可分解出 O₂。<br>(D)錯：狀態與溫度、壓力有關，與純物質與否無關。<br>(E)錯：組成均勻者也可能是均勻混合物(如糖水)。<br>(A)(C)則為正確敘述(所以是『恰當』的，不選)。" },
+
+    { id:"1-14", type:"multi", q:"正平做了蒸餾紅色墨水溶液的實驗，下列哪些敘述正確？（應選 3 項）",
+      options:["蒸餾法的原理為利用沸點的不同","在蒸餾瓶中會加入沸石以防止突沸","冷凝管的使用，須讓冷卻水由上方進入","收集到的蒸氣經冷凝管冷凝後，主要成分為水","蒸餾所得的物質必為純物質"],
+      answer:["A","B","D"],
+      explain:"(A)對：蒸餾靠沸點差異。(B)對：加沸石防突沸。(D)對：紅墨水蒸餾出來主要是水。<br>(C)錯：冷凝水應由『下方進入、上方流出』(逆流冷卻效果較好)。(E)錯：揮發性物質均可能餾出，未必是純物質。" },
+
+    { id:"1-15", type:"essay", q:"【素養題】進行濾紙色層分析實驗。油溶性色素在進行層析實驗時，在水中或 95% 酒精中，何者移動較快？",
+      figure:"實驗裝置示意圖：量筒中加入 5 mL 溶液，管口用鋁箔紙密封。濾紙下端點有『水性墨水』與『油性墨水』兩點，濾紙插入含液量筒中。",
+      answer:["95% 酒精"],
+      explain:"標準答案：95% 酒精。<br>因為油(油溶性色素)在水中不易溶解，而酒精容易使油溶解，所以在酒精中油溶性色素移動較快。" },
+
+    { id:"1-16", type:"essay", q:"【素養題】在步驟 1 中，為何管口用鋁箔紙密封，其主要目的為何？",
+      answer:["維持管內蒸氣相恆定飽和"],
+      explain:"標準答案：維持管內的蒸氣相恆定飽和（如此層析時，色素的移動速率不致產生太大誤差）。" },
+  ]
+},
+
+{
+  id: 2, code: "5711", title: "原子與分子 ＋ 原子結構與週期表 ＋ 化學鍵",
+  subtitle: "第 2 回", score: "5 / 13",
+  questions: [
+    { id:"2-1", type:"single", q:"如果從活性碳燃燒製取 CO₂ 和加熱碳酸鈣製取 CO₂，兩者比較後，發現其中的元素碳及氧有著相同的質量比，此一結果可確立下列何種定律？",
+      options:["質量守恆定律","定比定律","倍比定律","亞佛加厥定律","氣體化合體積定律"],
+      answer:["B"],
+      explain:"同一化合物(CO₂)不論來源為何，其組成元素的質量比都固定 → 這是『定比定律』(定組成定律)。" },
+
+    { id:"2-2", type:"single", q:"假若硫酸銅（CuSO₄）的來源有二，其一是加熱孔雀石而得，其二是以硫酸與氫氧化銅反應而得，則依法國科學家普魯斯特所提定比定律，無論 CuSO₄ 的來源為何，其元素質量比 銅：硫：氧 恆為多少？（Cu=64、S=32、O=16）",
+      options:["1：1：1","1：1：4","1：2：3","2：1：2","4：2：1"],
+      answer:["D"],
+      explain:"CuSO₄ 中 Cu:S:O = 64 : 32 : (16×4) = 64 : 32 : 64 = 2 : 1 : 2。故選 (D)。" },
+
+    { id:"2-3", type:"single", q:"今於同溫同壓條件下，進行氣體測重。已知氧氣體積為 1 升時，質量為 0.64 克，某氣體體積為 2 升時，質量為 0.64 克，則下列何者可能是某氣體的化學式？（原子量：C=12、S=32）",
+      options:["H₂","CO₂","CH₄","SO₂","C₂H₂"],
+      answer:["C"],
+      explain:"同溫同壓下，體積比＝莫耳數比。O₂ 1升重 0.64克，分子量 32；某氣體 2升重 0.64克 → 同體積(1升)時重 0.32克，是 O₂ 的一半 → 分子量＝32÷2＝16 → CH₄(分子量16)。" },
+
+    { id:"2-4", type:"single", q:"關於 4.60 克的乙醇（C₂H₅OH），下列敘述何者錯誤？",
+      options:["含 0.10 莫耳乙醇","有 0.20 莫耳碳原子","有 0.50 莫耳氫原子","含有 1.60 克氧原子","和 0.10 莫耳的甲醚（CH₃OCH₃）等重"],
+      answer:["C"],
+      explain:"乙醇分子量46，4.60克＝0.10莫耳。<br>(A)對：0.10莫耳。(B)對：碳2個→0.20莫耳。(C)錯：氫有6個→0.10×6＝0.60莫耳，不是0.50。(D)對：氧1個→0.10×16＝1.60克。(E)對：甲醚與乙醇同分子式C₂H₆O，分子量都46，0.10莫耳都重4.6克。" },
+
+    { id:"2-5", type:"single", q:"已知氖有兩種同位素 ²⁰Ne、²²Ne，其平均原子量為 20.2，則其自然界的含量比是多少？",
+      options:["1：1","1：2","1：9","4：1","9：1"],
+      answer:["E"],
+      explain:"設 ²⁰Ne 佔 a、²²Ne 佔 (1−a)：20a + 22(1−a) = 20.2 → 22−2a = 20.2 → a = 0.9。故 ²⁰Ne:²²Ne = 0.9:0.1 = 9:1。" },
+
+    { id:"2-6", type:"single", q:"西元 1932 年查兌克進行實驗，他使用 α 粒子撞擊鈹原子核 ⁹₄Be，得到了 ¹²₆C 和某種粒子，則此粒子的本質就是下列何種粒子？",
+      options:["⁴₂He","¹₁H","⁰₋₁e","¹₀n","¹₁P"],
+      answer:["D"],
+      explain:"核反應：⁴₂He + ⁹₄Be → ¹²₆C + ¹₀n。左邊質量數4+9=13、電荷2+4=6；右邊C為12、6，故缺一個質量數1、電荷0的粒子＝中子 ¹₀n。查兌克因此發現『中子』。" },
+
+    { id:"2-7", type:"single", q:"西元 2015 年底，IUPAC 公布了第 118 號新元素 Og 的命名，此元素位於週期表上第七週期，屬於人工合成元素，它在週期表上的位置，應和下列哪一個元素是同一類？",
+      options:["Li","Al","Si","Cl","Ar"],
+      answer:["E"],
+      explain:"第 118 號元素 Og(氪) 位於第 18 族(鈍氣/惰性氣體)。選項中 Ar(氬) 同為第 18 族惰性氣體 → 同一類。" },
+
+    { id:"2-8", type:"single", q:"強哥在書上看到有 NO₂、NO、NH₃、SO₂、SO₃、CO、CO₂ 以上七種物質，其結構不符合八隅體法則的有幾種？（H 原子除外）",
+      options:["2 種","3 種","4 種","5 種","6 種"],
+      answer:["A"],
+      explain:"不符合八隅體：NO₂(N上有1個未成對電子，不滿8)、NO(N上也有1個未成對電子，不滿8)。共 2 種。<br>NH₃、SO₂、SO₃、CO、CO₂ 都能滿足八隅體(H除外)。" },
+
+    { id:"2-9", type:"single", q:"下列有關電解質之敘述，何者不正確？",
+      options:["電解質溶於水必會解離成陰、陽離子","電解質加熱熔化成液態時，必能導電","電解質水溶液中的正離子數不一定等於負離子數","分子化合物溶於水，不一定可以導電","分子化合物若溶於水可以導電，則屬於酸或鹼類型"],
+      answer:["B"],
+      explain:"(B)錯：電解質的『純液態』未必導電，例如 H₂SO₄(l)、HCl(l) 為分子態不導電；要溶於水解離後才導電。其餘敘述皆正確。" },
+
+    { id:"2-10", type:"single", q:"水哥看到桌上有兩杯白色固體，一杯為蔗糖，一杯為食鹽，在未知的狀況下，請問可用下列哪一種科學方法區分？",
+      options:["測水溶液酸鹼性","嚐嚐水溶液味道","測水溶液導電度","觀察水溶液顏色","測量水溶液密度"],
+      answer:["C"],
+      explain:"食鹽是離子化合物，水溶液能導電；蔗糖是分子化合物，水溶液幾乎不導電 → 用『導電度』可區分。<br>(A)兩者水溶液皆中性。(B)嚐味道不科學(危險)。(D)兩者皆無色透明。(E)混合物無特定密度，不能作鑑定依據。" },
+
+    { id:"2-11", type:"multi", q:"下列有關物質的敘述，何者錯誤？（本題實為單選之錯誤敘述，答案 E）",
+      options:["矽的導電度介於導體與絕緣體之間，且導電度隨溫度上升而增加","分子化合物是由共價鍵結合形成的化合物","Cu 是利用電子海中的自由電子來傳遞電荷","共價網狀物質通常具有很高的熔點","H₂SO₄ 溶於水可解離生成 H⁺ 及 SO₄²⁻，並使水溶液導電，則 H₂SO₄ 應屬於離子化合物"],
+      answer:["E"],
+      explain:"(E)錯：H₂SO₄ 是以『共價鍵』結合的分子化合物。它能在水中解離、具電解質特性，但這不代表它屬於離子化合物。(A)(B)(C)(D)皆正確。" },
+
+    { id:"2-12", type:"multi", q:"下列各組物質，分析其元素的組成質量，哪些可符合道耳頓所提出的倍比定律？（應選 2 項）",
+      options:["CO、CO₂","HCl、HBr","H₂SO₄、H₂SO₃","N₂O、NO₂","C(石墨)、C(金剛石)、C₆₀"],
+      answer:["A","D"],
+      explain:"倍比定律：『相同兩元素』形成『兩種以上不同化合物』時，固定一元素質量，另一元素質量成簡單整數比。<br>(A)CO、CO₂ 同為 C、O 兩元素 → 符合。(D)N₂O、NO₂ 同為 N、O 兩元素 → 符合。<br>(B)含不同元素(Cl vs Br)。(C)H₂SO₄、H₂SO₃ 含三元素。(E)是同素異形體，非化合物。" },
+
+    { id:"2-13", type:"multi", q:"有關給呂薩克氣體反應體積比定律，下列敘述哪些正確？（應選 2 項）",
+      options:["主要結論是反應式必定遵守質量守恆定律","反應氣體必須為單原子氣體","依現今觀點，同溫同壓下，氣體反應體積比就是分子數比","道耳頓的原子觀點可以圓滿解釋此定律而不涉及原子分割的矛盾","對於反應式 2CO(g)+O₂(g) → 2CO₂(g) 其反應體積比為 2：1：2"],
+      answer:["C","E"],
+      explain:"(C)對：同溫同壓下體積比＝分子數比(亞佛加厥定律推得)。(E)對：2CO+O₂→2CO₂，體積比 2:1:2。<br>(A)非主要結論。(B)不必為單原子。(D)道耳頓原子說無法圓滿解釋(會出現原子須分割的矛盾)，是靠亞佛加厥分子概念才解決。" },
+
+    { id:"2-14", type:"multi", q:"比較 ₂₀Ca²⁺ 和 ₁₇Cl⁻ 兩粒子的基本性質，下列敘述哪些正確？（應選 2 項）",
+      options:["具有相同電子數","具有相同化學性質","具有相同電子排列方式","具有相同質量數","互為同位素"],
+      answer:["A","C"],
+      explain:"Ca²⁺：質子20、電子18(20−2)；Cl⁻：質子17、電子18(17+1)。<br>(A)對：電子數都是18。(C)對：電子數相同 → 電子排列相同(皆為Ar組態)。<br>(B)化學性質不同。(D)質量數不同(Ca-40 vs Cl-35或37)。(E)同位素需質子數相同，兩者質子數不同，非同位素。" },
+
+    { id:"2-15", type:"multi", q:"關於元素的性質、分類與週期表分布，下列敘述哪些正確？（應選 3 項）",
+      options:["元素依導電性可分為金屬、非金屬和類金屬","週期表上從左至右，元素金屬性漸增強","週期表上從左至右，元素的熔點漸漸變小","矽、鍺、銻具有半導體的特性","鋰、鈉、鉀具有金屬光澤，常溫下為固體"],
+      answer:["A","D","E"],
+      explain:"(A)對：依導電性分金屬、非金屬、類金屬。(D)對：矽、鍺、銻為類金屬，具半導體性。(E)對：Li、Na、K為鹼金屬，有金屬光澤、常溫固體。<br>(B)錯：由左至右金屬性『漸弱』。(C)錯：熔點由左至右一般是先增後減的趨勢，非單純變小。" },
+
+    { id:"2-16", type:"multi", q:"已知下列元素的原子序分別為 甲=7，乙=11，丙=14，丁=17，戊=18，己=20。則下列敘述哪些正確？（應選 3 項）",
+      options:["甲至己六個元素中，乙最容易形成正一價的陽離子","甲至己六個元素中，戊最容易形成負一價的陰離子","丙和丁形成的化合物為共價分子化合物","丁和己形成的化合物之化學式為 己丁","甲元素最外層的電子數＝5"],
+      answer:["A","C","E"],
+      explain:"甲=N(7)、乙=Na(11)、丙=Si(14)、丁=Cl(17)、戊=Ar(18)、己=Ca(20)。<br>(A)對：Na易失1電子成 Na⁺。(C)對：Si與Cl形成SiCl₄，為共價分子化合物。(E)對：N最外層5個電子。<br>(B)錯：Ar是惰性氣體不形成離子。(D)錯：Ca與Cl形成 CaCl₂(己丁₂)，不是己丁。" },
+
+    { id:"2-17", type:"essay", q:"【素養題】附圖是三種不同固體晶格的結構，代表 NaCl、矽及乾冰的結構。寫出 B、C 分別代表哪一種物質。",
+      figure:"三個晶格立體圖：A 為立方晶格，黑白兩色球交錯排列(離子晶體特徵)。B 為立方晶格，可看出是 CO₂ 分子(每個節點是一個小分子單元)。C 標示『原子』，是四面體網狀連接的單元素立體結構。",
+      answer:["B 為乾冰(CO₂)，C 為矽"],
+      explain:"A 為 NaCl(黑白離子交錯)；B 可看出是 CO₂ 分子的乾冰結構；C 只含單一原子、四面體網狀連結 → 為矽(Si)。" },
+
+    { id:"2-18", type:"essay", q:"【素養題】寫出 A、C 粒子（包含離子或分子或原子）間的化學鍵結構。",
+      answer:["A：離子鍵；C：共價鍵"],
+      explain:"A 為 NaCl，存在 Na⁺ 和 Cl⁻ 之間的『離子鍵』；C 為純矽(Si)晶體，只含『共價鍵』(共價網狀)。" },
+
+    { id:"2-19", type:"essay", q:"【素養題】何者之熔點最高？",
+      answer:["C（矽）"],
+      explain:"C 為共價網狀固體矽，整塊晶體靠強共價鍵連結，熔點最高。" },
+
+    { id:"2-20", type:"essay", q:"【素養題】何者在固態不導電、熔融態或水溶液態可導電？",
+      answer:["A（NaCl）"],
+      explain:"NaCl 為離子化合物：固態時離子被固定不導電，但熔融或溶於水後離子可自由移動 → 可導電。故為 A，也就是氯化鈉。" },
+
+    { id:"2-21", type:"essay", q:"【素養題】何者結構中的粒子的作用力最弱？",
+      answer:["B（乾冰 CO₂）"],
+      explain:"B 乾冰中，CO₂ 為獨立分子，分子與分子之間只靠微弱的分子間作用力(凡得瓦力)結合，故作用力最弱。" },
+  ]
+},
+];
+
+// 第 3、4 回
+EXAMS.push(
+{
+  id: 3, code: "5701", title: "化學式 ＋ 平衡化學反應式",
+  subtitle: "第 3 回", score: "6 / 8",
+  questions: [
+    { id:"3-1", type:"single", q:"米多莉使一個未知的有機物在純氧中完全燃燒，測得的生成物只有二氧化碳及水，關於這個有機物的組成敘述正確的是？",
+      options:["一定含碳、氫、氧三種元素","一定含碳、氫元素，可能也含氧元素","只含碳、氫兩種元素，不含氧元素","只含碳元素，可能含氧、氫兩種元素","只含碳、氧兩種元素"],
+      answer:["B"],
+      explain:"燃燒生成 CO₂ 和 H₂O → 一定含 C(來自CO₂)、H(來自H₂O)。但氧可能來自空氣的 O₂，也可能來自化合物本身，故『可能含氧』無法確定 → (B)。" },
+
+    { id:"3-2", type:"single", q:"為了讓比賽過程能更加順利，舉重選手常使用滑石粉來保持手的乾燥，而滑石粉中的主要成分就是「鹼式碳酸鎂」。鹼式碳酸鎂在高溫時容易分解：Mg₅(OH)₂(CO₃)₄ → 5MgO + Y + 4CO₂，試問 Y 可能是何物？",
+      options:["O₂","H₂O","Mg(OH)₂","MgCO₃","H₂"],
+      answer:["B"],
+      explain:"依原子守恆平衡。左邊：Mg5、O(2+12)=14、H2、C4。右邊已有5MgO(Mg5,O5)+4CO₂(C4,O8)=Mg5,O13,C4。缺 H2、O1 → Y＝H₂O。" },
+
+    { id:"3-3", type:"single", q:"苯甲酸是生活食品中常添加的防腐劑，具有下列的化學式 C₇HₙO₂，若已知苯甲酸中氫質量百分率為 5.0%，則化學式中 n 值為多少？",
+      options:["18","14","10","6","2"],
+      answer:["D"],
+      explain:"氫質量百分率 = (1×n)/(7×12 + 1×n + 16×2) = 5% = 0.05。<br>n/(84+n+32)=0.05 → n=0.05(116+n) → n=5.8+0.05n → 0.95n=5.8 → n≈6。故 n=6(苯甲酸 C₇H₆O₂)。" },
+
+    { id:"3-4", type:"single", q:"含氟牙膏中的氟化物通常為 SnF₂。在 24.6 克的 SnF₂ 中約含有幾克的氟？（原子量：F=19，Sn=118.7）",
+      options:["5","6","7","8","9"],
+      answer:["B"],
+      explain:"SnF₂ 分子量 = 118.7 + 19×2 = 156.7。氟的質量 = 24.6 × (19×2)/(118.7+19×2) = 24.6 × 38/156.7 ≈ 5.97 ≈ 6 克。" },
+
+    { id:"3-5", type:"single", q:"某化合物由元素分析得知含有碳、氫、氧三種元素，且其重量百分組成分別為碳 39.97%，氫 6.73%，氧 53.30%。已知此化合物的分子量為 90，試問下列哪一項是該化合物的分子式？",
+      options:["C₅H₁₄O","C₂H₅O","C₃H₆O₃","CH₂O","CHO"],
+      answer:["C"],
+      explain:"莫耳數比 C:H:O = 39.97/12 : 6.73/1 : 53.30/16 = 3.33:6.73:3.33 ≈ 1:2:1 → 實驗式 CH₂O(式量30)。分子量90÷30=3 → 分子式 C₃H₆O₃。" },
+
+    { id:"3-6", type:"single", q:"【6～8題組】某有機化合物9.0 g，內含C、H、O，使用燃燒分析法。經裝置後測得甲管質量增加5.4 g，乙管質量增加13.2 g。同溫同壓下測得此化合物分子量為60。下列有關元素分析實驗的敘述，何者正確？",
+      options:["裝置中的 CuO 可使反應物完全燃燒","甲管內含 NaOH 吸收 CO₂，而乙管內含 Mg(ClO₄)₂ 吸收 H₂O","化合物的含氧量可由所生成的 H₂O 及 CO₂ 中的含氧量相加求得","最後應把甲、乙管的吸收順序交換，重複進行實驗後平均，可降低實驗誤差","Mg(ClO₄)₂ 可使用藍色硫酸銅來替代"],
+      answer:["A"],
+      figure:"燃燒分析裝置圖：過量O₂由左通入，試樣放在鉑小盤上加熱，後方有CuO加熱段；氣體依序通過『甲管』(先)與『乙管』(後)兩個U形吸收管，右端排出O₂。",
+      explain:"(A)對：CuO 作為氧化劑，可使不完全燃燒產生的 CO 進一步氧化成 CO₂、確保完全燃燒。<br>(B)錯：甲管裝 Mg(ClO₄)₂ 吸水(在前)，乙管裝 NaOH 吸 CO₂(在後)。(C)含氧量是用『試樣重−C重−H重』求得。(D)甲乙管順序不可交換(乙管NaOH會同時吸CO₂和H₂O)。(E)藍色硫酸銅無法吸水，不能替代。" },
+
+    { id:"3-7", type:"single", q:"承上題，當氣體通過甲管柱後，進到乙之前，該處所含有的氣體成分，何者正確？",
+      options:["只含有 O₂(g)","只含有 CO₂(g)","只含有 H₂O(g)","同時含有 O₂(g)、CO₂(g)","同時含有 O₂(g)、H₂O(g)"],
+      answer:["D"],
+      explain:"甲管裝過氯酸鎂 Mg(ClO₄)₂，會吸收 H₂O，故通過甲管後 H₂O 被除去。此時剩下的氣體是過量的 O₂ 和尚未被吸收的 CO₂ → 同時含 O₂ 和 CO₂。" },
+
+    { id:"3-8", type:"single", q:"承上題，下列有關此有機化合物的敘述，何者正確？",
+      options:["此化合物的實驗式為 C₂H₄O","此化合物的分子式為 C₂H₄O₂","此化合物可能為 C₂H₅OH","此化合物中，碳的質量百分率組成為 50%","此化合物具有惡臭味"],
+      answer:["B"],
+      explain:"C重=CO₂(13.2g)×12/44=3.6g；H重=H₂O(5.4g)×2/18=0.6g；O重=9.0−3.6−0.6=4.8g。<br>C:H:O=3.6/12:0.6/1:4.8/16=0.3:0.6:0.3=1:2:1 → 實驗式CH₂O(式量30)。分子量60÷30=2 → 分子式 C₂H₄O₂。<br>(D)碳%=(12×2)/60=40%，不是50%。" },
+
+    { id:"3-9", type:"single", q:"下列何項物質的化學式是以示性式表示的？",
+      options:["乙酸 C₂H₄O₂","食鹽 NaCl","甘油 C₃H₅(OH)₃","石墨 C","草酸 H₂C₂O₄"],
+      answer:["C"],
+      explain:"示性式：能表現分子中所含的官能基。甘油 C₃H₅(OH)₃ 中的 (OH)₃ 表示含有 3 個『OH（羥基）』官能基，是示性式。其餘為分子式或元素符號。" },
+
+    { id:"3-10", type:"single", q:"下列物質均是以適當的化學式表示，其中何者為分子式，也是實驗式？",
+      options:["N₂H₄","C₆H₁₂O₆","C₂H₆","H₂O","C₂H₅OH"],
+      answer:["D"],
+      explain:"分子式同時也是實驗式 → 各原子數的比已是最簡整數比。實驗式依序為：(A)NH₂ (B)CH₂O (C)CH₃ (E)C₂H₆O。只有 (D)H₂O，其分子式即為最簡比，故分子式＝實驗式。" },
+
+    { id:"3-11", type:"single", q:"【11～12題組】在一個體積可調整的反應器中，於27℃、1大氣壓，注入10毫升的A₂氣體與30毫升的B₂氣體(A與B為兩種原子)。假設恰好完全反應，產生甲氣體。已知甲的分子式與其實驗式相同，則下列哪一個是甲的分子式？",
+      options:["AB","AB₂","AB₃","A₂B₃","A₃B₃"],
+      answer:["C"],
+      explain:"依原子不滅：10A₂ + 30B₂ → 20AB₃(此時A原子20、B原子60，兩邊守恆)。故甲＝AB₃。因分子式＝實驗式(最簡比)，AB₃ 符合。" },
+
+    { id:"3-12", type:"single", q:"承上題，試問本化學反應方程式為下列何者？",
+      options:["A + B → AB","A₂ + B₂ → A₂B₂","A₂ + B → A₂B","A₂ + 3B₂ → 2AB₃","2A₂ + B₂ → A₄B₂"],
+      answer:["D"],
+      explain:"將係數約成最簡整數比：10A₂ + 30B₂ → 20AB₃，同除以10 → A₂ + 3B₂ → 2AB₃。故選(D)。" },
+
+    { id:"3-13", type:"multi", q:"下列哪些只能代表實驗式？（應選 3 項）",
+      options:["NaCl","SiO₂","CO₂","CH₃COOH","Hg"],
+      answer:["A","B","E"],
+      explain:"實驗式只表示原子最簡比、無獨立分子。(A)NaCl、(B)SiO₂ 為離子/網狀固體，只有實驗式；(E)Hg 為金屬元素，以實驗式(原子)表示。<br>(C)CO₂ 是分子式(也可作示性式)。(D)CH₃COOH 是示性式。" },
+
+    { id:"3-14", type:"multi", q:"下列哪些物質的化學式是示性式？（應選 2 項）",
+      options:["丙酮：H₃CCOCH₃","甲胺：CH₅N","甲醇：CH₃OH","聯胺：N₂H₄","乙酸：C₂H₄O₂"],
+      answer:["A","C"],
+      explain:"示性式要能表現官能基。(A)丙酮 H₃CCOCH₃ 顯示羰基 C=O。(C)甲醇 CH₃OH 顯示羥基 OH。<br>(B)甲胺示性式應為 CH₃NH₂。(D)聯胺示性式為 H₂NNH₂。(E)乙酸示性式為 CH₃COOH，題目給的 C₂H₄O₂ 是分子式。" },
+
+    { id:"3-15", type:"multi", q:"下列關於化學式的敘述，哪些正確？（應選 2 項）",
+      options:["離子化合物通常以實驗式表示","分子式相同的化合物，其實驗式必定相同","實驗式可表明化合物的官能基","示性式相同的化合物，其分子式未必相同","分子式的原子總數恆多於實驗式的原子總數"],
+      answer:["A","B"],
+      explain:"(A)對：離子化合物無獨立分子，用實驗式。(B)對：分子式相同→原子數相同→最簡比(實驗式)必相同。<br>(C)錯：能表明官能基的是『示性式』。(D)錯：示性式相同→分子式一定相同。(E)錯：分子式的原子總數『≥』實驗式，可能相等(如H₂O)。" },
+
+    { id:"3-16", type:"multi", q:"【素養題】某常見化學肥料由A、B、C、D四種元素組成。(1)A為地殼中含量最高的元素。(2)B可形成空氣中含量最多的氣體。(3)C形成的分子是所有物質中相對分子質量最小的。(4)D與氧可形成組成為 DO₂ 的氣體化合物，在光合作用中扮演重要角色。下列關於湯大頭想法的敘述，哪些正確？（應選 3 項）",
+      options:["A元素形成的分子物質具有可燃性","B元素的元素符號應該為 N","C元素形成分子的分子式為 H","D元素與氧形成 DO₂ 氣體，收集較純的該氣體較適合用排水集氣法","化學肥料的化學式可能為尿素 CO(NH₂)₂"],
+      answer:["B","D","E"],
+      explain:"A=O(地殼含量最高)、B=N(空氣最多是N₂)、C=H(H₂分子量最小)、D=C(CO₂在光合作用重要)。<br>(B)對：B是N。(D)對：CO₂可用排水集氣法(CO₂溶解度不算太高，可收集較純)。(E)對：尿素CO(NH₂)₂含C、O、N、H四元素，符合。<br>(A)錯：A是O助燃非可燃。(C)錯：C(氫)形成的分子式是 H₂ 不是 H。" },
+  ]
+},
+{
+  id: 4, code: "5701", title: "化學計量 ＋ 化學反應熱",
+  subtitle: "第 4 回", score: "3 / 8",
+  questions: [
+    { id:"4-1", type:"single", q:"某硫酸銅晶體，加熱後得無水硫酸銅 CuSO₄，其重量約為原先重量之 82%，則此晶體所含結晶水個數為若干？（Cu=64）",
+      options:["1","2","3","4","5"],
+      answer:["B"],
+      explain:"CuSO₄ 式量=64+32+16×4=160。設含 n 個結晶水：160/(160+18n)=0.82 → 160+18n=195 → 18n=35 → n≈2。含 2 個結晶水(CuSO₄·2H₂O)。" },
+
+    { id:"4-2", type:"single", q:"硝酸銨（NH₄NO₃）受熱超過 400℃ 時，會完全分解產生水蒸氣、氮氣和氧氣。若將 40.0 克的硝酸銨，加熱至完全分解，至多會產生多少莫耳的氣體？",
+      options:["1.75","3.50","5.25","7.00","9.25"],
+      answer:["A"],
+      explain:"NH₄NO₃ 式量=14×2+1×4+16×3=80。40.0g=0.5莫耳。分解方程式：2NH₄NO₃→4H₂O+2N₂+O₂。由係數：0.5莫耳NH₄NO₃產生 H₂O=1.0、N₂=0.5、O₂=0.25 → 共 1.0+0.5+0.25=1.75莫耳氣體。" },
+
+    { id:"4-3", type:"single", q:"金屬銀在硫化氫存在的空氣中，會反應生成硫化銀：Ag + H₂S + O₂ → Ag₂S + H₂O(未平衡)。取 21.6克銀、6.12克硫化氫、2.40克氧混合，充分反應，何者是限量試劑？（H=1,O=16,S=32,Ag=108）",
+      options:["Ag","H₂S","O₂","Ag₂S","H₂O"],
+      answer:["A"],
+      explain:"平衡：4Ag+2H₂S+O₂→2Ag₂S+2H₂O。各除以係數看比值：Ag=21.6/108÷4=0.05；H₂S=6.12/34÷2=0.09；O₂=2.40/32÷1=0.075。比值最小者為限量試劑 → Ag(0.05最小)。" },
+
+    { id:"4-4", type:"single", q:"【4～5題組】「八硝基立方烷」是新型炸藥，化學式為 C₈N₈O₁₆，對震動敏感度較低，一經引爆會劇烈爆炸，與分解產物都無毒。該炸藥的分子量是？",
+      options:["244","304","364","464","584"],
+      answer:["D"],
+      explain:"C₈N₈O₁₆ 分子量 = 12×8 + 14×8 + 16×16 = 96+112+256 = 464。" },
+
+    { id:"4-5", type:"single", q:"此炸藥在爆炸時會發生分解反應，反應分解出兩種無毒氣體，一種是空氣中含量最多的氣體，其化學方程式為何？",
+      options:["C₈N₈O₁₆ → 4N₂ + 8CO₂","C₈N₈O₁₆ + 8O₂ → 8CO₂ + 8NO₂","C₈N₈O₁₆ + 8O₂ → 8O₂ + 8NO₂ + 8C","C₈N₈O₁₆ → 8NO + 8CO","C₈N₈O₁₆ → 4N₂ + 2O₂ + 4CO + 4CO₂"],
+      answer:["A"],
+      explain:"空氣中含量最多的氣體是 N₂。檢查原子守恆：C₈N₈O₁₆ → 4N₂ + 8CO₂，左右 C8、N8、O16 皆守恆，且產物 N₂、CO₂ 皆無毒。故選(A)。" },
+
+    { id:"4-6", type:"single", q:"已知醋酸與乙醇在濃硫酸催化下可進行反應：CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O。取 30 克醋酸及 46 克乙醇合成乙酸乙酯，經蒸餾純化得 11 克乙酸乙酯，則產率為多少？",
+      options:["10%","15%","20%","25%","30%"],
+      answer:["D"],
+      explain:"醋酸=30/60=0.5莫耳，乙醇=46/46=1.0莫耳。醋酸為限量試劑，理論產量0.5莫耳乙酸乙酯(分子量88)。產率=11/(0.5×88)×100%=11/44=25%。" },
+
+    { id:"4-7", type:"single", q:"下列圖形中，何者為 H₂O(l) + 10.5 kcal → H₂O(g) 之熱含量變化簡圖？",
+      options:["(A)","(B)","(C)","(D)","(E)以上皆非"],
+      answer:["E"],
+      figure:"四張熱含量(E)高低圖：反應為吸熱(需吸收10.5 kcal)，故產物 H₂O(g) 能量應『高於』反應物 H₂O(l)，且 ΔH=+10.5 kcal。(A)畫H₂O(l)在上、往下到H₂O(g)且ΔH=+10.5(方向錯)。(B)畫H₂O(g)在上往下到H₂O(l)ΔH=−10.5。(C)畫H₂O(g)在上、H₂O(l)在下ΔH=+10.5(能量高低對但箭頭方向須從反應物l指向產物g)。(D)畫H₂O(l)在上ΔH=−10.5。四者皆有錯誤處。",
+      explain:"正確圖須：反應物 H₂O(l) 在『下』(能量低)、產物 H₂O(g) 在『上』(能量高)，箭頭由 l 往 g，ΔH=+10.5 kcal(吸熱)。四個選項的能量高低或ΔH正負或箭頭方向都有錯，故選(E)以上皆非。" },
+
+    { id:"4-8", type:"single", q:"下列有關能量與物質反應熱的敘述，何者錯誤？",
+      options:["反應熱的大小與溫度及壓力有關","高能量的物質變成低能量的過程稱為放熱反應","反應熱等於反應物的總熱含量減去產物的總熱含量","反應熱的大小與反應前、後物質的狀態有關，但與反應的變化過程無關","反應熱的大小與參與反應之反應物質量成正比"],
+      answer:["C"],
+      explain:"(C)錯：反應熱 ΔH = 產物總熱含量 − 反應物總熱含量(不是反應物減產物)。其餘敘述皆正確。" },
+
+    { id:"4-9", type:"single", q:"把水蒸氣通過紅熱的煤炭，即產生水煤氣（CO+H₂），反應式：C(s)+H₂O(g)→CO(g)+H₂(g)，ΔH=133 kJ，下列敘述何者正確？",
+      options:["此反應為放熱反應","此反應也可表示為：C(s)+H₂O(l)+133 kJ→CO(g)+H₂(g)","1 mol 純碳完全反應需吸熱 133 kJ","36 克純碳要完全變成水煤氣需放熱 399 kJ","水煤氣是一種家庭用的乾淨安全燃料"],
+      answer:["C"],
+      explain:"ΔH=+133 kJ 為吸熱反應。(C)對：1 mol C 反應吸熱 133 kJ。<br>(A)錯，是吸熱。(B)錯，狀態由g改l會改變能量值。(D)36克C=3莫耳，需『吸熱』399 kJ(非放熱)。(E)水煤氣含CO有毒，不適合室內使用。" },
+
+    { id:"4-10", type:"single", q:"取 4.00 g KNO₃(式量101)溶於 50.0 mL 蒸餾水中，溶解前後溶液溫度由 37℃ 下降至 31℃，則硝酸鉀溶於水時，反應熱約為若干 kJ/mol？（水溶液密度1.0 g/mL；比熱4.2 J/g℃）",
+      options:["4","10","14","24","34"],
+      answer:["E"],
+      explain:"溫度下降→吸熱。溶液總質量≈50.0+4.00=54.0g，ΔT=6℃。吸熱量Q=msΔT=54.0×4.2×6×10⁻³=1.36 kJ。KNO₃莫耳數=4.00/101≈0.0396。反應熱=1.36/0.0396≈34 kJ/mol。" },
+
+    { id:"4-11", type:"multi", q:"若有 14 克氫氣與 80 克氧氣燃燒生成水，下列敘述哪些正確？（應選 2 項）",
+      options:["此反應氫氣為限量試劑","此反應氧氣為限量試劑","反應完成後將剩餘 2 克氫氣","反應完成後將生成 5 莫耳水","過程中用去 2.5 莫耳氫氣"],
+      answer:["B","D"],
+      explain:"H₂=14/2=7莫耳，O₂=80/32=2.5莫耳。反應 2H₂+O₂→2H₂O。由係數，O₂為限量試劑(B對)。O₂ 2.5莫耳需H₂ 5莫耳、生成H₂O 5莫耳(D對)。剩下氫氣=7−5=2莫耳(=4克)，故(C)(E)錯。" },
+
+    { id:"4-12", type:"multi", q:"已知：2H₂(g)+O₂(g)→2H₂O(g)，ΔH=−484 kJ。下列有關此熱化學反應式的敘述，哪些正確？（應選 3 項）",
+      options:["生成 1 莫耳的 H₂O(g) 會放熱 242 kJ","此反應的能量變化可使周遭的溫度上升","2H₂O(g)所含的能量比(2H₂(g)+O₂(g))所含的能量高出 484 kJ","若此反應的產物是 H₂O(l)，則反應的能量變化大於 484 kJ","使 1 莫耳 H₂(g) 與 2 莫耳 O₂(g) 的混合物反應，則能量的變化為 484 kJ"],
+      answer:["A","B","D"],
+      explain:"ΔH=−484 kJ 放熱，生成2莫耳H₂O放484 kJ。(A)對：生成1莫耳放242 kJ。(B)對：放熱使周遭升溫。(D)對：生成H₂O(l)會再放出汽化熱，放熱>484 kJ。<br>(C)錯：放熱表示產物能量『較低』，是低484 kJ非高。(E)錯：1莫耳H₂只放242 kJ(H₂為限量，O₂過剩)，非484。" },
+
+    { id:"4-13", type:"multi", q:"已知右表為 1 莫耳物質燃燒放出的熱量：N₂H₄=150 kJ、C=94 kJ、CH₄=213 kJ、H₂=68 kJ。則甲：4克H₂、乙：24克碳、丙：24克CH₄、丁：48克N₂H₄ 完全燃燒放熱大小，哪些正確？（應選 3 項）",
+      options:["甲>乙","丙>乙","丁>甲","甲>丙","丙>丁"],
+      answer:["B","C","E"],
+      explain:"甲:4克H₂=2莫耳→2×68=136 kJ。乙:24克C=2莫耳→2×94=188 kJ。丙:24克CH₄=1.5莫耳→1.5×213=319.5 kJ。丁:48克N₂H₄=1.5莫耳→1.5×150=225 kJ。<br>比較：丙(319.5)>丁(225)>乙(188)>甲(136)。(B)丙>乙✓ (C)丁>甲✓ (E)丙>丁✓。(A)甲>乙✗ (D)甲>丙✗。" },
+
+    { id:"4-14", type:"multi", q:"【素養題】密閉絕熱系統中，右圖表示重量百分率8%的氫氧化鈉溶液與20g某濃度稀鹽酸反應後溶液溫度的變化。當加入 15 g 氫氧化鈉溶液時，所得溶液中的物質為何？",
+      options:["NaCl、HCl、H₂O","NaCl、NaOH、H₂O","HCl、NaOH、H₂O","NaCl、H₂O","HCl、H₂O"],
+      answer:["A"],
+      figure:"溫度–NaOH溶液質量圖：橫軸為加入的氫氧化鈉溶液質量(g)，縱軸溫度(℃)。曲線從約20℃上升，在約 20 g 處達最高點 32℃後開始下降(表示此時恰好完全中和；之後NaOH過量使溫度回降)。",
+      explain:"由圖，約在20g時達最高溫(恰好完全中和)。加入僅15g NaOH溶液時尚未到達中和點 → 鹽酸(HCl)過量。此時溶液含：生成的NaCl、剩下的HCl、以及H₂O → 選(A)。" },
+
+    { id:"4-15", type:"multi", q:"承上題，推理當加入 10 g 氫氧化鈉溶液時，所得溶液的溫度大約是多少℃？",
+      options:["24","26","28","30","34"],
+      answer:["B"],
+      explain:"由圖，20g時32℃達最高、起點約20℃。溫度上升與加入量近似線性：從0→20g時升了約12℃(20→32)。加入10g約為一半 → 升約6℃ → 20+6=26℃。故選(B)。" },
+  ]
+},
+);
+
+// 第 5、6 回
+EXAMS.push(
+{
+  id: 5, code: "5701", title: "溶液的種類與特性 ＋ 水溶液的濃度",
+  subtitle: "第 5 回", score: "10 / 11",
+  questions: [
+    { id:"5-1", type:"single", q:"下列何者不是真溶液？",
+      options:["空氣","啤酒","鹽水","乳液","糖水"],
+      answer:["D"],
+      explain:"真溶液的溶質粒子直徑<1 nm、均勻透明。乳液粒子較大屬膠體(或懸浮)，不是真溶液。空氣、啤酒、鹽水、糖水都是真溶液。" },
+
+    { id:"5-2", type:"single", q:"下列有關溶液的性質敘述，何者錯誤？",
+      options:["濃度98%的硫酸溶液中，水為溶劑","碘酒是以酒精為溶劑所形成的溶液","18K金可將其成分中的金視為溶質，銅視為溶劑","空氣為氣態溶液，其主要成分為氮、氧","溶液皆為混合物"],
+      answer:["A"],
+      explain:"(A)錯：溶劑是量最多者、溶質是量最少者。98%硫酸中，硫酸最多應為溶劑、水最少為溶質。其餘皆正確。" },
+
+    { id:"5-3", type:"single", q:"體積莫耳濃度為 1 M、體積為 100 mL 的 Na₂SO₄ 溶液中，下列敘述何者正確？",
+      options:["[Na⁺]=2 M","[Na⁺]=½[SO₄²⁻]","Na⁺ 莫耳數=0.1 mole","SO₄²⁻ 莫耳數=0.2 mole","為膠體溶液"],
+      answer:["A"],
+      explain:"Na₂SO₄→2Na⁺+SO₄²⁻。[Na₂SO₄]=1M → [Na⁺]=2M(A對)、[SO₄²⁻]=1M。<br>(B)錯：[Na⁺]=2[SO₄²⁻]。(C)Na⁺莫耳數=2×1×0.1=0.2mole。(D)SO₄²⁻莫耳數=1×0.1=0.1mole。(E)是真溶液。" },
+
+    { id:"5-4", type:"single", q:"下列何種方法可提高硝酸鉀於水中的溶解度？",
+      options:["升溫","降溫","提高壓力","攪拌","加入更多的硝酸鉀"],
+      answer:["A"],
+      explain:"固體溶質(KNO₃)的溶解度隨溫度升高而增加。<br>(B)降溫會降低。(C)壓力對固體溶解度影響不大。(D)攪拌只加快溶解速率、不改變溶解度。(E)加更多溶質不改變溶解度。" },
+
+    { id:"5-5", type:"single", q:"某禮堂內空間 4000 m³(空氣密度1.4 g/L，平均分子量28 g/mol)，冬天窗戶緊閉，內含二氧化碳4.4 kg，則此時 CO₂ 的濃度約為多少 mg/kg？",
+      options:["785","1000","1500","2000","2500"],
+      answer:["A"],
+      explain:"空氣總質量=體積×密度=4000 m³×1000 L/m³×1.4 g/L=5.6×10⁶ g。CO₂=4.4 kg=4400 g。濃度(mg/kg即ppm質量比)=4400/(5.6×10⁶)×10⁶=785 mg/kg。" },
+
+    { id:"5-6", type:"single", q:"重量百分率為 45% 的氯化鈉溶液 300 公克中加氯化鈉 200 公克，可製成若干%的溶液？",
+      options:["47","57","67","77","87"],
+      answer:["C"],
+      explain:"原溶液含NaCl=300×45%=135g。加入200g後溶質=135+200=335g，溶液總重=300+200=500g。濃度=335/500×100%=67%。" },
+
+    { id:"5-7", type:"single", q:"有 15% 及 10% 兩種食鹽溶液，若混合成 12% 之水溶液，則此兩種溶液混合質量之比值為若干？",
+      options:["2/3","3/2","4/5","5/4","5/6"],
+      answer:["A"],
+      explain:"設15%取X克、10%取Y克：15%·X+10%·Y=12%·(X+Y)。→ 3X=2Y → X:Y=2:3 → X/Y=2/3。" },
+
+    { id:"5-8", type:"single", q:"銅金屬溶於硝酸溶液：Cu(s)+4HNO₃(aq)→Cu(NO₃)₂(aq)+2NO₂(g)+2H₂O(l)。若將6.35克銅線完全溶解於2.00 M硝酸，則至少需要硝酸溶液約多少毫升？(Cu=63.5)",
+      options:["50","100","150","200","250"],
+      answer:["D"],
+      explain:"Cu=6.35/63.5=0.1莫耳。依係數，1莫耳Cu需4莫耳HNO₃ → 需HNO₃=0.4莫耳。體積=莫耳/濃度=0.4/2.00=0.2 L=200 mL → 選(D)。" },
+
+    { id:"5-9", type:"single", q:"衛生署公告氟濃度至少 8500 ppm，試問 8500 ppm 約為多少%？",
+      options:["0.085%","0.85%","8.5%","85%","以上皆非"],
+      answer:["B"],
+      explain:"ppm 換算%：8500 ppm = 8500×10⁻⁶ = 0.0085 = 0.85%。(1% = 10000 ppm)" },
+
+    { id:"5-10", type:"single", q:"將 12 M 的鹽酸溶液 200 mL，加水配製成 4 L 後，溶液的體積莫耳濃度變成多少？",
+      options:["0.2","0.4","0.6","0.8","1.0"],
+      answer:["C"],
+      explain:"稀釋前後溶質莫耳數不變：M₁V₁=M₂V₂。12×0.2=M₂×4 → M₂=2.4/4=0.6 M。" },
+
+    { id:"5-11", type:"single", q:"比重 1.8，重量百分濃度 98% 的濃硫酸，其體積莫耳濃度為若干？",
+      options:["18","14","10","6","4"],
+      answer:["A"],
+      explain:"假設1公升(1000mL)：質量=1000×1.8=1800g，H₂SO₄=1800×98%=1764g，莫耳數=1764/98=18莫耳。體積莫耳濃度=18莫耳/1L=18 M。" },
+
+    { id:"5-12", type:"single", q:"要配製 0.100 M 的標準溶液 100 毫升，最好要使用 100 毫升的下列哪一種儀器？",
+      options:["燒杯","量筒","燒瓶","容量瓶","錐形瓶"],
+      answer:["D"],
+      explain:"容量瓶(定量瓶)是測量液體體積最準確的儀器，配製標準溶液時使用。" },
+
+    { id:"5-13", type:"single", q:"在定溫下，實驗室秤取15g NaOH固體並量取45g蒸餾水，配製NaOH溶液，結果所配得的溶液中NaOH重量百分濃度大於25%，推測原因可能為下列何者？",
+      options:["所用的 NaOH 已潮解","NaOH 固體的溶解度變大","用量筒取水倒入燒杯中時有水濺出","實驗室內的氣溫過低","將 NaOH 固體放在紙上稱量後倒入燒杯中，有少量殘留在紙上"],
+      answer:["C"],
+      explain:"理論濃度=15/(15+45)=25%。實測>25% → 表示溶質變多或溶劑變少。<br>(C)對：量水時有水濺出 → 溶劑(水)減少 → 濃度變大。<br>(A)NaOH潮解會吸水、實際溶質變少 → 濃度變小。(E)殘留紙上使溶質變少 → 濃度變小。(B)定溫下溶解度不變、不影響配製濃度。(D)氣溫不影響配製濃度。" },
+
+    { id:"5-14", type:"multi", q:"下列哪些物質具有導電性？（應選 2 項）",
+      options:["NaCl(l)","HNO₃(l)","CO₂(g)","C₂H₅OH(aq)","HCl(aq)"],
+      answer:["A","E"],
+      explain:"導電需有可自由移動的離子。(A)NaCl(l)熔融態離子可動→導電。(E)HCl(aq)解離出H⁺、Cl⁻→導電。<br>(B)HNO₃純液態為分子不導電。(C)CO₂分子不導電。(D)乙醇水溶液不解離、不導電。" },
+
+    { id:"5-15", type:"multi", q:"關於溶液的敘述，哪些正確？（應選 3 項）",
+      options:["溶質顆粒的直徑小於1 nm為真溶液","溶質顆粒的直徑介於1 nm～1000 nm為膠體溶液","膠體溶液的溶質稱為分散質","光線通過膠體溶液時因為溶劑的粒子散射光線，會產生廷得耳效應","溶液一定是液態"],
+      answer:["A","B","C"],
+      explain:"(A)(B)對：真溶液<1nm、膠體1~1000nm。(C)對：膠體的溶質稱分散質。<br>(D)錯：廷得耳效應是『溶質(分散質)』粒子散射光線，不是溶劑。(E)錯：溶液不一定是液態(空氣是氣態溶液)。" },
+
+    { id:"5-16", type:"multi", q:"關於溶液的敘述，哪些正確？（應選 2 項）",
+      options:["溶液一定是無色透明、穩定的混合物","葡萄糖水是溶液、鹽水也是溶液，但將兩者混合，水中有鹽也有糖就不是溶液","密閉系統中，放入一杯飽和溶液，當溫度升高時，若溶質沉澱析出則代表溶液在高溫下仍是飽和溶液","定溫下，同一種溶質及溶劑的系統，其飽和溶液的重量百分濃度一定比未飽和溶液的重量百分濃度高","喝一杯調好均勻的甜品飲料，喝第一口特別甜，後來愈喝愈不甜，表示飲料的濃度變稀了"],
+      answer:["C","D"],
+      explain:"(C)對：升溫仍析出溶質，代表高溫下仍飽和(甚至過飽和)。(D)對：定溫下飽和溶液達最大溶解量，濃度必比未飽和高。<br>(A)錯：溶液不一定無色(如硫酸銅溶液藍色)。(B)錯：鹽和糖都溶在水中，仍是溶液。(E)錯：均勻溶液濃度處處相同，愈喝愈不甜是味覺疲勞非濃度變稀。" },
+
+    { id:"5-17", type:"multi", q:"將不同濃度的兩杯糖水溶液混合，混合過程中之敘述下列哪些正確？（應選 2 項）",
+      options:["溶液混合後濃度比原來兩杯的濃度都高","溶液混合前後溶質的質量不變","溶液混合前後溶劑的質量不變","溶液混合前後溶液的體積為定值","溶液混合前後溶液的密度為定值"],
+      answer:["B","C"],
+      explain:"混合只是把兩杯合併，總溶質質量、總溶劑質量都守恆(B、C對)。<br>(A)混合後濃度介於原兩杯之間。(D)體積無加成性(混合前後體積不一定守恆)。(E)密度應介於兩者之間，非定值。" },
+
+    { id:"5-18", type:"multi", q:"關於重量百分率為 10% 的硫酸敘述哪些正確？（應選 3 項）",
+      options:["硫酸與水的質量比應該為 1：9","100 g的水中有 10 g的硫酸","90 g的水中有 10 g的硫酸","100 g的硫酸溶液中有 10 g的硫酸","100 mL的硫酸溶液中有 10 g的硫酸"],
+      answer:["A","C","D"],
+      explain:"10%硫酸：每100g溶液含硫酸10g、水90g。(A)對：硫酸:水=10:90=1:9。(C)對：90g水中含10g硫酸。(D)對：100g溶液含10g硫酸。<br>(B)錯：應是90g水配10g硫酸(共100g溶液)。(E)錯：以體積計需知密度才能換算，不能直接說100mL含10g。" },
+
+    { id:"5-19", type:"single", q:"【素養題】豆漿中含有的微量元素 Fe 約為多少 ppm？（Fe 質量百分比 0.0005%）",
+      options:["0.05","0.5","5","50","500"],
+      answer:["C"],
+      explain:"0.0005% = 0.0005×10⁻² = 5×10⁻⁶ = 5 ppm。(1% = 10⁴ ppm，故0.0005%×10⁴=5 ppm)" },
+
+    { id:"5-20", type:"single", q:"【素養題】若豆漿的密度為 1.2 g/cm³，成年人每天至少需攝入 60 克蛋白質，試問最少需喝多少公升的豆漿？（蛋白質質量百分比 3.6%）",
+      options:["0.8","1.2","1.4","1.8","2.0"],
+      answer:["C"],
+      explain:"設需喝 V mL 豆漿：質量=V×1.2 g，蛋白質=V×1.2×3.6%=60。→ V×1.2×0.036=60 → V×0.0432=60 → V≈1389 mL≈1.4 L。" },
+  ]
+},
+{
+  id: 6, code: "5701", title: "溶解度 ＋ 酸鹼反應 ＋ 氧化與還原反應",
+  subtitle: "第 6 回", score: "8 / 10",
+  questions: [
+    { id:"6-1", type:"single", q:"在物質混合、反應等過程中，通常會存在「1+1=2」的現象。但在哪個狀況下會有「1+1≠2」情況發生？",
+      options:["1 g酒精和1 g水混合後的總質量","1 mL酒精與1 mL水混合均勻後所得溶液的總體積","1 g氯化鈉溶液和1 g醋酸溶液中和後溶液的總質量","溫度一定時，1 g未飽和氯化鈉溶液中加入1 g氯化鈉後(仍未飽和)，所得溶液的質量","1 g酒精和1 g酒精混合後的總質量"],
+      answer:["B"],
+      explain:"質量有加成性(1+1=2)，但體積『沒有加成性』。酒精與水混合後分子間空隙填補，總體積會小於2 mL(1+1≠2)。故選(B)。" },
+
+    { id:"6-2", type:"single", q:"今有重量百分濃度為20%的溶液200公克，欲使其濃度增加一倍，做法是如何？（假設溶質不析出）",
+      options:["溶劑的質量蒸發掉一半","溶質的質量增加一倍","溶劑蒸發掉的質量等於原溶液質量的一半","溶質的質量減少一半","再加入原溶液一倍"],
+      answer:["C"],
+      explain:"原溶液200g：溶質40g、溶劑160g。要濃度變40%：溶質仍40g，需溶液總重=40/0.4=100g → 要蒸發掉100g水。100g=原溶液200g的一半。故(C)『溶劑蒸發掉的質量等於原溶液質量的一半』。<br>※注意(A)是『溶劑』蒸發一半(160/2=80g)，不對。" },
+
+    { id:"6-3", type:"single", q:"已知25℃時某溶質的溶解度為20 g/100 g水，則湯大頭配製一杯25℃飽和溶液720克時，至少需要秤取此溶質多少克？",
+      options:["60","80","100","120","140"],
+      answer:["D"],
+      explain:"溶解度20g/100g水 → 飽和溶液中，溶質:溶液=20:120。720克飽和溶液含溶質=720×(20/120)=120克。" },
+
+    { id:"6-4", type:"single", q:"【4～5題組】附圖是某物質甲的溶解度(每100克水可溶解甲的克數)與溫度曲線。在50℃，90克飽和溶液中，含有約多少克的甲？",
+      options:["20","40","60","80","100"],
+      answer:["B"],
+      figure:"溶解度曲線圖：橫軸溫度(℃) 0~70，縱軸溶解度(g/100g水) 0~80。曲線隨溫度上升而遞增：10℃約20 g、50℃約80 g。",
+      explain:"由圖，50℃時溶解度=80 g/100 g水 → 飽和溶液中溶質:溶液=80:180。90克飽和溶液含甲=90×(80/180)=40克。" },
+
+    { id:"6-5", type:"single", q:"承上題，若將50℃、90克的飽和溶液冷卻至10℃，則會有約多少克的甲沉澱析出？",
+      options:["15","20","25","30","35"],
+      answer:["D"],
+      figure:"同上溶解度圖：10℃時溶解度約 20 g/100 g水，50℃約 80 g/100 g水。",
+      explain:"50℃時90克飽和溶液=溶質40g+水50g(由80:100比例，90×80/180=40溶質、50水)。冷卻到10℃，溶解度20g/100g水 → 50g水最多溶10g甲。析出=40−10=30克。" },
+
+    { id:"6-6", type:"single", q:"有一 pH 值為 12 的氫氧化鉀溶液 10 毫升，當不斷加入純水稀釋到體積為 1000 毫升時，其 pH 值最後會變為多少？",
+      options:["13","12","10","7","5"],
+      answer:["C"],
+      explain:"pH=12 → pOH=2 → [OH⁻]=10⁻²M。稀釋100倍(10mL→1000mL)：[OH⁻]=10⁻²/100=10⁻⁴M → pOH=4 → pH=10。（稀釋鹼液pH下降但不會低於7）" },
+
+    { id:"6-7", type:"single", q:"0.1 M的某單質子弱酸溶液，以剛果紅試紙試之呈紅色，以溴瑞香草酚藍試紙試之呈黃色，以石蕊試紙試之呈紅色。（指示劑變色範圍：剛果紅藍3.1~紅5.1；溴瑞香草酚藍黃6.0~藍7.6；石蕊紅5.5~藍8.0）則該弱酸溶液的[H⁺]值可能為下列何者？",
+      options:["2×10⁻³","4×10⁻⁵","5×10⁻⁶","7×10⁻⁷","9×10⁻⁷"],
+      answer:["C"],
+      figure:"指示劑表格：剛果紅(藍)3.1~5.1(紅)；溴瑞香草酚藍(黃)6.0~7.6(藍)；石蕊(紅)5.5~8.0(藍)。",
+      explain:"剛果紅呈紅→pH>5.1；溴瑞香草酚藍呈黃→pH<6.0；石蕊呈紅→pH<5.5。綜合：5.1<pH<5.5。對應[H⁺]介於10⁻⁵·⁵~10⁻⁵·¹之間。只有 5×10⁻⁶(pH≈5.3)落在此範圍 → 選(C)。" },
+
+    { id:"6-8", type:"single", q:"湯大頭想知道紫色的蝶豆花是否可作酸鹼指示劑，他應把紫色蝶豆花浸出液分別滴入下列哪組物質中進行觀察？",
+      options:["食醋、優酪乳","食醋、通樂(主要成分為氫氧化鈉)","蜂蜜水、食鹽水","澄清石灰水和鐵粉","鹽水及糖水"],
+      answer:["B"],
+      explain:"要測試指示劑，需分別用『酸性』與『鹼性』物質觀察變色。(B)食醋(酸性)＋通樂/NaOH(鹼性)一酸一鹼，最適合。其他組多為中性或同性質，無法完整測試。" },
+
+    { id:"6-9", type:"single", q:"下列三個反應式中的 X 與 Y 分別為兩個金屬元素的代號，Cl 為氯的元素符號：X+YCl₂→XCl₂+Y、Cl₂+2XCl₂→2XCl₃、Y+2XCl₃→YCl₂+2XCl₂，已知三個反應均能向右進行，試推測下列物質中哪一個是最強的氧化劑？",
+      options:["XCl₃","XCl₂","Cl₂","Y","X"],
+      answer:["C"],
+      explain:"氧化劑強弱比較：由①得知YCl₂>XCl₂(能氧化X)；由②得知Cl₂>XCl₃；由③得知XCl₃>YCl₂。綜合排序：Cl₂>XCl₃>YCl₂>XCl₂。故最強氧化劑為 Cl₂。" },
+
+    { id:"6-10", type:"single", q:"學期末時，湯大頭表演一場「鐵絲長毛」的化學魔術，將一根光亮的鐵絲放入一杯藍色的溶液中，溶液逐漸變淡，鐵絲表面出現紅色物質。根據上述，哪一個推測合理？（Fe=56，Cu=63.5）",
+      options:["是一種酸鹼反應","最後將鐵絲拿出秤重，鐵絲總重應該會減輕","鐵絲是氧化劑","藍色的溶液可能是硫酸銅","紅色物質可能是汞的氧化物"],
+      answer:["D"],
+      explain:"Fe+CuSO₄→FeSO₄+Cu：藍色CuSO₄褪色、鐵絲表面析出紅色的銅。(D)對：藍色溶液是硫酸銅。<br>(A)是氧化還原反應。(B)每溶解1莫耳Fe(56g)會析出1莫耳Cu(63.5g)，鐵絲重量反而『增加』。(C)鐵是還原劑(被氧化)。(E)紅色物質是銅，非汞。" },
+
+    { id:"6-11", type:"multi", q:"喝碳酸飲料(例如可樂)後，容易打嗝吐氣。下列與此現象相關的敘述，哪些正確？（應選 2 項）",
+      options:["此氣體主要為氧氣","此氣體主要為碳酸","此氣體主要為二氧化碳","所吐出氣體，可以被氧化成碳酸","容易吐出氣體，是因為在胃中溫度升高，飲料中氣體在水中的溶解度因而下降"],
+      answer:["C","E"],
+      explain:"碳酸飲料是CO₂溶於水。(C)對：吐出的氣體主要是CO₂。(E)對：胃中溫度較高，氣體溶解度隨溫度升高而降低，CO₂逸出。<br>(A)不是氧氣。(B)碳酸是液態的H₂CO₃非氣體。(D)CO₂溶於水才成碳酸，非被氧化。" },
+
+    { id:"6-12", type:"multi", q:"定溫下，一開口容器中裝滿飽和的葡萄糖溶液，一段時間之後，發現底部有溶質析出，下列關於這一杯溶液的敘述哪些正確？（應選 2 項）",
+      options:["仍為飽和溶液","溶劑蒸發所以溶液重量百分率濃度變大","溶液重量百分率濃度不變","因為溶質析出所以溶液重量百分率濃度變小","因為溶質析出所以溶液未飽和"],
+      answer:["A","C"],
+      explain:"定溫下開口容器，水蒸發→溶液變過飽和→析出溶質，但剩餘溶液『仍是飽和』(A對)。定溫飽和溶液濃度是定值，故濃度『不變』(C對)。<br>(B)(D)錯：飽和濃度定值不變。(E)錯：析出後溶液仍飽和。" },
+
+    { id:"6-13", type:"multi", q:"下列哪些物質溶於水會呈現酸性？（應選 3 項）",
+      options:["H₂CO₃","NaHCO₃","SO₂","NH₃","CH₃COOH"],
+      answer:["A","C","E"],
+      explain:"(A)H₂CO₃碳酸→酸性。(C)SO₂溶水生成H₂SO₃→酸性。(E)CH₃COOH醋酸→酸性。<br>(B)NaHCO₃小蘇打→鹼性。(D)NH₃氨→鹼性。" },
+
+    { id:"6-14", type:"multi", q:"胃酸中含有鹽酸，若分泌過多會侵蝕胃壁，所以必須服用胃藥。試問胃藥中含有哪些種成分，可中和胃酸？（應選 2 項）",
+      options:["氫氧化鈉","氫氧化鈣","氫氧化鋁","氫氧化鎂","阿司匹靈"],
+      answer:["C","D"],
+      explain:"制酸胃藥需用『弱鹼』中和胃酸(不能太強以免傷胃)。(C)氫氧化鋁、(D)氫氧化鎂為常見制酸劑(弱鹼、溫和)。<br>(A)氫氧化鈉、(B)氫氧化鈣為強鹼，太刺激不適合。(E)阿司匹靈為弱酸，不能中和胃酸。" },
+
+    { id:"6-15", type:"multi", q:"下列的反應中，哪幾項是氧化還原反應？（應選 2 項）",
+      options:["CaO(s)+H₂O(l)→Ca(OH)₂(s)","2PbS(s)+O₂(g)→2PbO(s)+2S(s)","CaCO₃(s)+2HCl(aq)→CaCl₂(aq)+H₂O(l)+CO₂(g)","Cl₂(g)+H₂O(l)→HOCl(aq)+HCl(aq)","SiO₂(s)+4HF(aq)→SiF₄(g)+2H₂O(l)"],
+      answer:["B","D"],
+      explain:"氧化還原反應：有元素氧化數改變。(B)O由0→−2、S由−2→0，有變化→是氧還。(D)Cl₂中Cl由0→+1(HOCl)及−1(HCl)，發生歧化→是氧還。<br>(A)(C)(E)各元素氧化數皆無改變，為非氧化還原反應。" },
+
+    { id:"6-16", type:"single", q:"【素養題】維生素C化學式C₆H₈O₆，每片100 mg含Vc 10%，飯後服用每次2片。若正常成人每天對維生素C最低需要量為60 mg，每天至少服用多少次？",
+      options:["1","2","3","6","8"],
+      answer:["C"],
+      explain:"每片100 mg×10%=含Vc 10 mg。每次服2片=20 mg。每天需60 mg → 60/20=3次。" },
+
+    { id:"6-17", type:"single", q:"【素養題】取兩片維生素C錠溶於水，滴入藍色石蕊試液變紅色，再加熱該溶液至沸騰，則紅色消失，試問在烹調新鮮蔬菜時想減少維生素C的損失，應採取的作法是？",
+      options:["加點小蘇打","加點鹽","低溫烹調","高溫熱油讓維生素C溶解","加入果糖"],
+      answer:["C"],
+      explain:"加熱到沸騰紅色消失→表示維生素C不耐高溫(受熱被破壞)。故烹調時應『低溫烹調』以減少維生素C損失。" },
+
+    { id:"6-18", type:"single", q:"【素養題】取兩片維生素C輕輕搗碎，注入20 mL蒸餾水，振盪後測得溶液[H⁺]=3×10⁻³ M，試問此溶液的pH值為多少？(log3=0.5)",
+      options:["2.5","5.1","6.7","8.3","9.5"],
+      answer:["A"],
+      explain:"pH=−log[H⁺]=−log(3×10⁻³)=3−log3=3−0.5=2.5。" },
+  ]
+},
+);
+
+// 第 7、8 回
+EXAMS.push(
+{
+  id: 7, code: "5701", title: "生物體中的分子 ＋ 藥品與界面活性劑",
+  subtitle: "第 7 回", score: "11 / 11",
+  questions: [
+    { id:"7-1", type:"single", q:"人體最重要的營養成分包括：醣類、蛋白質、脂質、維生素和礦物質。有關食品與營養的敘述，何者正確？",
+      options:["澱粉與纖維素均屬多醣，兩者均可被人體消化吸收","組成蛋白質的各種胺基酸均可在人體內自行合成","人體中所需的礦物質(如鐵、鋅等)很少，不需攝取也不影響健康","澱粉、蛋白質和脂質在消化道會被消化成葡萄糖、胺基酸、脂肪酸及甘油","完全不攝取澱粉，只吃蛋白質食物，可以快速減肥而不影響健康"],
+      answer:["D"],
+      explain:"(D)對：澱粉→葡萄糖、蛋白質→胺基酸、脂質→脂肪酸及甘油。<br>(A)錯：纖維素不能被人體消化吸收。(B)錯：必需胺基酸人體無法自行合成，需從食物攝取。(C)錯：礦物質雖需求少但仍必要。(E)錯：各種營養均衡攝取才健康。" },
+
+    { id:"7-2", type:"single", q:"下列哪一類物質是豆腐中最主要的營養素？",
+      options:["油脂","醣","蛋白質","維生素","礦物質"],
+      answer:["C"],
+      explain:"豆腐由黃豆製成，蛋白質含量豐富，含有人體必需的八種胺基酸。故最主要營養素為蛋白質。" },
+
+    { id:"7-3", type:"single", q:"下列關於澱粉和纖維素的敘述不正確的是？",
+      options:["它們的通式都是(C₆H₁₀O₅)ₙ，是同分異構體","它們都是混合物","它們都可以發生水解，其最終產物都是葡萄糖","它們都是天然高分子化合物","二者皆不易溶於水中"],
+      answer:["A"],
+      explain:"(A)錯：澱粉與纖維素通式雖都是(C₆H₁₀O₅)ₙ，但聚合度n不同，所以『不是』同分異構體。其餘(B)(C)(D)(E)皆正確。" },
+
+    { id:"7-4", type:"single", q:"警探自犯罪現場發現少量有機物質，初步測得性質：狀態=固體、密度=比水大(>1)、溶解度=難溶於水、燃燒=僅集得二氧化碳及水蒸氣、接觸濃硫酸=固體變焦黑並集得水蒸氣。下列何種物質最符合分析結果？",
+      options:["乙醇 C₂H₅OH","果糖 C₆H₁₂O₆","植物纖維 Cₘ(H₂O)ₙ","蛋白質","碳酸鈣 CaCO₃"],
+      answer:["C"],
+      figure:"性質表格：狀態=固體；密度=比水大(>1)；溶解度=難溶於水；燃燒=僅集得CO₂及水蒸氣；接觸濃硫酸=固體變焦黑並集得水蒸氣。",
+      explain:"燃燒和濃硫酸反應的結果，可推知含C、H兩元素，且不含N(否則燃燒會有含氮氧化物)；又不易溶於水、為固體 → 最可能為『植物纖維』(纖維素)。(A)乙醇是液體。(B)果糖易溶於水。(D)蛋白質含N。(E)CaCO₃不會焦黑。" },
+
+    { id:"7-5", type:"single", q:"(甲)CH₃CH₂CO₂⁻、(乙)CH₃(CH₂)₁₁CO₂⁻、(丙)Na⁺、(丁)Cl⁻，上列甲至丁四種基團中，哪兩種的組合適合作為清潔劑？",
+      options:["甲、丙","甲、丁","乙、丙","乙、丁","丙、丁"],
+      answer:["C"],
+      explain:"清潔劑需有『長鏈的親油端』及『帶負電荷的親水端(再配陽離子)』。乙(CH₃(CH₂)₁₁CO₂⁻)有長碳鏈=親油端且帶負電=親水端，配上丙(Na⁺)成為肥皂/清潔劑。故乙、丙組合最適合。" },
+
+    { id:"7-6", type:"single", q:"在硬水中清洗食器時，合成的清潔劑比肥皂更具有洗滌能力，其主要原因為何？",
+      options:["合成清潔劑的鈉鹽溶於水，而肥皂的鈉鹽不溶於水","合成清潔劑會與酸作用，而肥皂不與酸作用","肥皂會在硬水中分解，而合成清潔劑不會分解","合成清潔劑的鈣鹽溶於水，而肥皂的鈣鹽不溶於水","合成清潔劑有添加少量的漂白劑"],
+      answer:["D"],
+      explain:"硬水含Ca²⁺、Mg²⁺。肥皂遇這些離子會形成『不溶於水』的鈣鹽(皂垢)而失效；合成清潔劑的鈣鹽則可溶於水，故在硬水中仍能發揮洗滌力。" },
+
+    { id:"7-7", type:"single", q:"下列有關常見藥物的各種組合或性質，何者正確？",
+      options:["止痛藥中的磺胺類藥劑","速效型制酸劑的 NaHCO₃","焦油具有的成癮性","退燒藥中的青黴素","外科手術過程中常用麻醉型的止痛藥為阿司匹靈"],
+      answer:["B"],
+      explain:"(B)對：NaHCO₃(小蘇打)是速效型制酸劑。<br>(A)磺胺類是消炎藥。(C)焦油不具成癮性(尼古丁才有)。(D)青黴素是抗生素。(E)外科手術常用的麻醉止痛藥是嗎啡，非阿司匹靈。" },
+
+    { id:"7-8", type:"single", q:"根據國中所學的化學原理，湯大頭想製造肥皂。試問下列五種物質中哪一種不是必要的？",
+      options:["硫酸","油脂","氫氧化鈉","濃食鹽水","小蘇打水溶液"],
+      answer:["A"],
+      explain:"製皂(皂化)：油脂+鹼(NaOH)→肥皂+甘油，再用濃食鹽水鹽析出肥皂。小蘇打水可調整。硫酸(酸)不需要且會破壞反應 → 硫酸『不是必要的』。<br>※依詳解：油脂+鹼→皂+甘油，分離皂與甘油需用濃食鹽水；故硫酸為非必要。" },
+
+    { id:"7-9", type:"single", q:"湯小多幫爸爸在夜市賣鹽酥雞，每次收攤回家都發現衣服變得油膩膩的，而且回收的油也變得比較濃稠，下列敘述何者錯誤？",
+      options:["可以利用食鹽水去除油汙","回收的油與氫氧化鈉反應，可製造肥皂","回收的油，不可再食用，因恐致癌","衣服上的油汙可用碳酸氫鈉溶液清洗","油的顏色愈深，炸出來的食材愈不健康"],
+      answer:["A"],
+      explain:"(A)錯：食鹽水是將肥皂與甘油分離用的(鹽析)，並不能去除油汙(食鹽水不具乳化去油能力)。其餘敘述皆正確。" },
+
+    { id:"7-10", type:"single", q:"海水中含有許多的金屬離子，例如鈉離子、鎂離子等。當船員在海上想以海水來清洗器具或洗澡時，使用何種清潔劑無法發揮功能？",
+      options:["香皂","洗髮精","沐浴乳","洗碗精","無磷清潔劑"],
+      answer:["A"],
+      explain:"海水是硬水(含Ca²⁺、Mg²⁺)。『香皂(肥皂)』遇這些離子會產生不溶皂垢而失效。其他合成清潔劑在硬水中仍可使用。故香皂無法發揮功能。" },
+
+    { id:"7-11", type:"multi", q:"下列生活中常見物質的敘述，哪些正確？（應選 2 項）",
+      options:["醣類、蛋白質、脂肪完全燃燒只生成 CO₂ 和 H₂O","醣類、蛋白質、脂肪都是天然高分子化合物","汽油、柴油、橄欖油都是只含碳氫的化合物","麥芽糖、脂肪在一定條件下都能發生水解反應","醣類不一定有甜味"],
+      answer:["D","E"],
+      explain:"(D)對：麥芽糖(雙醣)、脂肪都能水解。(E)對：醣類不一定有甜味(如澱粉、纖維素)。<br>(A)錯：蛋白質含N，燃燒會有含氮氧化物。(B)錯：脂肪是小分子，不是高分子。(C)錯：植物油(橄欖油)含氧，非只含碳氫。" },
+
+    { id:"7-12", type:"multi", q:"下列敘述哪些正確？（應選 3 項）",
+      options:["核苷酸結構中含有硫酸根","核糖核酸具有雙股螺旋的結構","核酸包含核糖核酸及去氧核糖核酸","核苷酸結構中含有五碳糖","去氧核糖核酸是構成基因的基本成分之一"],
+      answer:["C","D","E"],
+      explain:"(C)對：核酸包含RNA(核糖核酸)和DNA(去氧核糖核酸)。(D)對：核苷酸含五碳糖。(E)對：DNA是構成基因的基本成分。<br>(A)錯：核苷酸含『磷酸根』非硫酸根。(B)錯：具雙股螺旋的是DNA(去氧核糖核酸)，RNA通常單股。" },
+
+    { id:"7-13", type:"multi", q:"醣類是重要營養素，而代糖則可作為取代醣類甜味的食品添加物。下列有關醣類與代糖的敘述，哪些正確？（應選 2 項）",
+      options:["蔗糖是雙醣","葡萄糖是一種果糖","單醣在體內可以經由代謝產生能量","阿司巴丹(aspartame)是一種代糖，屬於單醣","澱粉及纖維素均為多醣，在人體內皆可分解產生葡萄糖"],
+      answer:["A","C"],
+      explain:"(A)對：蔗糖由葡萄糖+果糖組成，是雙醣。(C)對：單醣可代謝產生能量。<br>(B)錯：葡萄糖與果糖是同分異構物，不是果糖。(D)錯：阿司巴丹是雙肽分子，非單醣、非聚合物。(E)錯：纖維素在人體內無法分解(缺酵素)。" },
+
+    { id:"7-14", type:"multi", q:"肥皂與清潔劑是日常生活不可缺少的清潔用品，下列有關肥皂與清潔劑的敘述，哪些正確？（應選 2 項）",
+      options:["動物油脂用強鹼水解可得肥皂","肥皂分子較不易與硬水作用產生沉澱","肥皂與清潔劑的分子皆具有親水性及親油性","軟性清潔劑分子之長碳鏈有較多支鏈，易被微生物分解","清潔劑常添加磷酸鹽，磷酸鹽流入河川會抑制藻類生長"],
+      answer:["A","C"],
+      explain:"(A)對：油脂+強鹼(皂化)可製得肥皂。(C)對：肥皂與清潔劑分子都具親水端與親油端。<br>(B)錯：肥皂『較易』與硬水作用產生皂垢沉澱。(D)錯：軟性清潔劑的長碳鏈是『直鏈無支鏈』才易被微生物分解(硬性才有多支鏈)。(E)錯：磷酸鹽會使藻類『大量繁殖(優養化)』，非抑制。" },
+
+    { id:"7-15", type:"multi", q:"下列有關藥物的敘述，哪些正確？（應選 3 項）",
+      options:["碳酸氫鈉是消炎藥中的一種","青黴素俗稱盤尼西林，是一種抗生素","氫氧化鋁會和胃酸反應，有制酸作用","磺胺類藥物是止瀉藥物中最普遍的一類","阿司匹靈的學名是乙醯柳酸(又名乙醯水楊酸)"],
+      answer:["B","C","E"],
+      explain:"(B)對：青黴素=盤尼西林=抗生素。(C)對：氫氧化鋁是制酸劑。(E)對：阿司匹靈學名乙醯柳酸(乙醯水楊酸)。<br>(A)錯：NaHCO₃是制酸劑(胃藥)，非消炎藥。(D)錯：磺胺類是消炎藥中最普遍的一類，非止瀉藥。" },
+
+    { id:"7-16", type:"single", q:"【素養題】牛軋糖外那層「薄薄透明的紙」測試結果如表①(顏色透明無色有光澤、觸感滑膩、味道微甜、可燃燒呈黑色片狀)與表②(加碘液呈藍紫色、加本氏液呈淡藍色、加石蕊試液都不變色、加唾液透明紙穿洞)。根據實驗，下列敘述哪一個正確？",
+      options:["摸起來有滑膩感、可以燃燒且具有光澤，湯大頭認為應與脂肪同類","加入本氏液呈淡藍色、加入石蕊試液都不變色，陳清清認為應該不是蛋白質","可以燃燒且加碘液呈藍紫色，米多莉認為應該與澱粉同類","加入唾液會使透明紙穿洞，薛曉真認為唾液可分解透明紙，所以將唾液加入透明玻璃紙也應有相同現象","外觀顏色透明無色、味道微甜，湯小弟推測這與口香糖添加的人工甜味劑類似"],
+      answer:["C"],
+      figure:"表①測試結果：顏色=透明無色有光澤；觸感=滑膩感；味道=微甜；燃燒=可燃燒且呈黑色片狀或粉狀。表②:加碘液=呈藍紫色；加本氏液=呈淡藍色；加石蕊試液=藍紅石蕊都不變色；加唾液=透明的紙穿洞。",
+      explain:"加碘液呈藍紫色是澱粉的特徵反應！故此透明紙(糯米紙)與『澱粉』同類，(C)正確。加唾液會穿洞，是因唾液中澱粉酶把澱粉分解。(D)玻璃紙(纖維素)無法被唾液分解，不會有相同現象。" },
+
+    { id:"7-17", type:"single", q:"【素養題】實驗完成之後，大家推論生活中哪一種材料可以做出薄薄透明又可以吃的紙？",
+      options:["糯米","雞蛋","豬大腸內的薄膜","玻璃紙","沒有漂白的原生木頭紙漿"],
+      answer:["A"],
+      explain:"由前題得知透明紙的主成分是澱粉(遇碘變藍紫)，糯米富含澱粉，可製成可食用的透明糯米紙。故選(A)糯米。" },
+
+    { id:"7-18", type:"single", q:"【素養題】湯大頭將透明的紙、唾液及本氏液放入試管中，隔水加熱一段時間，發現溶液轉成紅色，推論溶液中出現何種物質？",
+      options:["脂肪","葡萄糖","澱粉","纖維素","酒精"],
+      answer:["B"],
+      explain:"唾液中的澱粉酶把澱粉分解成葡萄糖(還原糖)，葡萄糖與本氏液加熱會呈現紅色(磚紅色沉澱)。故溶液中出現的是『葡萄糖』。" },
+
+    { id:"7-19", type:"single", q:"【素養題】根據國中學習的經驗，再推論上述實驗將透明的紙加兩滴硫酸後，發現生成黑色物質且無臭味，試問透明的紙可能含有哪些元素？",
+      options:["C、H、N","C、N、O","N、H、O","C、H、O","C、N、S"],
+      answer:["D"],
+      explain:"碳水化合物(澱粉)遇濃硫酸會脫水生成黑色的『碳』(且無臭味表示不含硫、氮)。澱粉屬碳水化合物，含C、H、O三元素。故選(D)。" },
+  ]
+},
+{
+  id: 8, code: "5701", title: "新興能源與永續發展 ＋ 環境與化學 ＋ 化學在先進科技發展的應用",
+  subtitle: "第 8 回", score: "6 / 8",
+  questions: [
+    { id:"8-1", type:"single", q:"下列各物質中，屬於再生能源的是？",
+      options:["煤","石油","天然氣","生質能","核能"],
+      answer:["D"],
+      explain:"生質能是取之不盡、用之不竭的再生能源。煤、石油、天然氣為化石燃料(不可再生)，核能也屬不可再生。" },
+
+    { id:"8-2", type:"single", q:"氫氣是最乾淨的能源，但是到目前為止，氫氣仍未能成為生活中主要的燃料，你認為原因可能為何？",
+      options:["氫氣難儲存及容易氣爆","氫氣難溶於水","氫氣很難燃燒","氫氣太輕","氫氣難以製備"],
+      answer:["A"],
+      explain:"氫氣具強可燃性和氧化性，儲存與易氣爆是較難處理的問題，這是氫氣尚未普及為主要燃料的主因。" },
+
+    { id:"8-3", type:"single", q:"下列有關能源的敘述何者正確？",
+      options:["原子核反應可分為核分裂與核融合兩種，目前世界運轉中的核能電廠，大部分採核融合反應","石油是自然界唯一的不可再生礦物能源","太陽能電池安全又清潔，且轉換功率極高","石油及天然氣的主要成分是碳氫化合物","風力發電一年四季都可提供穩定的發電量"],
+      answer:["D"],
+      explain:"(D)對：石油、天然氣主成分是碳氫化合物。<br>(A)錯：現行核能電廠大部分採『核分裂』。(B)錯：煤、天然氣也是不可再生礦物能源，非唯一。(C)錯：太陽能電池與核能相比，發電功率仍嫌不足。(E)錯：風力受天候影響，發電量不穩定。" },
+
+    { id:"8-4", type:"single", q:"天然氣主成分是甲烷，為讓天然氣洩漏易被發現，常加入少量乙硫醇(C₂H₅SH)。乙硫醇燃燒方程式：2C₂H₅SH+9O₂→4CO₂+2Y+6H₂O，已知Y由兩種元素組成，則Y的化學式為？",
+      options:["SO₂","SO₃","S","H₂SO₄","H₂S"],
+      answer:["A"],
+      explain:"依方程式平衡並符合原子數守恆。左邊S=2(來自2C₂H₅SH)、右邊需2個Y各含1個S。檢查：左邊O=18，右邊4CO₂(8)+6H₂O(6)=14，缺4個O給2Y → 每個Y含2個O、1個S → Y=SO₂。" },
+
+    { id:"8-5", type:"single", q:"控制地球上CO₂含量是解決溫室效應的有效途徑。將CO₂轉化成有機物的例子很多，試問以下反應中「原子經濟率」最高的是？",
+      options:["6CO₂+6H₂O→C₆H₁₂O₆+6O₂","CO₂+3H₂→CH₃OH+H₂O","CO₂+CH₄→CH₃COOH","2CO₂+6H₂→CH₂=CH₂+4H₂O","以上皆非"],
+      answer:["C"],
+      explain:"原子經濟率=目標產物質量/所有原料質量×100%。若反應中『產物只有一種』(沒有副產物)，表示所有原料原子都進入目標產物，原子經濟率最高=100%。(C)CO₂+CH₄→CH₃COOH 只生成一種產物，故原子經濟率最高。" },
+
+    { id:"8-6", type:"single", q:"2018年8月熱帶性低氣壓在南部造成嚴重災情，水災過後水庫上游水源混濁，需進一步淨化。下列有關都市淨水處理的步驟，何者正確？",
+      options:["活性碳可有效吸附不溶的固體雜質及氣味，是淨水程序的第二步","氧化是將空氣打入水中，主要目的是去除水中無機物沉澱","自來水廠過濾步驟處理通常使用逆滲透法，在最後可有效去除溶在水中的金屬離子","沉降法通常在水中加入鋁礬(硫酸鋁)，主要原因是Al³⁺在水中會形成膠體物質，吸附水中細小顆粒而沉降","以上皆非"],
+      answer:["D"],
+      explain:"(D)對：沉降(混凝)加入明礬/硫酸鋁，Al³⁺水解形成膠體(氫氧化鋁)，吸附細小顆粒使其沉降。<br>(A)活性碳是淨水程序倒數第二步。(B)氧化(打空氣)是使有機物氧化及殺菌，非去除無機物沉澱。(C)自來水廠過濾沒有使用逆滲透法。" },
+
+    { id:"8-7", type:"single", q:"硬水含鈣、鎂等金屬離子。若將1公升硬水分成四等份，分別用下列方法處理：(甲)陽離子交換法，交換鈉離子、(乙)蒸餾法、(丙)陰陽離子交換法，將陽離子交換氫離子、陰離子交換氫氧根離子、(丁)逆滲透法。經處理後的水，其導電度大幅下降的有哪幾種？",
+      options:["甲乙","甲丙","乙丙丁","甲丙丁","甲乙丙"],
+      answer:["C"],
+      explain:"導電度下降表示離子減少。乙(蒸餾)、丙(陰陽離子交換成H⁺和OH⁻，結合成純水)、丁(逆滲透)都能大幅去除離子。甲(陽離子交換成Na⁺)只是把鈣鎂換成鈉，離子仍在，導電度不會大幅下降。故乙丙丁。" },
+
+    { id:"8-8", type:"single", q:"有關溫室效應，下列哪一敘述是引起地球表面溫度逐漸升高的主要原因？",
+      options:["大氣中的二氧化碳大量吸收陽光中能量較大的紫外線","大氣中的二氧化碳大量吸收紅外線，減少地球表面的熱能散逸至太空","陽光中的紫外線破壞大氣中的臭氧層","因臭氧層的破洞，陽光中的紫外線能直接照射在地球的表面","東南亞的火山持續噴發"],
+      answer:["B"],
+      explain:"溫室效應：大氣中的CO₂大量吸收地表放出的『紅外線』，使熱能無法散逸至太空，導致地表溫度升高。(A)(C)(D)是臭氧層相關，非溫室效應主因。" },
+
+    { id:"8-9", type:"single", q:"奈米科技在生活應用上最為人知的是奈米光觸媒，下列與奈米光觸媒有關的描述，何者錯誤？",
+      options:["奈米級二氧化鈦可吸收紅外光達到光觸媒效果","非奈米等級二氧化鈦，可被應用於塗料上","奈米級二氧化鈦在紫外光照射下，可以催化有機物的分解","奈米是一種長度單位","二氧化鈦光觸媒可與水分子或氧氣作用，經一連串氧化還原反應，以達到殺菌、除臭、自潔的功效"],
+      answer:["A"],
+      explain:"(A)錯：奈米級二氧化鈦吸收的是『紫外光』(波長<400 nm)達到光觸媒效果，不是紅外光。其餘敘述皆正確。" },
+
+    { id:"8-10", type:"single", q:"已知光觸媒主成分是奈米級二氧化鈦，接受光波長至少需低於400 nm。吸光後具強氧化力，可將水分子氧化為氫氧根自由基(·OH+H⁺+e⁻→H₂O，E°=2.79 V)。下列敘述何者正確？",
+      options:["·OH 為強還原劑可以分解汙染物","奈米級的顆粒大小，是比本土的蓬萊米略大","二氧化鈦的基態和激發態能階差約為 3.2 eV","光觸媒處理過的場所，在黑暗中仍具有消毒效果","氫氧根自由基中的氧原子之電子恰好是八隅體組態"],
+      answer:["C"],
+      figure:"反應式：·OH + H⁺ + e⁻ → H₂O，E°=2.79 V。",
+      explain:"(C)對：由波長400 nm換算能量 E=hc/λ≈3.1~3.2 eV，即二氧化鈦的能隙約3.2 eV。<br>(A)·OH是強氧化劑非還原劑。(B)奈米(10⁻⁹m)遠小於蓬萊米。(D)光觸媒需光照才有效，黑暗中無消毒效果。(E)·OH中氧原子少1個電子(未符八隅體)，故易奪電子(強氧化性)。" },
+
+    { id:"8-11", type:"multi", q:"電能是生產生活不可或缺的能量，下列哪些發電方式是由「化學能」轉變成「電能」？（應選 2 項）",
+      options:["水力發電","風力發電","燃煤發電","太陽能電池","垃圾焚燒發電"],
+      answer:["C","E"],
+      explain:"化學能→電能：需經由『燃燒(化學反應)』。(C)燃煤發電、(E)垃圾焚燒發電都是靠燃燒(化學能)產生熱能再轉電能。<br>(A)水力=位能→電能。(B)風力=動能→電能。(D)太陽能電池=光能→電能。" },
+
+    { id:"8-12", type:"multi", q:"「綠色化學」可朝三方向進行：使用無毒無害可再生原料、減少廢料；盡量在常溫常壓下反應節約能源；使用催化劑或生物技術縮短反應時間、提高產率。試問下列哪些能源措施符合「綠色化學」思想？（應選 2 項）",
+      options:["直接燃「煤」發電","大量興建「水庫」作為水力發電","使用可降解的塑料代替不可分解的塑料","大量使用飛機噴灑化學性質穩定的含氯農藥","設計良好的化學流程，讓原子的經濟效率盡量達 100%"],
+      answer:["C","E"],
+      explain:"(C)對：可降解塑料減少環境汙染，符合綠色化學。(E)對：原子經濟效率達100%表示無廢料，最符合綠色化學。<br>(A)燃煤汙染大。(B)大量興建水庫會破壞生態。(D)含氯農藥穩定不易分解，會殘留汙染環境。" },
+
+    { id:"8-13", type:"multi", q:"對於下列各組中兩種「水」的說法，哪些錯誤？（應選 2 項）",
+      options:["食鹽水中的水和蒸餾水中的水，氫元素與氧元素的質量比不同","礦泉水是混合物，而蒸餾水是純物質","硬水和軟水中可溶性鈣鎂化合物的含量不同","澄清石灰水和自來水的酸鹼性不同","可以用活性碳軟化硬水"],
+      answer:["A","E"],
+      explain:"題目問『錯誤』的。(A)錯：只要是純水(H₂O)，氫氧質量比恆為1:8，相同。(E)錯：活性碳只能吸附雜質、除氯除臭，『無法』去除鈣鎂離子(不能軟化硬水)。<br>(B)(C)(D)皆為正確敘述。" },
+
+    { id:"8-14", type:"multi", q:"某溫泉的水質為硬水，下列說法哪些正確？（應選 2 項）",
+      options:["硬水是一種混合物","硬水是含有 Ca²⁺ 或 Mg²⁺ 的水","加入明礬再靜置一段時間，硬水會變成軟水","只要含有雜質就可以稱為硬水","含磷洗衣粉可以降低水的硬度，提升肥皂洗淨力，所以市售洗衣粉中都應添加"],
+      answer:["A","B"],
+      explain:"(A)對：硬水含多種物質，是混合物。(B)對：硬水是含Ca²⁺或Mg²⁺的水。<br>(C)錯：加明礬是使懸浮物沉降(混凝)，硬水不會因此變軟水。(D)錯：硬水特指含鈣鎂離子，非只要有雜質。(E)錯：含磷洗衣粉會造成水質優養化，不應添加。" },
+
+    { id:"8-15", type:"multi", q:"奈米材料被譽為21世紀最有前途的新型導電材料。奈米碳管是由碳原子構成的直徑為幾個奈米的空心管。下列關於奈米碳管的說法錯誤的是？（應選 2 項）",
+      options:["奈米碳管和 C₆₀ 一樣，都是新型化合物","奈米碳管材料如果充分燃燒，生成物是二氧化碳","奈米碳管材料在常溫下的化學性質不活潑","奈米碳管的表面積極大，具有較強的吸附能力","奈米碳管材料是絕緣體"],
+      answer:["A","E"],
+      explain:"題目問『錯誤』的。(A)錯：奈米碳管和C₆₀都只由碳一種元素組成，是『元素』不是化合物。(E)錯：奈米碳管可導電(是導電材料)，非絕緣體。<br>(B)(C)(D)皆為正確敘述。" },
+
+    { id:"8-16", type:"single", q:"【素養題】利用離子交換樹脂淨化海水。中性水樣品含少量氯化鈉與氯化鎂，用甲圖(陽離子交換樹脂)與乙圖裝置淨化，水樣品由甲圖分液漏斗滴下。水樣品中的哪些離子可以被甲圖中的陽離子交換樹脂除去？",
+      options:["Na⁺ 與 Cl⁻","Cl⁻ 與 OH⁻","Mg²⁺ 與 H⁺","Na⁺ 與 Mg²⁺","皆無法去除"],
+      answer:["D"],
+      figure:"甲圖裝置：上方分液漏斗裝中性水樣品，下接玻璃棉、陽離子交換樹脂、玻璃棉、活閥開關，底部接燒杯收集『溶液M』。乙圖：分液漏斗裝溶液M，管中裝物質x，底部收集『純水』。",
+      explain:"陽離子交換樹脂只能交換(除去)『陽離子』。水樣品中的陽離子是Na⁺和Mg²⁺，會被陽離子交換樹脂除去(交換成H⁺)。故選(D)。" },
+
+    { id:"8-17", type:"single", q:"【素養題】將甲圖裝置所得的溶液M，由乙圖分液漏斗慢慢滴下，取得純水，試問乙圖中的物質 x 應該是下列哪一種物質？",
+      options:["陰離子交換樹脂","酸鹼中和試劑","活性碳","明礬","白色石灰岩粉末"],
+      answer:["A"],
+      explain:"甲圖(陽離子交換)後溶液M只剩陰離子(Cl⁻)和H⁺。要得純水，需再用『陰離子交換樹脂』把Cl⁻換成OH⁻，OH⁻與H⁺結合成水 → 得純水。故物質x為陰離子交換樹脂。這是完整的離子交換實驗流程。" },
+  ]
+},
+);
+
+// 幼兒園白話詳解（大量生活比喻）— 以 id 對應
+const BABY = {
+// ===== 第 1 回 =====
+"1-1":"想像『純物質』就是一整包只有草莓口味的糖果，裡面全都一樣。<br>『混合物』就是把好幾種口味倒在一起的綜合糖果罐。<br>沸點就像糖果罐『融化的溫度』——如果一罐糖每次融化的溫度都不一樣，代表裡面口味很多種，就是綜合罐（混合物）啦！<br>👉 沸點不固定 = 混合物，選 C。",
+"1-2":"把四杯水放到鍋子上煮，水跑光後看鍋底：<br>如果鍋底『乾乾淨淨什麼都沒有』→ 這杯本來就只有水，是乾淨的純物質。<br>如果鍋底『留下白白或紅紅的渣渣』→ 代表水裡本來偷偷藏了東西（像鹽、色素），是綜合的混合物。<br>👉 只有甲煮完什麼都不剩，所以甲最乾淨，選 A。",
+"1-3":"這題在問各種『把東西分開』的魔法各是靠什麼。<br>層析就像：把一滴彩色墨水點在衛生紙上，紙吸水往上爬，顏色會慢慢分家——因為每個顏色『黏在紙上的力氣』不一樣，黏得緊的走得慢、黏得鬆的跑得快。<br>👉 層析靠『黏的力氣（附著力）』不同來分開，選 C。",
+"1-4":"食鹽水裡有砂子，想把鹽拿回來，分兩步：<br>第一步『過濾』——像用濾網撈掉泡麵裡的蔥花，把不會溶的砂子撈掉。<br>第二步『結晶』——把鹽水曬乾，水跑掉後鹽就自己現身變成鹽粒（像海水曬成鹽）。<br>👉 過濾＋結晶，選 B（甲戊）。",
+"1-5":"要用『煮沸騰』來認出誰是純的、誰是綜合的，前提是這溫度範圍（50~150℃）裡東西真的會沸騰給你看。<br>就像你要看水『幾度會冒泡』，水得真的在這個溫度冒泡才行。氣體太冷、固體太硬都不會在這範圍表演。<br>👉 甲組和丁組在這溫度會冒泡表演，可以區別，選 E。",
+"1-6":"氣體 = 粒子像放風的小朋友，滿場亂跑、彼此離很開。<br>混合物 = 場上有『兩種不一樣』的小朋友（有大個子也有小個子）。<br>👉 找『又分散、又同時有大小兩種粒子』的圖，就是氣態混合物，選 D。",
+"1-7":"碘本來躲在水裡（紅紅的），你倒進一種油油的正己烷，碘比較喜歡油，就『跳槽』搬到油裡去了（變紫色）。<br>這種『讓東西從一種液體搬到另一種它更愛的液體』的搬家魔法，叫萃取。<br>👉 選 E 萃取。就像用油把辣椒的辣味泡出來一樣。",
+"1-8":"水很特別、跟別人不一樣。一般東西壓越大越容易結冰，但水『壓越大反而越難結冰（更想當水）』。<br>畫成圖時，水那條『冰↔水』的線會往左邊倒（跟別人相反）。<br>👉 選那張線倒向左邊的圖，就是水，選 B。",
+"1-9":"這個東西是一般乖乖牌（跟水相反）：你用力『捏它加壓』，它就會從液體被壓成固體。<br>就像用力把鬆鬆的雪球捏緊，會變成硬硬的冰塊。<br>👉 捏一捏 → 液體變固體，選 C。",
+"1-10":"超臨界二氧化碳是一種『半氣半液』的神奇狀態，很會鑽、很會把東西溶出來。<br>工廠拿它來『把咖啡豆裡的咖啡因洗出來』，做成喝了不會睡不著的低咖啡因咖啡。<br>👉 選 C。就像用它幫咖啡豆『卸妝』把咖啡因卸掉。",
+"1-11":"這瓶氣體只有『一種原子』。<br>只有一種原子 → 一定是『單一元素』（不可能是化合物，因為化合物至少要兩種原子牽手）。<br>但它可能是純的（全部一樣），也可能是混的（例如氧氣 O₂ 和臭氧 O₃ 混在一起，兩個都只有氧原子）。<br>👉 選 C、D。",
+"1-12":"(A)水是乾淨的一種東西，但可以用電『拆成』氫和氧（像拆積木）。✔<br>(D)鑽石很純，但它整顆只有『碳』一種積木，所以是元素不是化合物。✔<br>👉 選 A、D。",
+"1-13":"這題要挑『說錯的』。<br>(B)錯：純物質也能再拆出別的純物質（雙氧水能拆出氧氣）。<br>(D)錯：是固體液體氣體，看溫度和壓力決定，跟純不純沒關係。<br>(E)錯：看起來均勻的也可能是綜合的（糖水很均勻但是混合物）。<br>👉 選 B、D、E。",
+"1-14":"蒸餾紅墨水 = 把紅墨水煮開，收集冒出的蒸氣再冷卻變回水。<br>(A)靠不同東西『幾度會沸騰』分開。✔<br>(B)丟幾顆沸石，避免暴衝噴出來（像煮綠豆湯放湯匙防溢）。✔<br>(D)收到的主要是乾淨的水。✔<br>(C)錯：冷卻水要『從下面進、上面出』才涼得均勻。<br>👉 選 A、B、D。",
+"1-15":"油跟水處不來（油不溶於水），但油跟酒精是好朋友（很好溶）。<br>層析時，色素會跟著它喜歡的液體一起跑。油溶色素在酒精裡跑得快，因為酒精帶得動它。<br>👉 答案：在 95% 酒精裡跑比較快。",
+"1-16":"管口用鋁箔紙蓋住，是為了讓管子裡『空氣濕濕的狀態保持一樣』（不要一下乾一下濕）。<br>就像養青蛙的箱子要蓋蓋子保持濕度，色素爬升的速度才會穩定、不會亂跳。<br>👉 答案：維持管內蒸氣飽和恆定，減少誤差。",
+
+// ===== 第 2 回 =====
+"2-1":"同一種東西（二氧化碳），不管你從哪裡生出來，裡面碳和氧的比例永遠一樣。<br>就像不管哪家工廠做的『原味餅乾』，麵粉和糖的比例都固定一樣，這叫定比定律。<br>👉 選 B。",
+"2-2":"CuSO₄ 裡面的三種積木永遠照同一個比例牽手：銅:硫:氧 = 64:32:64 = 2:1:2。<br>就像每個『三色冰淇淋』永遠是 2 球草莓:1 球香草:2 球巧克力，不會變。<br>👉 選 D（2:1:2）。",
+"2-3":"同樣大小的房間（同體積），裝越多人代表每個人越輕。<br>氧氣 1 升重 0.64；某氣體要 2 升才 0.64，代表它同樣 1 升只有一半重 → 它比氧氣輕一半 → 分子量 16 → 是甲烷 CH₄。<br>👉 選 C。",
+"2-4":"4.6 克乙醇 = 0.1 盒。每盒乙醇裡有 2 個碳、6 個氫、1 個氧。<br>(C)說氫有 0.5 → 錯！應該是 0.1×6 = 0.6 個氫。<br>就像每盒餅乾有 6 片，0.1 盒就是 0.6 片，不是 0.5 片。<br>👉 選 C（這句是錯的）。",
+"2-5":"氖有兩種：輕的(20)和重的(22)，平均起來是 20.2，很靠近輕的那邊。<br>代表『輕的佔超多、重的只有一點點』。算出來是輕:重 = 9:1。<br>就像一堆糖，平均重量靠近小糖，代表小糖佔九成。<br>👉 選 E（9:1）。",
+"2-6":"用小球（α粒子）去撞鈹，結果撞出碳，還飛出一顆『沒有電、質量是 1』的小球。<br>沒電又有重量的小球 = 中子。這就是科學家發現中子的故事。<br>👉 選 D 中子。",
+"2-7":"第 118 號元素 Og 住在週期表『最右邊那一直行』，那一行都是很孤僻、不愛跟別人反應的鈍氣。<br>選項裡 Ar（氬）也住那一行，是同一家人。<br>👉 選 E。",
+"2-8":"八隅體 = 每個原子最外圈想湊滿 8 顆電子才滿足（像集點集滿 8 點）。<br>NO₂ 和 NO 這兩個，氮的點『集不滿、缺一顆單身電子』，所以不乖。<br>👉 有 2 種不符合，選 A。",
+"2-9":"(B)說錯了：電解質燒成液體『不一定』能導電。<br>像硫酸、鹽酸這種，本身純純的液體時是安靜的分子，要泡進水裡拆成離子才會導電。<br>就像乾電池要放進水裡的比喻——沒拆開就不通電。<br>👉 選 B（這句錯）。",
+"2-10":"兩杯白粉，一杯糖一杯鹽，怎麼分？<br>泡水後『通電看看』：鹽水會導電（燈會亮），糖水不導電（燈不亮）。因為鹽會拆成帶電的離子，糖不會。<br>👉 選 C 測導電度。",
+"2-11":"(E)說錯了：硫酸是靠『共用電子（共價鍵）』組成的分子，不是離子做的。<br>它雖然泡水後會拆開導電，但那不代表它本身是離子化合物。<br>就像積木用膠水黏（共價），不是用磁鐵吸（離子）。<br>👉 選 E（這句錯）。",
+"2-12":"倍比定律 = 『同樣兩種積木』可以拼出好幾種不同的東西。<br>(A)CO 和 CO₂ 都只用碳和氧兩種積木拼。✔<br>(D)N₂O 和 NO₂ 都只用氮和氧兩種積木拼。✔<br>👉 選 A、D。",
+"2-13":"(C)同樣房間大小裝的人數一樣多（同溫同壓，體積比=分子數比）。✔<br>(E)2CO+O₂→2CO₂，體積比就是 2:1:2。✔<br>👉 選 C、E。就像食譜比例：2 杯麵粉配 1 杯水做 2 個蛋糕。",
+"2-14":"Ca²⁺ 和 Cl⁻ 這兩個，雖然是不同人，但身上帶的電子數量一樣多（都 18 顆）。<br>電子一樣多 → 排隊方式也一樣。<br>就像兩個不同的小朋友，手上都拿 18 顆彈珠、排法一樣。<br>👉 選 A、C。",
+"2-15":"(A)東西照『會不會導電』分成三類：金屬、非金屬、中間派。✔<br>(D)矽、鍺、銻是中間派，會做半導體（電腦晶片的材料）。✔<br>(E)鋰鈉鉀亮晶晶像金屬、常溫是固體。✔<br>👉 選 A、D、E。",
+"2-16":"先把號碼翻成名字：甲=氮、乙=鈉、丙=矽、丁=氯、戊=氬、己=鈣。<br>(A)鈉最愛丟掉 1 顆電子變 Na⁺。✔<br>(C)矽和氯手牽手是共用電子（共價）。✔<br>(E)氮最外圈有 5 顆電子。✔<br>👉 選 A、C、E。",
+"2-17":"三種晶體積木堆：<br>A 是黑白球交錯排 = 鹽（NaCl）。<br>B 每個點是一小顆分子 = 乾冰（CO₂）。<br>C 只有一種原子、像四腳架連起來 = 矽。<br>👉 B 是乾冰、C 是矽。",
+"2-18":"A 是鹽：靠『一個要電子、一個給電子』互相吸住 = 離子鍵（像磁鐵正負相吸）。<br>C 是矽：大家『共用電子』手牽手 = 共價鍵。<br>👉 A 離子鍵、C 共價鍵。",
+"2-19":"C（矽）整塊都是超強的手牽手（共價網狀），要拆開超難，所以要燒到超高溫才會融化。<br>就像一整片手牽手牽超緊的人牆，最難拆散。<br>👉 熔點最高的是 C。",
+"2-20":"A（鹽）平常固體時，離子被綁住不能動，不導電。<br>但一旦『融化』或『泡進水』，離子就自由亂跑了，就能導電。<br>就像冰塊裡的水結住不能流，融化後才能到處流。<br>👉 選 A（NaCl）。",
+"2-21":"B（乾冰）裡面每顆 CO₂ 是各自獨立的小分子，彼此只有『輕輕靠著』的微弱力氣。<br>就像一盤沒有黏在一起、只是靠很近的小珠子，很容易撥開。<br>👉 作用力最弱的是 B。",
+};
+
+// 幼兒園白話 — 第 3、4 回
+Object.assign(BABY, {
+// ===== 第 3 回 =====
+"3-1":"東西燒完只跑出二氧化碳和水。<br>有二氧化碳 → 一定有『碳』；有水 → 一定有『氫』。<br>但氧可能是空氣自己帶來的，也可能東西本來就有，看不出來 → 氧『可能有可能沒有』。<br>就像烤肉燒完有煙有水氣，你知道肉有碳有氫，但不確定它本來含不含氧。<br>👉 選 B。",
+"3-2":"這是拆積木要對數量：左邊有多少個原子，右邊就要補齊一樣多。<br>算一算發現右邊還缺『2 個氫和 1 個氧』沒地方去 → 剛好湊成一個水（H₂O）。<br>👉 Y 就是水，選 B。",
+"3-3":"苯甲酸裡氫『只佔全部重量的 5%』很輕。<br>用這個 5% 回推有幾個氫，算出來是 6 個。<br>就像知道一盒餅乾裡葡萄乾只佔 5% 重，回推有幾顆葡萄乾。<br>👉 n=6，選 D。",
+"3-4":"一整顆 SnF₂ 裡，氟佔的重量比例算出來大約是 6 克。<br>就像知道一顆綜合糖果球裡『草莓那部分』佔多重，直接照比例分。<br>👉 約 6 克，選 B。",
+"3-5":"先算碳、氫、氧各幾個 → 得到最簡單比例 CH₂O（1 碳 2 氫 1 氧）。<br>但真正的分子比較大（分子量 90），是這個小單位的 3 倍 → C₃H₆O₃。<br>就像最小單位是『1 組樂高』，實際是 3 組疊起來。<br>👉 選 C。",
+"3-6":"這是『燒東西測成分』的裝置。<br>(A)對：裡面放 CuO，像個補刀高手，把沒燒乾淨的再燒到全乾淨，確保燒得徹底。<br>其他選項把管子裝的東西或順序講錯了。<br>👉 選 A。",
+"3-7":"氣體先經過『甲管』，甲管專門吸水（把水擦掉）。<br>所以過了甲管後，水不見了，只剩下『還沒被抓走的二氧化碳』和『多出來的氧氣』。<br>👉 同時有 O₂ 和 CO₂，選 D。",
+"3-8":"用兩管抓到的水和二氧化碳，回推東西裡有多少碳、氫、氧。<br>算出比例 1:2:1（CH₂O），再看分子量 60 是它的 2 倍 → C₂H₄O₂。<br>👉 選 B。（這其實就是醋酸）",
+"3-9":"示性式 = 化學式裡『特別把重要的小尾巴（官能基）秀出來』。<br>甘油寫成 C₃H₅(OH)₃，那個 (OH)₃ 就是特地秀出『它有 3 個 OH 小尾巴』。<br>就像自我介紹特別強調『我戴了 3 個蝴蝶結』。<br>👉 選 C。",
+"3-10":"有些東西寫出來時，原子數量已經是『最簡單、不能再約分』的比例了。<br>H₂O 就是這種：2 氫 1 氧已經最簡單，沒辦法再縮小。<br>其他像 C₂H₆ 可以縮成 CH₃，就不算。<br>👉 選 D（H₂O）。",
+"3-11":"10 份 A₂ 配 30 份 B₂，全部反應後，數一數原子重新組合成 AB₃（1 個 A 配 3 個 B）。<br>就像 10 個哥哥配 30 個弟弟，每個哥哥牽 3 個弟弟，剛好牽完。<br>👉 甲是 AB₃，選 C。",
+"3-12":"把上一題的數字通通除以 10，變成最簡單的食譜：<br>A₂ + 3B₂ → 2AB₃。<br>就像把『10 人份食譜』縮小成『1 人份』方便寫。<br>👉 選 D。",
+"3-13":"這些東西沒有『一顆一顆獨立的分子』，只能寫出最簡單的比例（實驗式）。<br>NaCl（鹽）、SiO₂（石英）是一大片連在一起的，Hg（水銀）是金屬。<br>它們都只能寫最簡比。<br>👉 選 A、B、E。",
+"3-14":"示性式 = 有把『特別的小尾巴（官能基）』秀出來。<br>(A)丙酮秀出中間的 C=O（羰基）。<br>(C)甲醇秀出 OH（羥基）。<br>👉 選 A、C。就像特地標出『這裡有個把手』。",
+"3-15":"(A)鹽這種離子做的東西，沒有獨立分子，用最簡比表示。✔<br>(B)分子式一樣 → 原子數一樣 → 縮到最簡也一定一樣。✔<br>👉 選 A、B。",
+"3-16":"猜謎翻名字：A=氧、B=氮、C=氫、D=碳。<br>(B)B 是氮，符號 N。✔<br>(D)二氧化碳可以用『排水法』收集得比較純。✔<br>(E)尿素 CO(NH₂)₂ 剛好含這四種元素，是肥料。✔<br>👉 選 B、D、E。",
+
+// ===== 第 4 回 =====
+"4-1":"硫酸銅晶體裡『藏了幾個水寶寶』？<br>加熱把水趕跑後只剩 82% 重，代表被趕走的水佔一些重量。<br>回推發現藏了 2 個水寶寶。<br>就像葡萄乾麵包烤乾後變輕，回推本來含多少水。<br>👉 選 B（2 個）。",
+"4-2":"40 克硝酸銨 = 0.5 盒。照食譜比例，0.5 盒會噴出水、氮氣、氧氣加起來共 1.75 盒的氣體。<br>就像 0.5 包爆米花玉米，爆完會變出一堆爆米花。<br>👉 選 A（1.75）。",
+"4-3":"三種材料一起反應，誰『先用完』誰就是限量（決定能做多少）。<br>算一算銀最少、最先用光，所以銀是限量的那個。<br>就像做三明治，麵包只剩一點點，麵包先用完就不能再做了。<br>👉 選 A（Ag）。",
+"4-4":"把積木一個一個加重量：8 個碳 + 8 個氮 + 16 個氧 = 464。<br>就像算一盒綜合積木總共多重。<br>👉 選 D（464）。",
+"4-5":"這炸藥爆炸後變出兩種無毒氣體，其中一種是『空氣裡最多的』那個 = 氮氣。<br>檢查積木數量有對上：C₈N₈O₁₆ → 4N₂ + 8CO₂。<br>👉 選 A。",
+"4-6":"醋酸只有 0.5 盒（比較少、先用完），所以最多只能做出 0.5 盒的乙酸乙酯。<br>但實際只拿到 11 克，算一算只達成 25%。<br>就像食譜說最多能做 44 個餅乾，結果只成功做出 11 個 → 成功率 25%。<br>👉 選 D（25%）。",
+"4-7":"這反應是『吸熱』（要吸 10.5 熱量才能把水變成水蒸氣）。<br>吸熱 → 產物（水蒸氣）能量要『比較高』，箭頭往上，ΔH 是正的。<br>四張圖的高低或方向都有錯，所以選『以上皆非』。<br>👉 選 E。就像爬樓梯要花力氣往上，能量變高。",
+"4-8":"(C)說反了：反應熱是『產物 − 反應物』，題目寫成反應物減產物，方向錯。<br>就像算身高變化要用『現在 − 以前』，不能倒過來。<br>👉 選 C（這句錯）。",
+"4-9":"這反應吸熱（ΔH 是正的，要吃進 133 的熱）。<br>(C)對：1 盒碳反應要吸 133 的熱。<br>(A)錯是吸熱不是放熱；(D)3 盒碳是吸熱 399，不是放熱。<br>就像 1 塊冰要吸熱才融化。<br>👉 選 C。",
+"4-10":"硝酸鉀溶進水，水溫『變冷了』（37→31 度），代表它吸走了熱。<br>用『變冷多少 × 水的量』算出吸了多少熱，再除以硝酸鉀的量 → 約 34。<br>就像手心放一顆會吸熱的糖，手會覺得涼。<br>👉 選 E（34）。",
+"4-11":"氫氣 7 盒、氧氣 2.5 盒。照食譜 2 氫配 1 氧，氧氣比較少會先用完（氧是限量）。<br>2.5 盒氧配掉 5 盒氫，做出 5 盒水，氫還剩 2 盒。<br>👉 選 B、D。",
+"4-12":"放出 484 的熱做出 2 盒水。<br>(A)做 1 盒水就放一半 = 242。✔<br>(B)放熱會讓旁邊變溫暖。✔<br>(D)如果變成液態水，還會再多放一點熱，所以超過 484。✔<br>👉 選 A、B、D。就像暖暖包放熱讓手變暖。",
+"4-13":"把每個東西換算成幾盒，再乘以『每盒放的熱』，比大小。<br>算完排名：丙(319.5) > 丁(225) > 乙(188) > 甲(136)。<br>(B)丙>乙✔ (C)丁>甲✔ (E)丙>丁✔<br>👉 選 B、C、E。",
+"4-14":"圖裡溫度爬到最高的那一點 = 酸和鹼剛好『打平中和』。<br>只加了 15 克還沒到最高點 → 酸還太多（有剩）。<br>所以杯裡有：中和生出的鹽、剩下的酸、還有水。<br>👉 選 A。就像糖還沒加夠，還是偏鹹。",
+"4-15":"從 0 到 20 克時溫度升了 12 度（20→32），是直直往上升。<br>加 10 克大約走一半路 → 升約 6 度 → 20+6 = 26 度。<br>就像走樓梯走一半，高度也大概到一半。<br>👉 選 B（26）。",
+});
+
+// 幼兒園白話 — 第 5、6 回
+Object.assign(BABY, {
+// ===== 第 5 回 =====
+"5-1":"真溶液 = 東西完全溶進水裡、透明看不到顆粒（像糖水）。<br>乳液 = 裡面有小油滴飄著、白白霧霧的，不透明（像牛奶），顆粒比較大，不算真溶液。<br>👉 選 D（乳液）。",
+"5-2":"溶劑 = 量最多的那個（當『杯子』），溶質 = 量少的那個（當『放進去的東西』）。<br>(A)說錯了：98% 硫酸裡，硫酸最多應該當杯子（溶劑），水才是被放進去的。<br>👉 選 A（這句錯）。",
+"5-3":"Na₂SO₄ 泡水會拆成 2 個 Na⁺ 和 1 個 SO₄²⁻。<br>因為一個拆出兩個鈉，所以鈉的濃度是 2 倍 → [Na⁺]=2M。<br>就像 1 個媽媽帶 2 個小孩，小孩人數是媽媽的 2 倍。<br>👉 選 A。",
+"5-4":"想讓硝酸鉀『更容易溶進水』→ 把水加熱（變溫水）。<br>熱水比冷水更會溶東西（像熱水泡糖比冷水快溶）。<br>👉 選 A 升溫。",
+"5-5":"房間裡空氣總重很重（好幾噸），二氧化碳只有 4.4 公斤，佔的比例很小很小。<br>算成 ppm（百萬分之幾）大約 785。<br>就像一大桶水裡滴幾滴墨水，比例很淡。<br>👉 選 A（785）。",
+"5-6":"本來有 135 克鹽在裡面，再倒進 200 克鹽 → 變 335 克鹽，水沒變。<br>算新濃度 = 鹽 335 ÷ 全部 500 = 67%。<br>就像本來的鹹湯再加一大把鹽，變更鹹。<br>👉 選 C（67%）。",
+"5-7":"把 15% 和 10% 兩杯混成 12%。<br>12 比較靠近 10 那邊，代表 10% 的要多加一點。算出來 15%:10% = 2:3。<br>就像調水溫，想要偏涼，冷水就要多倒一點。<br>👉 選 A（2/3）。",
+"5-8":"0.1 盒銅，食譜說 1 個銅要配 4 個硝酸 → 需要 0.4 盒硝酸。<br>硝酸濃度是每公升 2 盒，要裝 0.4 盒就需要 0.2 公升 = 200 毫升。<br>就像 1 杯果汁要 4 顆檸檬，算出總共要幾顆再換算成幾瓶。<br>👉 選 D（200）。",
+"5-9":"ppm 換成 % 很簡單：往左移 4 格。<br>8500 ppm → 0.85%。<br>就像把『百萬分之』換成『百分之』縮小一萬倍。<br>👉 選 B（0.85%）。",
+"5-10":"稀釋 = 加水變淡，但『鹽的總量沒變』。<br>本來 12M 的 200 毫升，加水變成 4 公升（變胖 20 倍），濃度就變淡 20 倍 → 0.6M。<br>就像一杯濃果汁加很多水，變大杯但變淡。<br>👉 選 C（0.6）。",
+"5-11":"假設拿 1 公升這種濃硫酸，秤一秤裡面純硫酸有 18 盒 → 濃度就是 18 M。<br>就像數一大瓶飲料裡有幾份糖。<br>👉 選 A（18）。",
+"5-12":"要『很準地』配出剛好 100 毫升的標準水溶液，要用容量瓶（專門量精準體積的瓶子）。<br>就像量藥水要用有精準刻度的量杯，不能隨便拿碗。<br>👉 選 D 容量瓶。",
+"5-13":"照理說濃度應該剛好 25%，但實測『比 25% 還濃』。<br>比較濃 = 要嘛藥(NaOH)變多、要嘛水變少。<br>(C)倒水的時候濺出去一些 → 水變少 → 剩下的變更濃。<br>就像泡飲料時水灑掉一些，剩下的就變更甜更濃。<br>👉 選 C。",
+"5-14":"能導電 = 裡面要有『會自由跑的離子』。<br>(A)融化的鹽，離子可以跑 → 導電。<br>(E)鹽酸水，拆成 H⁺ 和 Cl⁻ → 導電。<br>👉 選 A、E。乾乾的分子（像酒精、二氧化碳）不導電。",
+"5-15":"(A)顆粒超小（<1奈米）→ 真溶液，像糖水透明。<br>(B)顆粒中等 → 膠體，像豆漿。<br>(C)膠體裡溶的東西叫『分散質』。<br>👉 選 A、B、C。",
+"5-16":"(C)溫度升高還一直掉出鹽渣 → 代表它一直維持在『裝滿滿』的飽和狀態。<br>(D)固定溫度時，飽和溶液的濃度是固定的，一定比沒裝滿的濃。<br>👉 選 C、D。",
+"5-17":"把兩杯糖水倒在一起，只是合併：<br>(B)糖的總重不變。(C)水的總重不變。<br>但體積不一定剛好相加（混合會有縮水），密度也會變。<br>👉 選 B、C。就像兩杯果汁倒一起，糖和水總量不變。",
+"5-18":"10% 硫酸 = 每 100 克溶液裡有 10 克硫酸、90 克水。<br>(A)硫酸:水 = 10:90 = 1:9 ✔<br>(C)90 克水配 10 克硫酸 ✔<br>(D)100 克溶液含 10 克硫酸 ✔<br>👉 選 A、C、D。",
+"5-19":"0.0005% 換成 ppm，往右移 4 格 → 5 ppm。<br>就像很淡很淡的味道，用『百萬分之』來數比較清楚。<br>👉 選 C（5）。",
+"5-20":"每天要吃 60 克蛋白質，豆漿裡蛋白質只佔 3.6%（很少）。<br>要湊滿 60 克，得喝好多 → 算出來大約 1.4 公升。<br>就像想吃夠葡萄乾，但麵包裡葡萄乾很少，得吃好幾個。<br>👉 選 C（1.4）。",
+
+// ===== 第 6 回 =====
+"6-1":"重量可以直接相加（1克+1克=2克），但『體積』不一定！<br>酒精和水倒一起，小分子會鑽進大分子的縫隙，總體積會『縮水』變不到 2 毫升。<br>就像一杯彈珠加一杯沙子，沙子鑽進縫，合起來不到兩杯。<br>👉 選 B。",
+"6-2":"想讓濃度變兩倍（20%→40%），鹽不動，把水蒸發掉一些。<br>算出來要蒸發掉 100 克水，剛好是『原本整杯 200 克的一半』。<br>👉 選 C。注意不是『水的一半』喔，是『整杯的一半』。",
+"6-3":"溶解度 20 = 每 100 克水最多溶 20 克。<br>所以飽和時，溶質:整杯 = 20:120。720 克整杯裡，溶質佔 120 克。<br>就像每杯飲料固定配 20 顆珍珠，大桶要配幾顆照比例算。<br>👉 選 D（120）。",
+"6-4":"看圖：50 度時每 100 克水能溶 80 克。<br>飽和時溶質:整杯 = 80:180。90 克整杯裡，甲佔 40 克。<br>👉 選 B（40）。",
+"6-5":"熱的時候水溶得下 40 克甲；冷卻到 10 度後，水只溶得下 10 克了。<br>多出來的 40−10 = 30 克就『掉出來』變成渣渣。<br>就像熱糖水冷掉後，多的糖會結晶沉底。<br>👉 選 D（30）。",
+"6-6":"pH 12 的鹼水，加水稀釋 100 倍變淡，pH 從 12 降到 10。<br>但再怎麼加水，鹼水也不會變成酸（不會低於 7）。<br>就像很鹹的湯加水變淡，但永遠不會變甜。<br>👉 選 C（10）。",
+"6-7":"三張試紙就像三個溫度計，各自框出一個範圍。<br>三個條件交集後，pH 卡在 5.1~5.5 之間。<br>只有 5×10⁻⁶（pH 約 5.3）剛好落在這個小框框裡。<br>👉 選 C。",
+"6-8":"想測試蝶豆花能不能當『酸鹼變色筆』，要拿『一個酸的』和『一個鹼的』來試才看得出變色。<br>(B)食醋是酸、通樂(NaOH)是鹼，一酸一鹼最適合。<br>👉 選 B。",
+"6-9":"氧化劑 = 『搶電子的高手』。誰能搶贏誰，就排出強弱。<br>三個反應像三場比賽，比完排名：Cl₂ 是搶電子冠軍。<br>👉 選 C（Cl₂）。",
+"6-10":"鐵絲丟進藍色硫酸銅水裡，鐵把銅『擠出來』，紅紅的銅黏到鐵絲上（像鐵絲長毛），藍色也變淡。<br>(D)對：藍色水就是硫酸銅。<br>👉 選 D。這是鐵搶了銅的位置的魔術。",
+"6-11":"喝汽水打嗝跑出的氣 = 二氧化碳（本來壓進飲料裡的氣泡）。<br>(E)胃裡溫溫的，氣體在溫的地方比較待不住，就跑出來打嗝。<br>就像可樂放溫了氣會跑光。<br>👉 選 C、E。",
+"6-12":"杯子開著放，水慢慢蒸發，多的糖掉出來變渣。<br>但剩下的糖水『還是裝滿滿的飽和狀態』，而且固定溫度下濃度不變。<br>👉 選 A、C。就像海水曬鹽，剩下的還是很鹹的飽和鹽水。",
+"6-13":"泡水變酸的：<br>(A)碳酸 ✔ (C)二氧化硫泡水變亞硫酸 ✔ (E)醋酸 ✔<br>(B)小蘇打是鹼、(D)氨是鹼，不算。<br>👉 選 A、C、E。",
+"6-14":"胃酸太多會咬胃壁，胃藥要用『溫和的鹼』去中和它（不能太兇）。<br>(C)氫氧化鋁、(D)氫氧化鎂 都是溫和的鹼，剛剛好。<br>太強的鹼（氫氧化鈉）會傷胃，不能用。<br>👉 選 C、D。",
+"6-15":"氧化還原 = 有原子的『身價（氧化數）』改變了。<br>(B)氧和硫身價有變。(D)氯一半變高一半變低（自己跟自己換）。<br>👉 選 B、D。像有人升職、有人降職才算。",
+"6-16":"每片藥 100 毫克，維生素 C 只佔 10% → 每片含 10 毫克。<br>一次吃 2 片 = 20 毫克。要湊 60 毫克 → 吃 3 次。<br>👉 選 C（3）。",
+"6-17":"維生素 C 加熱到滾，紅色不見了 → 代表它『怕熱、一燙就壞掉』。<br>所以煮菜要『低溫煮』才不會把維生素 C 煮壞。<br>就像冰淇淋怕熱，要小心別讓它化掉。<br>👉 選 C。",
+"6-18":"pH 就是把 [H⁺] 的『幾次方』翻出來。<br>[H⁺]=3×10⁻³，算出 pH = 3 − 0.5 = 2.5。<br>👉 選 A（2.5）。數字越小代表越酸。",
+});
+
+// 幼兒園白話 — 第 7、8 回
+Object.assign(BABY, {
+// ===== 第 7 回 =====
+"7-1":"(D)對：澱粉會被身體拆成葡萄糖、蛋白質拆成胺基酸、油拆成脂肪酸和甘油。<br>就像積木在肚子裡被拆成一小塊一小塊才能吸收。<br>(A)纖維素拆不動、(B)有些胺基酸身體做不出來要用吃的、(E)只吃一種不健康。<br>👉 選 D。",
+"7-2":"豆腐是黃豆做的，黃豆最有名的就是『蛋白質』很多（長肌肉用的）。<br>就像牛奶最有名的是鈣，豆腐最有名的是蛋白質。<br>👉 選 C 蛋白質。",
+"7-3":"(A)說錯了：澱粉和纖維素雖然長得像，但『長度不一樣』（一個短一個超長），所以不是同分異構體。<br>就像同樣的積木，一條排 10 個、一條排 1000 個，就不是同一種東西。<br>👉 選 A（這句錯）。",
+"7-4":"線索：固體、比水重、不溶水、燒完只有二氧化碳和水、碰濃硫酸變黑。<br>燒完有 CO₂ 和水 → 含碳和氫；碰硫酸變黑 → 是碳水化合物；又是固體不溶水 → 最像『植物纖維』。<br>👉 選 C。像偵探照線索找兇手。",
+"7-5":"清潔劑要有『一頭愛油、一頭愛水』才能把油汙拉走。<br>乙有長長的油尾巴（愛油）又帶負電（愛水），配上丙（Na⁺）就是好用的肥皂。<br>👉 選 C（乙、丙）。像一隻手抓油、一隻手抓水。",
+"7-6":"硬水裡有鈣鎂離子（搗蛋鬼）。<br>肥皂遇到它們會結成『白白的渣』失效；但合成清潔劑的渣『能溶在水裡』，所以還是有效。<br>👉 選 D。就像肥皂在硬水裡會結塊，合成的不會。",
+"7-7":"(B)對：小蘇打（NaHCO₃）是『快速』中和胃酸的胃藥。<br>其他選項把藥配錯了（磺胺是消炎、青黴素是抗生素、阿司匹靈不是麻醉藥）。<br>👉 選 B。",
+"7-8":"做肥皂需要：油、鹼（NaOH）、濃鹽水（把肥皂撈出來）。<br>『硫酸』是酸，不但用不到還會搗亂 → 不需要。<br>👉 選 A（硫酸不必要）。",
+"7-9":"(A)說錯了：食鹽水是拿來『把肥皂和甘油分開』用的，不能拿來洗油汙（它不會去油）。<br>要去油得用會乳化的清潔劑。<br>👉 選 A（這句錯）。",
+"7-10":"海水是硬水（有鈣鎂搗蛋鬼）。<br>『香皂』遇到它們會結渣失效，洗不乾淨。其他合成清潔劑還可以用。<br>👉 選 A（香皂沒用）。",
+"7-11":"(D)麥芽糖和脂肪都能被『拆開（水解）』。✔<br>(E)醣類不一定甜（澱粉、纖維素就不甜）。✔<br>(A)蛋白質含氮，燒完不只有 CO₂ 和水。(B)脂肪是小分子不是高分子。(C)橄欖油含氧不是只有碳氫。<br>👉 選 D、E。",
+"7-12":"(C)核酸分兩種：RNA 和 DNA。✔<br>(D)核苷酸裡有『五個碳的糖』。✔<br>(E)DNA 是基因的基本材料。✔<br>(A)裡面是磷酸不是硫酸。(B)雙螺旋是 DNA 不是 RNA。<br>👉 選 C、D、E。",
+"7-13":"(A)蔗糖是『兩顆糖牽手』= 雙醣。✔<br>(C)單醣（一顆糖）能在身體裡燒出能量。✔<br>(B)葡萄糖不是果糖（是雙胞胎但不同人）。(D)阿斯巴甜不是單醣。(E)纖維素人體拆不動。<br>👉 選 A、C。",
+"7-14":"(A)油脂加強鹼可以做出肥皂（皂化）。✔<br>(C)肥皂和清潔劑都是『一頭愛水、一頭愛油』。✔<br>(B)肥皂其實『容易』在硬水結渣。(D)軟性清潔劑是直鏈才好分解。(E)磷酸鹽會害藻類爆長（優養化）。<br>👉 選 A、C。",
+"7-15":"(B)青黴素=盤尼西林=抗生素。✔<br>(C)氫氧化鋁能中和胃酸（制酸）。✔<br>(E)阿司匹靈學名叫乙醯柳酸。✔<br>(A)小蘇打是胃藥不是消炎藥。(D)磺胺是消炎不是止瀉。<br>👉 選 B、C、E。",
+"7-16":"糯米紙滴到碘液『變藍紫色』——這是澱粉的招牌反應！<br>所以這張紙跟澱粉是同一國的。<br>就像滴碘酒在飯上會變藍紫，證明有澱粉。<br>👉 選 C。",
+"7-17":"前一題發現透明紙的主角是澱粉，而『糯米』就是澱粉超多的東西。<br>所以能做出可以吃的透明紙的是糯米。<br>👉 選 A 糯米。",
+"7-18":"口水裡有『剪刀酵素』，把澱粉剪成一小顆一小顆的葡萄糖。<br>葡萄糖遇到本氏液加熱會變紅色，代表有葡萄糖跑出來了。<br>👉 選 B 葡萄糖。",
+"7-19":"碳水化合物碰濃硫酸會被『脫水』留下黑黑的碳，而且沒臭味代表沒有硫和氮。<br>所以這紙含碳、氫、氧三種。<br>就像糖碰硫酸會變一坨黑黑的碳。<br>👉 選 D（C、H、O）。",
+
+// ===== 第 8 回 =====
+"8-1":"再生能源 = 用不完、會一直長回來的（像太陽、風、植物）。<br>生質能是植物做的，會一直長 → 再生。<br>煤、石油、天然氣、核能都是『用完就沒了』。<br>👉 選 D 生質能。",
+"8-2":"氫氣雖然乾淨，但它『很愛爆炸又很難裝』（一不小心就轟一聲）。<br>所以還不敢大量拿來當家裡的燃料。<br>就像氣球裝氫氣很危險，容易爆。<br>👉 選 A。",
+"8-3":"(D)對：石油和天然氣主要是『碳和氫做的』。<br>(A)現在核電廠大多用核分裂不是核融合。(B)煤天然氣也不可再生。(C)太陽能發電量還不夠強。(E)風力看天氣不穩定。<br>👉 選 D。",
+"8-4":"對積木數量：反應後每個 Y 要含 1 個硫、2 個氧 → Y 是 SO₂。<br>就像數清楚左右兩邊的積木一樣多，回推 Y 是什麼。<br>👉 選 A（SO₂）。",
+"8-5":"原子經濟率高 = 『所有材料都變成想要的產品，沒有浪費、沒有垃圾』。<br>(C)反應後只生出一種東西，沒有副產品 → 最不浪費，經濟率最高。<br>就像做料理食材全用光、沒有廚餘。<br>👉 選 C。",
+"8-6":"(D)對：加明礬（硫酸鋁），鋁會形成黏黏的膠體，把水裡的小髒東西黏住一起沉到底。<br>就像磁鐵把散落的小鐵屑吸成一團。<br>👉 選 D。",
+"8-7":"導電度下降 = 把水裡的離子清掉。<br>乙（蒸餾）、丙（換成 H⁺和OH⁻結合成純水）、丁（逆滲透）都能清掉離子。<br>甲只是把鈣鎂換成鈉，離子還在，沒清掉。<br>👉 選 C（乙丙丁）。",
+"8-8":"溫室效應 = 二氧化碳像一層『棉被』，把地球放出的熱（紅外線）蓋住，散不出去，地球就變熱。<br>👉 選 B。就像蓋厚棉被會越睡越熱。",
+"8-9":"(A)說錯了：奈米二氧化鈦要靠『紫外光』才會啟動，不是紅外光。<br>就像有些玩具要照特定的光才會發亮。<br>👉 選 A（這句錯）。",
+"8-10":"(C)對：用光的波長換算能量，算出二氧化鈦要跨越的能量差大約 3.2。<br>(A)·OH 是搶電子的（氧化劑）不是還原劑。(D)沒光就沒效。(E)氧少一顆電子才那麼兇。<br>👉 選 C。",
+"8-11":"化學能→電能 = 要靠『燒東西』。<br>(C)燒煤、(E)燒垃圾，都是燒（化學反應）發電。<br>水力是水流、風力是風吹、太陽能是光，都不是燒的。<br>👉 選 C、E。",
+"8-12":"綠色化學 = 對地球溫柔、不製造垃圾。<br>(C)可分解的塑膠不會變垃圾山。✔<br>(E)原子用好用滿到 100%，一點都不浪費。✔<br>👉 選 C、E。",
+"8-13":"這題挑『說錯的』。<br>(A)錯：只要是純水，氫和氧的重量比永遠 1:8，不會不一樣。<br>(E)錯：活性碳只能吸臭味雜質，『沒辦法』把硬水變軟（清不掉鈣鎂）。<br>👉 選 A、E。",
+"8-14":"(A)硬水裡有很多東西 → 是混合物。✔<br>(B)硬水就是『含鈣或鎂的水』。✔<br>(C)加明礬只是讓髒東西沉澱，不會把硬水變軟。(E)含磷洗衣粉會害水優養化，不該加。<br>👉 選 A、B。",
+"8-15":"這題挑『說錯的』。<br>(A)錯：奈米碳管和 C₆₀ 都只有碳一種積木 → 是元素不是化合物。<br>(E)錯：奈米碳管會導電，不是絕緣體。<br>👉 選 A、E。",
+"8-16":"陽離子交換樹脂就像一個『只抓帶正電的離子』的磁鐵。<br>水裡帶正電的是 Na⁺ 和 Mg²⁺，會被抓走。<br>👉 選 D。就像只吸『正極』的磁鐵，把正的都吸掉。",
+"8-17":"第一關已經把『正電離子』抓光，只剩負電的 Cl⁻。<br>第二關要用『抓負電的樹脂（陰離子交換）』把 Cl⁻ 也換掉，最後就變乾淨的純水。<br>👉 選 A。像接力賽，一個抓正的、一個抓負的，全抓完就純淨了。",
+});
+
+</script>
+<script>
+/* ============ 狀態儲存（記憶體，非 localStorage）============ */
+const STORE = {}; // {qid: {answered:true, correct:bool, picked:[]}}
+let streak = 0;
+
+const TOTAL = EXAMS.reduce((s,e)=>s+e.questions.length,0);
+
+/* ============ 工具 ============ */
+const $ = s=>document.querySelector(s);
+const KEYS=["A","B","C","D","E","F"];
+function examStats(ex){
+  let done=0,correct=0;
+  ex.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.answered){done++;if(r.correct)correct++;}});
+  return {done,correct,total:ex.questions.length};
+}
+function globalStats(){
+  let done=0,correct=0;
+  EXAMS.forEach(e=>e.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.answered){done++;if(r.correct)correct++;}}));
+  return {done,correct};
+}
+
+/* ============ 首頁渲染 ============ */
+function renderHome(){
+  const g=globalStats();
+  $("#orbDone").textContent=g.done;
+  $("#orbTotal").textContent=TOTAL;
+  $("#orbAcc").textContent = g.done? Math.round(g.correct/g.done*100)+"%" : "—";
+  updateStreakChip();
+
+  const grid=$("#chapterGrid");
+  grid.innerHTML="";
+  EXAMS.forEach(ex=>{
+    const st=examStats(ex);
+    const pct=Math.round(st.done/st.total*100);
+    let tagClass="none",tagText="未開始";
+    if(st.done>0&&st.done<st.total){tagClass="part";tagText=st.done+"/"+st.total;}
+    if(st.done===st.total){tagClass="full";tagText="✓ 完成";}
+    const card=document.createElement("button");
+    card.className="chapter";
+    card.innerHTML=`
+      <span class="badge">${ex.id}</span>
+      <span class="done-tag ${tagClass}">${tagText}</span>
+      <h3>${ex.title}</h3>
+      <div class="meta">第 ${ex.id} 回 · 編號 ${ex.code} · 共 ${st.total} 題　·　原始得分 ${ex.score}</div>
+      <div class="bar"><i style="width:${pct}%"></i></div>`;
+    card.onclick=()=>startQuiz(ex.id);
+    grid.appendChild(card);
+  });
+}
+function updateStreakChip(){$("#streakChip").textContent="🔥 連對 "+streak;}
+
+/* ============ 測驗流程 ============ */
+let curExam=null, curIdx=0;
+
+function startQuiz(examId){
+  curExam=EXAMS.find(e=>e.id===examId);
+  curIdx=0;
+  $("#home").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#qhTitle").innerHTML=`第 ${curExam.id} 回<small>${curExam.title}</small>`;
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+function backHome(){
+  $("#quiz").classList.add("hidden");
+  $("#home").classList.remove("hidden");
+  renderHome();
+  window.scrollTo(0,0);
+}
+
+function renderQuestion(){
+  const q=curExam.questions[curIdx];
+  const n=curExam.questions.length;
+  $("#qbar").style.width=((curIdx)/n*100)+"%";
+  $("#qcount").textContent=`第 ${curIdx+1} / ${n} 題`;
+
+  const typeLabel={single:"單選題",multi:"多選題",essay:"問答題"}[q.type];
+  const mount=$("#cardMount");
+  mount.innerHTML="";
+  const card=document.createElement("div");
+  card.className="card";
+
+  let optHtml="";
+  if(q.type==="essay"){
+    optHtml=`<div id="essayBlock"></div>`;
+  }else{
+    optHtml=`<div class="options" id="opts">`+
+      q.options.map((o,i)=>`
+        <button class="opt" data-k="${KEYS[i]}">
+          <span class="key">${KEYS[i]}</span>
+          <span class="otext">${o}</span>
+          <span class="mark"></span>
+        </button>`).join("")+`</div>`;
+    if(q.type==="multi") optHtml+=`<div class="multi-hint">多選題 · 可選多個答案，選好後按「確認作答」</div>`;
+  }
+
+  card.innerHTML=`
+    <span class="qtype ${q.type}">${typeLabel}</span>
+    <div class="qstem">${q.q}</div>
+    ${q.figure?`<div class="figure"><b>◎ 圖片說明</b>${q.figure}</div>`:""}
+    ${optHtml}
+    <div class="actions" id="actionRow"></div>
+    <div id="explainMount"></div>`;
+  mount.appendChild(card);
+
+  // 已作答過 → 直接顯示結果
+  const prev=STORE[q.id];
+  if(prev&&prev.answered){
+    if(q.type==="essay"){ showEssay(q,true); }
+    else { restoreAnswered(q,prev); }
+  }else{
+    if(q.type==="essay"){ setupEssay(q); }
+    else { setupChoice(q); }
+  }
+}
+
+/* ---- 選擇題互動 ---- */
+let picked=[];
+function setupChoice(q){
+  picked=[];
+  const opts=[...document.querySelectorAll("#opts .opt")];
+  opts.forEach(op=>{
+    op.onclick=()=>{
+      const k=op.dataset.k;
+      if(q.type==="single"){
+        picked=[k];
+        opts.forEach(o=>o.classList.toggle("sel",o.dataset.k===k));
+      }else{
+        if(picked.includes(k)){picked=picked.filter(x=>x!==k);op.classList.remove("sel");}
+        else{picked.push(k);op.classList.add("sel");}
+      }
+      $("#confirmBtn").disabled=picked.length===0;
+    };
+  });
+  const row=$("#actionRow");
+  row.innerHTML=`<button class="btn primary" id="confirmBtn" disabled>確認作答</button>`;
+  $("#confirmBtn").onclick=()=>gradeChoice(q);
+}
+
+function gradeChoice(q){
+  const correctSet=q.answer.slice().sort().join("");
+  const pickSet=picked.slice().sort().join("");
+  const isCorrect = correctSet===pickSet;
+  STORE[q.id]={answered:true,correct:isCorrect,picked:picked.slice()};
+
+  const opts=[...document.querySelectorAll("#opts .opt")];
+  opts.forEach(op=>{
+    op.classList.add("locked");op.classList.remove("sel");
+    const k=op.dataset.k;
+    const mark=op.querySelector(".mark");
+    if(q.answer.includes(k)){op.classList.add("correct");mark.textContent="✓";}
+    else if(picked.includes(k)){op.classList.add("wrong");mark.textContent="✗";}
+  });
+
+  if(isCorrect){streak++;fireBubbles();showToast(pickPraise(),"🎉");}
+  else{streak=0;}
+  updateStreakChip();
+
+  showExplain(q,isCorrect);
+  buildNextRow();
+}
+
+function restoreAnswered(q,prev){
+  const opts=[...document.querySelectorAll("#opts .opt")];
+  opts.forEach(op=>{
+    op.classList.add("locked");
+    const k=op.dataset.k;const mark=op.querySelector(".mark");
+    if(q.answer.includes(k)){op.classList.add("correct");mark.textContent="✓";}
+    else if(prev.picked&&prev.picked.includes(k)){op.classList.add("wrong");mark.textContent="✗";}
+  });
+  showExplain(q,prev.correct);
+  buildNextRow();
+}
+
+/* ---- 問答題 ---- */
+function setupEssay(q){
+  const row=$("#actionRow");
+  row.innerHTML=`<button class="btn primary" id="revealBtn">我想好了 · 看解答</button>`;
+  $("#revealBtn").onclick=()=>{
+    STORE[q.id]={answered:true,correct:true,picked:[]}; // 問答題以「已學習」計
+    streak++; updateStreakChip(); fireBubbles(); showToast("學會一題！","📖");
+    showEssay(q,false);
+  };
+}
+function showEssay(q,silent){
+  const eb=$("#essayBlock")||document.createElement("div");
+  const block=$("#cardMount");
+  $("#actionRow").innerHTML="";
+  const ansHtml=`<div class="essay-ans"><div class="lab">參考答案</div><div class="val">${q.answer.join("；")}</div></div>`;
+  const mount=$("#explainMount");
+  mount.innerHTML=ansHtml;
+  showExplain(q,true,true);
+  buildNextRow();
+}
+
+/* ---- 詳解 ---- */
+function showExplain(q,ok,isEssay){
+  const mount=$("#explainMount");
+  const div=document.createElement("div");
+  div.className="explain "+(ok?"ok":"no");
+  let ansLine="";
+  if(!isEssay){
+    ansLine=`<div class="ansline">正解：<em>${q.answer.join("、")}</em></div>`;
+  }
+  div.innerHTML=`
+    <div class="head">${ok?(isEssay?"📖 學習重點":"✓ 答對了！"):"✗ 再看一次就懂"}</div>
+    <div class="body">${ansLine}${q.explain}</div>`;
+  mount.appendChild(div);
+
+  // 🍼 講白話 按鈕（點了才展開）
+  if(BABY[q.id]){
+    const babyWrap=document.createElement("div");
+    babyWrap.innerHTML=`<button class="baby-btn" type="button">🍼 聽不懂？點我講白話</button>`;
+    const btn=babyWrap.querySelector(".baby-btn");
+    btn.onclick=()=>{
+      if(babyWrap.querySelector(".baby-panel")){
+        babyWrap.querySelector(".baby-panel").remove();
+        btn.innerHTML="🍼 聽不懂？點我講白話";
+        return;
+      }
+      const panel=document.createElement("div");
+      panel.className="baby-panel";
+      panel.innerHTML=`
+        <div class="bhead">🍼 白話版 · 用生活比喻講給你聽</div>
+        <div class="bbody">${BABY[q.id]}</div>`;
+      babyWrap.appendChild(panel);
+      btn.innerHTML="🍼 收起白話版";
+    };
+    mount.appendChild(babyWrap);
+  }
+}
+
+/* ---- 下一題 / 完成 ---- */
+function buildNextRow(){
+  const row=$("#actionRow");
+  const isLast=curIdx===curExam.questions.length-1;
+  row.innerHTML=`
+    ${curIdx>0?`<button class="btn ghost" id="prevBtn">← 上一題</button>`:""}
+    <button class="btn primary" id="nextBtn">${isLast?"看成績 🏁":"下一題 →"}</button>`;
+  if($("#prevBtn"))$("#prevBtn").onclick=()=>{curIdx--;renderQuestion();window.scrollTo(0,0);};
+  $("#nextBtn").onclick=()=>{
+    if(isLast){showFinish();}
+    else{curIdx++;renderQuestion();window.scrollTo(0,0);}
+  };
+}
+
+/* ---- 完成頁 ---- */
+function showFinish(){
+  $("#qbar").style.width="100%";
+  $("#qcount").textContent="全部完成";
+  const st=examStats(curExam);
+  const acc=Math.round(st.correct/st.total*100);
+  let emoji="🎉",msg="太厲害了！";
+  if(acc<40){emoji="💪";msg="別氣餒，詳解都看過了，再刷一次會更好！";}
+  else if(acc<70){emoji="📈";msg="進步中！錯的幾題再回去看一次詳解。";}
+  else if(acc<100){emoji="🌟";msg="很棒！離全對只差一點點。";}
+  else{emoji="🏆";msg="完美通關！這一回你完全掌握了。";}
+
+  const mount=$("#cardMount");
+  mount.innerHTML=`
+    <div class="finish">
+      <div class="emoji">${emoji}</div>
+      <h2>第 ${curExam.id} 回 完成</h2>
+      <div class="scorebox"><span class="big">${st.correct}</span><span class="small">/ ${st.total} 題答對</span></div>
+      <div class="line">${msg}（答對率 ${acc}%）</div>
+      <button class="btn primary" id="retryBtn">重做這一回</button>
+      <button class="btn ghost" id="homeBtn">回目錄選下一回</button>
+    </div>`;
+  $("#retryBtn").onclick=()=>{curExam.questions.forEach(q=>delete STORE[q.id]);startQuiz(curExam.id);};
+  $("#homeBtn").onclick=backHome;
+  fireBubbles(28);
+  window.scrollTo(0,0);
+}
+
+/* ============ 鼓勵動畫 ============ */
+const PRAISE=["答對了！","漂亮！","就是這個！","化學魂！","穩！","正解 ✓","太準了！","繼續衝！"];
+function pickPraise(){
+  if(streak>=5)return "連對 "+streak+" 題 🔥";
+  if(streak>=3)return "連續答對！";
+  return PRAISE[Math.floor(Math.random()*PRAISE.length)];
+}
+function showToast(text,icon){
+  const t=$("#toast");
+  t.innerHTML=`<span>${icon||"🎉"}</span><span>${text}</span>`;
+  t.classList.remove("show");void t.offsetWidth;t.classList.add("show");
+}
+const COLORS=["#2ec4b6","#ff9f1c","#e63946","#7b6cf6","#4cc9f0","#43aa8b"];
+function fireBubbles(count=16){
+  const box=$("#bubbles");
+  for(let i=0;i<count;i++){
+    const b=document.createElement("div");
+    b.className="bubble";
+    const size=8+Math.random()*20;
+    b.style.width=b.style.height=size+"px";
+    b.style.left=(Math.random()*100)+"vw";
+    b.style.background=COLORS[Math.floor(Math.random()*COLORS.length)];
+    b.style.animationDuration=(2.2+Math.random()*1.8)+"s";
+    b.style.animationDelay=(Math.random()*.3)+"s";
+    box.appendChild(b);
+    setTimeout(()=>b.remove(),4500);
+  }
+}
+
+/* ============ 綁定 ============ */
+$("#backBtn").onclick=backHome;
+$("#resetAll").onclick=()=>{
+  if(confirm("確定要清除所有作答紀錄嗎？")){
+    for(const k in STORE)delete STORE[k];
+    streak=0;renderHome();
+  }
+};
+
+renderHome();
+</script>
+</body>
+</html>
