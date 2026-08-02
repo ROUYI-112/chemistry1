@@ -213,6 +213,52 @@ header.top .sub{font-size:.72rem;opacity:.7;font-weight:500;margin-top:-2px}
 }
 .baby-panel .bbody br{content:"";display:block;margin:2px 0}
 
+/* 🧮 計算題標籤 */
+.calc-tag{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:1px;
+  padding:3px 9px;border-radius:20px;margin-bottom:10px;margin-left:6px;
+  background:rgba(230,57,70,.14);color:var(--coral)}
+.chapter .calc-mini{position:absolute;left:12px;bottom:12px;font-size:.62rem;
+  background:rgba(230,57,70,.12);color:var(--coral);font-weight:800;
+  padding:2px 7px;border-radius:12px}
+
+/* 柔柔版 計算題解題按鈕 + 面板 */
+.soft-btn{
+  display:inline-flex;align-items:center;gap:7px;margin-top:12px;margin-left:8px;
+  background:#ffeef0;border:2px solid var(--coral);color:var(--coral);
+  border-radius:22px;padding:9px 18px;font-weight:800;font-size:.92rem;
+  cursor:pointer;font-family:inherit;box-shadow:2px 2px 0 var(--coral);
+  transition:transform .1s,box-shadow .1s;
+}
+.soft-btn:hover{background:#ffe0e3}
+.soft-btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--coral)}
+.soft-panel{
+  margin-top:12px;border-radius:14px;overflow:hidden;
+  border:2px solid var(--coral);animation:pop .3s ease;
+}
+.soft-panel .shead{
+  background:linear-gradient(90deg,var(--coral),#ff6b76);
+  color:#fff;padding:10px 15px;font-weight:900;font-size:.95rem;
+  display:flex;align-items:center;gap:8px;
+}
+.soft-panel .sbody{
+  background:#fffdfd;padding:16px 17px;font-size:1rem;line-height:2.05;
+}
+.soft-panel .sbody b{color:var(--ink)}
+
+/* 首頁 計算題篩選 */
+.mode-row{display:flex;gap:10px;justify-content:center;margin:22px 0 4px;flex-wrap:wrap}
+.mode-chip{background:#fff;border:2px solid var(--ink);border-radius:22px;
+  padding:9px 18px;font-weight:800;font-size:.86rem;cursor:pointer;
+  font-family:inherit;box-shadow:2px 2px 0 var(--ink);color:var(--ink)}
+.mode-chip:hover{background:var(--paper)}
+.mode-chip.calc{border-color:var(--coral);color:var(--coral);box-shadow:2px 2px 0 var(--coral)}
+.mode-chip.star{border-color:var(--amber-deep);color:var(--amber-deep);box-shadow:2px 2px 0 var(--amber-deep);background:#fff8ec}
+.mode-chip.uncheck{border-color:var(--grape);color:var(--grape);box-shadow:2px 2px 0 var(--grape);background:#f4f2ff}
+.mode-chip:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.check-tag{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:1px;
+  padding:3px 9px;border-radius:20px;margin-bottom:10px;margin-left:6px;
+  background:rgba(255,159,28,.18);color:var(--amber-deep)}
+
 /* 完成頁 */
 .finish{text-align:center;padding:30px 10px}
 .finish .emoji{font-size:3.4rem;animation:bounce .7s ease}
@@ -247,6 +293,44 @@ header.top .sub{font-size:.72rem;opacity:.7;font-weight:500;margin-top:-2px}
 
 footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px}
 
+/* ===== 超誇張慶祝 ===== */
+/* 大字讚美爆出 */
+.mega{
+  position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.2) rotate(-8deg);
+  z-index:90;opacity:0;pointer-events:none;text-align:center;
+}
+.mega.show{animation:megaPop 1.6s cubic-bezier(.2,1.4,.4,1) forwards}
+.mega .big{
+  font-size:3.2rem;font-weight:900;color:var(--amber-deep);
+  text-shadow:3px 3px 0 #fff,5px 5px 0 var(--flask),0 0 30px rgba(255,159,28,.5);
+  white-space:nowrap;letter-spacing:1px;
+}
+.mega .sub{font-size:1.1rem;font-weight:800;color:var(--flask-deep);margin-top:4px}
+@keyframes megaPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-8deg)}
+  20%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}
+  35%{transform:translate(-50%,-50%) scale(1) rotate(-2deg)}
+  75%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+  100%{opacity:0;transform:translate(-50%,-58%) scale(1.05)}
+}
+/* 全螢幕閃光 */
+.flash{position:fixed;inset:0;z-index:75;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 50% 40%,rgba(255,223,150,.55),transparent 60%)}
+.flash.show{animation:flashAnim .7s ease forwards}
+@keyframes flashAnim{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+/* 星星放射 */
+.stars{position:fixed;left:50%;top:40%;z-index:82;pointer-events:none}
+.star{position:absolute;font-size:1.6rem;opacity:0;animation:starFly .9s ease-out forwards}
+@keyframes starFly{0%{opacity:0;transform:translate(0,0) scale(.3)}
+  20%{opacity:1}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1.3) rotate(var(--sr))}}
+/* 五彩紙屑 */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:71;overflow:hidden}
+.conf{position:absolute;top:-20px;width:11px;height:16px;opacity:.95;animation:confFall linear forwards}
+@keyframes confFall{
+  0%{transform:translateY(-20px) rotate(0);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:.9}
+}
+
 .hidden{display:none!important}
 </style>
 </head>
@@ -263,7 +347,7 @@ footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px
     <h1>化學闖關實驗室</h1>
     <div class="sub">必修化學 · 實力評量 8 回</div>
   </div>
-  <div class="streak" id="streakChip">🔥 連對 0</div>
+  <div class="streak" id="streakChip">🌟 已學會 0 題</div>
 </header>
 
 <div class="wrap">
@@ -271,12 +355,20 @@ footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px
   <main id="home">
     <section class="hero">
       <div class="eyebrow">Chemistry Quest</div>
-      <h2>把每一題<br>都<span class="hl">變成你會的</span></h2>
-      <p>選一回，逐題作答。答錯不扣分，每題都有詳解；看不懂還能按 🍼「講白話」，用生活比喻講到你懂。</p>
+      <h2>每一題<br>都<span class="hl">先教你，再試試</span></h2>
+      <p>不考試、不記分、不算錯。先看老師一步一步教你，看懂了再自己試一次。答對有大大的慶祝 🎉</p>
       <div class="progress-orb">
-        <div class="orb"><div class="num" id="orbDone">0</div><div class="lab">已完成題數</div></div>
+        <div class="orb"><div class="num" id="orbLearned">0</div><div class="lab">已學會題數</div></div>
         <div class="orb"><div class="num" id="orbTotal">142</div><div class="lab">總題數</div></div>
-        <div class="orb"><div class="num" id="orbAcc">—</div><div class="lab">答對率</div></div>
+        <div class="orb"><div class="num" id="orbWrong">0</div><div class="lab">錯題本</div></div>
+      </div>
+      <div class="mode-row">
+        <button class="mode-chip star" id="checkedModeBtn">⭐ 打勾題（77 題）</button>
+        <button class="mode-chip uncheck" id="uncheckedModeBtn">✏️ 沒打勾題（65 題）</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-chip calc" id="calcModeBtn">🧮 只練計算題（34 題）</button>
+        <button class="mode-chip" id="wrongBookBtn">📕 我的錯題本</button>
       </div>
     </section>
     <div class="grid" id="chapterGrid"></div>
@@ -299,6 +391,10 @@ footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px
 
 <div class="toast" id="toast"></div>
 <div class="bubbles" id="bubbles"></div>
+<div class="confetti" id="confetti"></div>
+<div class="flash" id="flash"></div>
+<div class="stars" id="stars"></div>
+<div class="mega" id="mega"><div class="big"></div><div class="sub"></div></div>
 
 <script>
 // 必修化學 實力評量 — 完整題庫（8 回）
@@ -1248,63 +1344,685 @@ Object.assign(BABY, {
 "8-17":"第一關已經把『正電離子』抓光，只剩負電的 Cl⁻。<br>第二關要用『抓負電的樹脂（陰離子交換）』把 Cl⁻ 也換掉，最後就變乾淨的純水。<br>👉 選 A。像接力賽，一個抓正的、一個抓負的，全抓完就純淨了。",
 });
 
+// 計算題標記 + 柔柔版超詳細解題
+const CALC = new Set([
+  "2-2","2-3","2-4","2-5",
+  "3-3","3-4","3-5","3-8","3-11",
+  "4-1","4-2","4-3","4-4","4-6","4-10","4-11","4-13","4-15",
+  "5-5","5-6","5-7","5-8","5-9","5-10","5-11","5-19","5-20",
+  "6-3","6-4","6-5","6-6","6-16","6-18",
+  "8-4"
+]);
+
+// SOFT[id] = 柔柔版一步一步解題（HTML 字串）
+const SOFT = {
+"2-2":
+`<b>💛 別緊張，我們一步一步來。</b><br><br>
+這題在問：CuSO₄ 裡面 銅:硫:氧 的重量比。<br><br>
+<b>第 1 步 —— 先看有幾個原子</b><br>
+CuSO₄ = 1 個 Cu、1 個 S、4 個 O。（下面小小的 4 就是「4 個氧」的意思）<br><br>
+<b>第 2 步 —— 每個原子有多重？（題目有給）</b><br>
+Cu=64、S=32、O=16。<br><br>
+<b>第 3 步 —— 算每種元素「總共」多重</b><br>
+· 銅：1 個 × 64 = <b>64</b><br>
+· 硫：1 個 × 32 = <b>32</b><br>
+· 氧：4 個 × 16 = <b>64</b>（別忘了氧有 4 個！）<br><br>
+<b>第 4 步 —— 寫成比例</b><br>
+銅:硫:氧 = 64 : 32 : 64<br>
+三個一起除以 32（找最小的來除）→ = <b>2 : 1 : 2</b><br><br>
+✅ 答案 D。<br>
+<i>小提醒：氧最容易忘記乘上「個數 4」，記得每種都要「個數 × 重量」喔。</i>`,
+
+"2-3":
+`<b>💛 慢慢來，這題只是在比「誰比較重」。</b><br><br>
+關鍵口訣：<b>同樣大小的空間，裝的東西一樣多（分子數一樣）。</b><br><br>
+<b>第 1 步 —— 讀懂題目給的兩件事</b><br>
+· 氧氣：1 升 重 0.64 克<br>
+· 某氣體：2 升 才 重 0.64 克<br><br>
+<b>第 2 步 —— 拉成「一樣的體積」來比</b><br>
+某氣體 2 升＝0.64 克，那 1 升就是一半 = 0.32 克。<br>
+現在兩個都用「1 升」比：<br>
+· 氧氣 1 升 = 0.64 克<br>
+· 某氣體 1 升 = 0.32 克<br><br>
+<b>第 3 步 —— 發現某氣體只有氧氣的一半重</b><br>
+同樣體積 → 分子數一樣多 → 所以「每個分子」也是一半重。<br>
+氧氣分子量 = 32，一半 = <b>16</b>。<br><br>
+<b>第 4 步 —— 誰的分子量是 16？</b><br>
+CH₄（甲烷）= 12 + 1×4 = 16 ✅<br><br>
+✅ 答案 C。<br>
+<i>小提醒：看到「同溫同壓」就想到「體積比＝分子數比」，這是解題鑰匙。</i>`,
+
+"2-4":
+`<b>💛 這題有點長，但拆開就很簡單。我們一格一格算。</b><br><br>
+<b>第 1 步 —— 乙醇有幾盒（幾莫耳）？</b><br>
+乙醇 C₂H₅OH 一盒（1 莫耳）重 46 克。<br>
+（怎麼來的：C 2 個×12 + H 6 個×1 + O 1 個×16 = 24+6+16 = 46）<br>
+題目給 4.6 克 → 4.6 ÷ 46 = <b>0.1 盒</b>。<br><br>
+<b>第 2 步 —— 一盒裡各種原子有幾個？</b><br>
+C₂H₅OH 拆開數：碳 2 個、氫 6 個、氧 1 個。<br>
+（氫要數清楚：H₅ 的 5 個 ＋ OH 的 1 個 = 6 個）<br><br>
+<b>第 3 步 —— 0.1 盒裡各有多少莫耳？</b><br>
+· 碳：0.1 × 2 = 0.2 ✔(B 說得對)<br>
+· 氫：0.1 × 6 = <b>0.6</b> ← 注意這裡！<br>
+· 氧：0.1 × 1 = 0.1 → 重量 0.1×16 = 1.6 克 ✔(D 對)<br><br>
+<b>第 4 步 —— 找出「說錯」的那個</b><br>
+(C) 說氫是 0.5 莫耳 → 但我們算出是 <b>0.6</b> 莫耳，<b>不對</b>！<br><br>
+✅ 答案 C（這句是錯的）。<br>
+<i>小提醒：這種「哪個錯」的題，就是每個選項都算一次，找出對不上的那個。</i>`,
+
+"2-5":
+`<b>💛 這題像在調平均分數，我們反過來推。</b><br><br>
+氖有兩種：輕的 ²⁰Ne（重 20）、重的 ²²Ne（重 22）。<br>
+平均是 20.2 —— 你有沒有發現？<b>20.2 很靠近 20</b>，代表輕的佔超多。<br><br>
+<b>第 1 步 —— 假設輕的佔 a 成</b><br>
+那重的就佔 (1−a) 成。<br><br>
+<b>第 2 步 —— 列平均式（加權平均）</b><br>
+20×a ＋ 22×(1−a) = 20.2<br><br>
+<b>第 3 步 —— 慢慢解</b><br>
+20a ＋ 22 − 22a = 20.2<br>
+22 − 2a = 20.2<br>
+2a = 22 − 20.2 = 1.8<br>
+a = 0.9<br><br>
+<b>第 4 步 —— 翻成比例</b><br>
+輕的 0.9、重的 0.1 → 0.9 : 0.1 = <b>9 : 1</b>。<br><br>
+✅ 答案 E。<br>
+<i>小提醒：平均靠近哪一邊，哪一邊就佔比較多。這個直覺能幫你檢查答案對不對。</i>`,
+
+"3-3":
+`<b>💛 這題給你一個「百分比」，我們用它回推個數。</b><br><br>
+苯甲酸 C₇HₙO₂，題目說「氫佔全部重量的 5%」，要找 n（幾個氫）。<br><br>
+<b>第 1 步 —— 分別寫出各元素重量</b><br>
+· 碳：7 個 × 12 = 84<br>
+· 氫：n 個 × 1 = n<br>
+· 氧：2 個 × 16 = 32<br>
+全部加起來重量 = 84 + n + 32 = 116 + n<br><br>
+<b>第 2 步 —— 「氫佔 5%」寫成算式</b><br>
+氫的重量 ÷ 全部重量 = 5%<br>
+n ÷ (116 + n) = 0.05<br><br>
+<b>第 3 步 —— 慢慢解</b><br>
+n = 0.05 × (116 + n)<br>
+n = 5.8 + 0.05n<br>
+n − 0.05n = 5.8<br>
+0.95n = 5.8<br>
+n ≈ 6<br><br>
+✅ 答案 D（n=6，苯甲酸是 C₇H₆O₂）。<br>
+<i>小提醒：「某元素佔幾%」= 那個元素的重量 ÷ 總重量。記住這個公式就能回推個數。</i>`,
+
+"3-4":
+`<b>💛 這題就是「照比例分」，像切蛋糕。</b><br><br>
+一整顆 SnF₂ 有 24.6 克，問裡面「氟」有多重。<br><br>
+<b>第 1 步 —— 算整顆 SnF₂ 多重</b><br>
+Sn 1 個 = 118.7，F 2 個 = 19×2 = 38。<br>
+整顆 = 118.7 + 38 = <b>156.7</b><br><br>
+<b>第 2 步 —— 氟佔整顆的幾分之幾？</b><br>
+氟的部分 38 ÷ 整顆 156.7 = 這是氟的「比例」。<br><br>
+<b>第 3 步 —— 用這個比例去分 24.6 克</b><br>
+氟的重量 = 24.6 × (38 ÷ 156.7)<br>
+= 24.6 × 0.2425...<br>
+≈ <b>5.97 ≈ 6 克</b><br><br>
+✅ 答案 B（約 6 克）。<br>
+<i>小提醒：「化合物裡某元素多重」= 總重 × (那元素的重量 ÷ 整個分子的重量)。就像切一塊蛋糕分給氟。</i>`,
+
+"3-5":
+`<b>💛 這題分兩關：先找「最簡比」，再放大成「真的分子」。</b><br><br>
+給的是重量百分比：C 39.97%、H 6.73%、O 53.30%，分子量 90。<br><br>
+<b>第 1 步 —— 假裝總共有 100 克</b><br>
+那就有：碳 39.97 克、氫 6.73 克、氧 53.30 克。<br><br>
+<b>第 2 步 —— 把「克」換成「幾個（莫耳）」</b><br>
+（用「重量 ÷ 每個多重」）<br>
+· 碳：39.97 ÷ 12 ≈ 3.33<br>
+· 氫：6.73 ÷ 1 ≈ 6.73<br>
+· 氧：53.30 ÷ 16 ≈ 3.33<br><br>
+<b>第 3 步 —— 化成最簡整數比</b><br>
+3.33 : 6.73 : 3.33，三個都除以最小的 3.33 →<br>
+≈ 1 : 2 : 1<br>
+所以最小單位是 <b>CH₂O</b>。<br><br>
+<b>第 4 步 —— 放大成真正的分子</b><br>
+CH₂O 一組重 = 12+2+16 = 30。<br>
+真正分子量是 90 → 90 ÷ 30 = 3 倍。<br>
+把 CH₂O 每個數字乘 3 → <b>C₃H₆O₃</b>。<br><br>
+✅ 答案 C。<br>
+<i>小提醒：兩關口訣——(1)克換莫耳、化最簡比 →實驗式；(2)分子量除以實驗式量→放大幾倍。</i>`,
+
+"3-8":
+`<b>💛 這題是燃燒分析，我們像偵探一樣還原成分。慢慢來。</b><br><br>
+題組資料：東西 9.0 克，燒完抓到 水 5.4 克、CO₂ 13.2 克，分子量 60。<br><br>
+<b>第 1 步 —— 從 CO₂ 找回碳有多重</b><br>
+CO₂ 裡碳佔的比例 = 12 ÷ 44。<br>
+碳重 = 13.2 × (12÷44) = <b>3.6 克</b><br><br>
+<b>第 2 步 —— 從水找回氫有多重</b><br>
+水 H₂O 裡氫佔 = 2 ÷ 18。<br>
+氫重 = 5.4 × (2÷18) = <b>0.6 克</b><br><br>
+<b>第 3 步 —— 剩下的就是氧</b><br>
+氧重 = 9.0 − 3.6 − 0.6 = <b>4.8 克</b><br><br>
+<b>第 4 步 —— 克換成個數（莫耳）</b><br>
+· 碳：3.6 ÷ 12 = 0.3<br>
+· 氫：0.6 ÷ 1 = 0.6<br>
+· 氧：4.8 ÷ 16 = 0.3<br>
+比例 0.3 : 0.6 : 0.3 = <b>1 : 2 : 1</b> → 最簡單位 CH₂O（重 30）<br><br>
+<b>第 5 步 —— 放大</b><br>
+分子量 60 ÷ 30 = 2 倍 → <b>C₂H₄O₂</b>（就是醋酸）<br><br>
+✅ 答案 B。<br>
+<i>小提醒：燃燒分析三步——碳從CO₂回推、氫從水回推、氧用「總重減掉碳和氫」。</i>`,
+
+"3-11":
+`<b>💛 這題用「數原子」就好，像分玩具。</b><br><br>
+放進 10 毫升 A₂ 和 30 毫升 B₂，剛好反應完，問產物長怎樣。<br>
+記住：<b>同溫同壓下，體積比就是個數比。</b><br><br>
+<b>第 1 步 —— 數原子總共有幾個</b><br>
+· A₂ 有 10 份，每份 2 個 A → A 原子共 20 個<br>
+· B₂ 有 30 份，每份 2 個 B → B 原子共 60 個<br><br>
+<b>第 2 步 —— 全部重新組合，A 配 B</b><br>
+20 個 A 要配 60 個 B → 平均每 1 個 A 配 3 個 B。<br>
+所以每個分子是 <b>AB₃</b>。<br><br>
+<b>第 3 步 —— 檢查（題目說分子式=實驗式）</b><br>
+AB₃ 已經是最簡單比例，符合。✔<br><br>
+✅ 答案 C。<br>
+<i>小提醒：「體積 → 個數 → 重新配對」三步，氣體反應題幾乎都這樣解。</i>`,
+};
+
+// 柔柔版 — 第 4 回計算題
+Object.assign(SOFT, {
+"4-1":
+`<b>💛 這題找「水寶寶」有幾個，我們反推。</b><br><br>
+硫酸銅晶體加熱後把水趕跑，剩下 82% 重。問本來藏幾個結晶水。<br><br>
+<b>第 1 步 —— 乾的 CuSO₄ 有多重</b><br>
+CuSO₄ = 64 + 32 + 16×4 = <b>160</b><br><br>
+<b>第 2 步 —— 設藏了 n 個水寶寶</b><br>
+每個水 H₂O 重 18，n 個就是 18n。<br>
+含水晶體總重 = 160 + 18n。<br><br>
+<b>第 3 步 —— 「乾的佔 82%」寫成算式</b><br>
+乾的 ÷ 含水總重 = 82%<br>
+160 ÷ (160 + 18n) = 0.82<br><br>
+<b>第 4 步 —— 慢慢解</b><br>
+160 = 0.82 × (160 + 18n)<br>
+160 = 131.2 + 14.76n<br>
+160 − 131.2 = 14.76n<br>
+28.8 = 14.76n<br>
+n ≈ 2<br><br>
+✅ 答案 B（2 個結晶水）。<br>
+<i>小提醒：「乾的重量 ÷ 含水總重 = 乾的百分比」，用這條就能反推水寶寶數量。</i>`,
+
+"4-2":
+`<b>💛 這題數「跑出幾盒氣體」，照食譜比例走。</b><br><br>
+40 克硝酸銨 NH₄NO₃ 完全分解，問跑出幾莫耳氣體。<br>
+食譜：2NH₄NO₃ → 4H₂O + 2N₂ + O₂<br><br>
+<b>第 1 步 —— 硝酸銨有幾盒</b><br>
+NH₄NO₃ = 14×2 + 1×4 + 16×3 = 28+4+48 = <b>80</b><br>
+40 ÷ 80 = <b>0.5 盒</b><br><br>
+<b>第 2 步 —— 看食譜比例配出氣體</b><br>
+食譜是「2 份硝酸銨」對應右邊的量。我們有 0.5 份，是食譜的 1/4（因為 0.5÷2＝0.25）。<br>
+把右邊每個都乘 0.25：<br>
+· 水 H₂O：4 × 0.25 = 1.0<br>
+· 氮氣 N₂：2 × 0.25 = 0.5<br>
+· 氧氣 O₂：1 × 0.25 = 0.25<br><br>
+<b>第 3 步 —— 全部氣體加起來</b><br>
+1.0 + 0.5 + 0.25 = <b>1.75 莫耳</b><br><br>
+✅ 答案 A。<br>
+<i>小提醒：先算「我的量是食譜的幾倍」，再把食譜每個數字都乘那個倍數。</i>`,
+
+"4-3":
+`<b>💛 這題找「誰先用完」（限量試劑），像做三明治。</b><br><br>
+食譜（平衡後）：4Ag + 2H₂S + O₂ → 2Ag₂S + 2H₂O<br>
+材料：銀 21.6 克、H₂S 6.12 克、O₂ 2.40 克。<br><br>
+<b>第 1 步 —— 每種材料各有幾盒</b><br>
+· 銀 Ag（108）：21.6 ÷ 108 = 0.2<br>
+· H₂S（34）：6.12 ÷ 34 = 0.18<br>
+· O₂（32）：2.40 ÷ 32 = 0.075<br><br>
+<b>第 2 步 —— 各自除以食譜需要的份數</b><br>
+（這步是關鍵：看「照食譜能做幾輪」）<br>
+· 銀：0.2 ÷ 4 = 0.05<br>
+· H₂S：0.18 ÷ 2 = 0.09<br>
+· O₂：0.075 ÷ 1 = 0.075<br><br>
+<b>第 3 步 —— 數字最小的先用完</b><br>
+0.05（銀）< 0.075 < 0.09 → <b>銀最小 → 銀先用完</b>。<br>
+先用完的就是限量試劑。<br><br>
+✅ 答案 A（Ag）。<br>
+<i>小提醒：限量試劑 = 把「每種的莫耳數 ÷ 食譜係數」，最小的那個。別只看誰克數少！</i>`,
+
+"4-4":
+`<b>💛 這題超單純，就是加起來算總重。</b><br><br>
+八硝基立方烷 C₈N₈O₁₆，算分子量。<br><br>
+<b>第 1 步 —— 每種原子總重</b><br>
+· 碳：8 個 × 12 = 96<br>
+· 氮：8 個 × 14 = 112<br>
+· 氧：16 個 × 16 = 256<br><br>
+<b>第 2 步 —— 全部加起來</b><br>
+96 + 112 + 256 = <b>464</b><br><br>
+✅ 答案 D。<br>
+<i>小提醒：分子量 = 每種原子「個數 × 重量」全部加總。慢慢加、別漏掉任何一種。</i>`,
+
+"4-6":
+`<b>💛 這題算「成功率（產率）」，先找誰先用完。</b><br><br>
+食譜：醋酸 + 乙醇 → 乙酸乙酯 + 水（1:1:1:1）<br>
+材料：醋酸 30 克、乙醇 46 克。實際做出乙酸乙酯 11 克。<br><br>
+<b>第 1 步 —— 兩種材料各幾盒</b><br>
+· 醋酸（60）：30 ÷ 60 = 0.5<br>
+· 乙醇（46）：46 ÷ 46 = 1.0<br><br>
+<b>第 2 步 —— 誰少誰先用完</b><br>
+食譜是 1:1，醋酸只有 0.5、乙醇有 1.0 → <b>醋酸先用完</b>。<br>
+所以最多只能做 0.5 盒乙酸乙酯。<br><br>
+<b>第 3 步 —— 理論上最多做多重</b><br>
+乙酸乙酯一盒重 88 → 0.5 × 88 = <b>44 克</b>（這是滿分）<br><br>
+<b>第 4 步 —— 成功率</b><br>
+實際 11 克 ÷ 理論 44 克 = 0.25 = <b>25%</b><br><br>
+✅ 答案 D。<br>
+<i>小提醒：產率 = 實際做出來 ÷ 理論最多能做。理論值要用「先用完的那個」去算。</i>`,
+
+"4-10":
+`<b>💛 這題算「吸了多少熱」，一步步不難。</b><br><br>
+4.00 克 KNO₃ 溶進 50 克水，溫度從 37℃ 掉到 31℃（變冷 = 吸熱）。<br>
+給：密度 1.0、比熱 4.2 J/g℃。<br><br>
+<b>第 1 步 —— 溶液總重多少</b><br>
+50 克水 + 4 克 KNO₃ ≈ <b>54 克</b><br><br>
+<b>第 2 步 —— 溫度變化多少</b><br>
+37 − 31 = <b>6℃</b><br><br>
+<b>第 3 步 —— 算吸收的熱（用 Q = 重量 × 比熱 × 溫差）</b><br>
+Q = 54 × 4.2 × 6 = 1360.8 J ≈ <b>1.36 kJ</b><br>
+（記得 1000 J = 1 kJ）<br><br>
+<b>第 4 步 —— KNO₃ 有幾盒</b><br>
+4.00 ÷ 101 ≈ 0.0396 盒<br><br>
+<b>第 5 步 —— 每盒吸多少熱</b><br>
+1.36 ÷ 0.0396 ≈ <b>34 kJ/mol</b><br><br>
+✅ 答案 E（34）。<br>
+<i>小提醒：Q = m × s × ΔT（重量×比熱×溫差）是熱量公式，先算總熱再除以莫耳數得「每莫耳」。</i>`,
+
+"4-11":
+`<b>💛 這題判斷誰先用完＋算生成量，慢慢走。</b><br><br>
+食譜：2H₂ + O₂ → 2H₂O<br>
+材料：氫氣 14 克、氧氣 80 克。<br><br>
+<b>第 1 步 —— 各幾盒</b><br>
+· 氫 H₂（2）：14 ÷ 2 = 7 盒<br>
+· 氧 O₂（32）：80 ÷ 32 = 2.5 盒<br><br>
+<b>第 2 步 —— 除以食譜係數，找先用完的</b><br>
+· 氫：7 ÷ 2 = 3.5<br>
+· 氧：2.5 ÷ 1 = 2.5 ← 最小<br>
+→ <b>氧氣先用完（是限量）</b>。(B 對)<br><br>
+<b>第 3 步 —— 用氧氣去算生成的水</b><br>
+食譜 O₂:H₂O = 1:2 → 2.5 盒氧 生出 5 盒水。(D 對)<br><br>
+<b>第 4 步 —— 氫氣用掉多少、剩多少</b><br>
+食譜 O₂:H₂ = 1:2 → 用掉 2.5×2 = 5 盒氫。<br>
+本來 7 盒，剩 7−5 = 2 盒（= 4 克）。<br>
+所以 (C)剩2克、(E)用2.5盒 都錯。<br><br>
+✅ 答案 B、D。<br>
+<i>小提醒：先找限量試劑，之後所有的生成量、剩餘量，都以限量試劑為基準去算。</i>`,
+
+"4-13":
+`<b>💛 這題比大小，把每個換算成「放多少熱」再排隊。</b><br><br>
+每莫耳燃燒放熱：H₂=68、C=94、CH₄=213、N₂H₄=150。<br>
+甲=4克H₂、乙=24克C、丙=24克CH₄、丁=48克N₂H₄。<br><br>
+<b>第 1 步 —— 每個換成幾盒</b><br>
+· 甲 H₂（2）：4÷2 = 2 盒<br>
+· 乙 C（12）：24÷12 = 2 盒<br>
+· 丙 CH₄（16）：24÷16 = 1.5 盒<br>
+· 丁 N₂H₄（32）：48÷32 = 1.5 盒<br><br>
+<b>第 2 步 —— 盒數 × 每盒放的熱</b><br>
+· 甲：2 × 68 = <b>136</b><br>
+· 乙：2 × 94 = <b>188</b><br>
+· 丙：1.5 × 213 = <b>319.5</b><br>
+· 丁：1.5 × 150 = <b>225</b><br><br>
+<b>第 3 步 —— 排隊（大到小）</b><br>
+丙 319.5 > 丁 225 > 乙 188 > 甲 136<br><br>
+<b>第 4 步 —— 對選項</b><br>
+(B)丙>乙 ✔　(C)丁>甲 ✔　(E)丙>丁 ✔<br>
+(A)甲>乙 ✗　(D)甲>丙 ✗<br><br>
+✅ 答案 B、C、E。<br>
+<i>小提醒：先全部換算成「放的熱量」數字，再排隊，比大小就一目了然。</i>`,
+
+"4-15":
+`<b>💛 這題看圖找規律，用比例推溫度。</b><br><br>
+圖上：加 0 克時約 20℃，加到 20 克時升到最高 32℃（直直線上升）。<br>
+問：加 10 克時溫度大概多少？<br><br>
+<b>第 1 步 —— 從 0 到 20 克總共升幾度</b><br>
+32 − 20 = 升了 <b>12 度</b>（在 20 克這段路）。<br><br>
+<b>第 2 步 —— 10 克是走了多少路</b><br>
+10 克是 20 克的一半（走一半路）。<br><br>
+<b>第 3 步 —— 一半路就升一半的度</b><br>
+12 度的一半 = 6 度。<br><br>
+<b>第 4 步 —— 加回起點</b><br>
+起點 20℃ + 升 6 度 = <b>26℃</b><br><br>
+✅ 答案 B（26）。<br>
+<i>小提醒：直線上升時，「走一半的路就升一半的高度」。先算總升幅，再按比例分。</i>`,
+});
+
+// 柔柔版 — 第 5 回計算題
+Object.assign(SOFT, {
+"5-5":
+`<b>💛 這題算「濃度（ppm）」，先算空氣總重。</b><br><br>
+禮堂 4000 m³，空氣密度 1.4 g/L，裡面有 CO₂ 4.4 公斤。<br><br>
+<b>第 1 步 —— 把體積換成公升</b><br>
+1 m³ = 1000 L，所以 4000 m³ = 4,000,000 L（400 萬升）。<br><br>
+<b>第 2 步 —— 算空氣總重</b><br>
+重量 = 體積 × 密度 = 4,000,000 × 1.4 = 5,600,000 克（560 萬克）。<br><br>
+<b>第 3 步 —— CO₂ 換成克</b><br>
+4.4 公斤 = 4400 克。<br><br>
+<b>第 4 步 —— 算 ppm（百萬分之幾）</b><br>
+ppm = (CO₂ 重 ÷ 空氣總重) × 1,000,000<br>
+= (4400 ÷ 5,600,000) × 1,000,000<br>
+= 0.000785 × 1,000,000<br>
+≈ <b>785 mg/kg</b><br><br>
+✅ 答案 A。<br>
+<i>小提醒：ppm 就是「百萬分之幾」，算出比例後乘 100 萬即可。單位先統一（都用克）。</i>`,
+
+"5-6":
+`<b>💛 這題加鹽後算新濃度，分開記「鹽」和「總重」。</b><br><br>
+本來 45% 的鹽水 300 克，再加 200 克鹽。<br><br>
+<b>第 1 步 —— 本來有多少鹽</b><br>
+300 克 × 45% = <b>135 克鹽</b>（水就是 300−135 = 165 克）。<br><br>
+<b>第 2 步 —— 加鹽後，鹽變多少</b><br>
+135 + 200 = <b>335 克鹽</b>（水沒變）。<br><br>
+<b>第 3 步 —— 總重變多少</b><br>
+300 + 200 = <b>500 克</b>。<br><br>
+<b>第 4 步 —— 算新濃度</b><br>
+鹽 ÷ 總重 = 335 ÷ 500 = 0.67 = <b>67%</b><br><br>
+✅ 答案 C。<br>
+<i>小提醒：加東西時，分別追蹤「溶質重」和「溶液總重」，最後相除就是濃度。</i>`,
+
+"5-7":
+`<b>💛 這題像調水溫，用「十字交叉」很快。</b><br><br>
+15% 和 10% 兩杯，混成 12%，問質量比。<br><br>
+<b>方法一：十字交叉法（超好用）</b><br>
+把目標 12 放中間，兩邊相減（取差距）：<br>
+· 15% 那邊：|10 − 12| = 2 ← 這是 15% 要的份數<br>
+· 10% 那邊：|15 − 12| = 3 ← 這是 10% 要的份數<br>
+→ 15%:10% = <b>2 : 3</b><br><br>
+<b>方法二：想一想合不合理</b><br>
+12 比較靠近 10，代表 10% 那杯要「多倒一點」。<br>
+果然 10% 是 3 份、15% 是 2 份，10% 比較多，合理！✔<br><br>
+✅ 答案 A（2/3）。<br>
+<i>小提醒：十字交叉——目標放中間，各減對角，得到的差就是對方的份數。混合題神器。</i>`,
+
+"5-8":
+`<b>💛 這題算「需要多少毫升」，用食譜比例＋濃度。</b><br><br>
+食譜：Cu + 4HNO₃ → ...（1 個銅要配 4 個硝酸）<br>
+材料：銅 6.35 克，硝酸濃度 2.00 M。<br><br>
+<b>第 1 步 —— 銅有幾盒</b><br>
+Cu（63.5）：6.35 ÷ 63.5 = <b>0.1 盒</b><br><br>
+<b>第 2 步 —— 需要幾盒硝酸</b><br>
+食譜 1 銅 : 4 硝酸 → 0.1 × 4 = <b>0.4 盒硝酸</b><br><br>
+<b>第 3 步 —— 濃度換成體積</b><br>
+濃度 2.00 M = 每 1 公升有 2 盒。<br>
+要裝 0.4 盒，需要 0.4 ÷ 2 = 0.2 公升。<br><br>
+<b>第 4 步 —— 公升換毫升</b><br>
+0.2 公升 = <b>200 毫升</b><br><br>
+✅ 答案 D（200）。<br>
+<i>小提醒：體積 = 莫耳數 ÷ 濃度。先用食譜算出需要幾莫耳，再除以濃度得體積。</i>`,
+
+"5-9":
+`<b>💛 這題超簡單，就是換單位。</b><br><br>
+8500 ppm 是多少 %？<br><br>
+<b>先記住這個對照：</b><br>
+1% = 10000 ppm（1 趴等於一萬 ppm）<br><br>
+<b>方法 —— 直接除</b><br>
+8500 ppm ÷ 10000 = <b>0.85%</b><br><br>
+<b>另一種想法（移小數點）</b><br>
+ppm 換 %，小數點往左移 4 格：<br>
+8500. → 0.8500 → <b>0.85%</b><br><br>
+✅ 答案 B。<br>
+<i>小提醒：ppm ÷ 10000 = %。或記「往左移 4 格」。反過來 % × 10000 = ppm。</i>`,
+
+"5-10":
+`<b>💛 這題是稀釋，記住「鹽的總量不變」。</b><br><br>
+12 M 鹽酸 200 mL，加水變成 4 公升（4000 mL），問新濃度。<br><br>
+<b>核心公式：M₁ × V₁ = M₂ × V₂</b><br>
+（稀釋前濃度×體積 = 稀釋後濃度×體積，因為溶質總量沒變）<br><br>
+<b>第 1 步 —— 代入已知</b><br>
+· 稀釋前：M₁=12，V₁=0.2 公升（200 mL）<br>
+· 稀釋後：M₂=？，V₂=4 公升<br><br>
+<b>第 2 步 —— 列式</b><br>
+12 × 0.2 = M₂ × 4<br>
+2.4 = M₂ × 4<br><br>
+<b>第 3 步 —— 解</b><br>
+M₂ = 2.4 ÷ 4 = <b>0.6 M</b><br><br>
+✅ 答案 C。<br>
+<i>小提醒：稀釋只加水，溶質總量不變 → M₁V₁ = M₂V₂。體積單位前後要一致。</i>`,
+
+"5-11":
+`<b>💛 這題把「濃度」換算成「莫耳濃度」，假設 1 公升最好算。</b><br><br>
+比重 1.8、98% 的濃硫酸，問體積莫耳濃度（M）。<br><br>
+<b>第 1 步 —— 假設拿 1 公升（1000 mL）來算</b><br>
+（這樣算出來的莫耳數，剛好就是 M）<br><br>
+<b>第 2 步 —— 這 1 公升多重</b><br>
+重量 = 體積 × 比重 = 1000 × 1.8 = <b>1800 克</b><br><br>
+<b>第 3 步 —— 裡面純硫酸多重</b><br>
+1800 × 98% = <b>1764 克</b>純硫酸<br><br>
+<b>第 4 步 —— 純硫酸幾盒</b><br>
+H₂SO₄ 一盒重 98 → 1764 ÷ 98 = <b>18 盒</b><br><br>
+<b>第 5 步 —— 得濃度</b><br>
+18 盒在 1 公升裡 → <b>18 M</b><br><br>
+✅ 答案 A。<br>
+<i>小提醒：算 M 時「假設 1 公升」最方便，因為莫耳數÷1公升＝就是 M。步驟：算總重→算純溶質重→換莫耳。</i>`,
+
+"5-19":
+`<b>💛 這題就是換單位，跟 ppm 有關。</b><br><br>
+鐵佔 0.0005%，換成 ppm。<br><br>
+<b>記住：% × 10000 = ppm</b><br><br>
+<b>算：</b><br>
+0.0005% × 10000 = <b>5 ppm</b><br><br>
+<b>移小數點的想法：</b><br>
+% 換 ppm，往右移 4 格：<br>
+0.0005 → 5.（往右數 4 位）→ <b>5 ppm</b><br><br>
+✅ 答案 C。<br>
+<i>小提醒：% 換 ppm 往右移 4 格；ppm 換 % 往左移 4 格。方向別搞反。</i>`,
+
+"5-20":
+`<b>💛 這題有點繞，我們一步一步拆。</b><br><br>
+豆漿密度 1.2 g/cm³，蛋白質佔 3.6%，每天要 60 克蛋白質，問要喝幾公升。<br><br>
+<b>第 1 步 —— 設要喝 V 毫升豆漿</b><br><br>
+<b>第 2 步 —— 這些豆漿多重</b><br>
+重量 = V × 1.2 克（因為密度是 1.2）<br><br>
+<b>第 3 步 —— 裡面蛋白質多重</b><br>
+蛋白質 = 豆漿重 × 3.6% = V × 1.2 × 0.036<br><br>
+<b>第 4 步 —— 讓蛋白質等於 60 克</b><br>
+V × 1.2 × 0.036 = 60<br>
+V × 0.0432 = 60<br><br>
+<b>第 5 步 —— 解 V</b><br>
+V = 60 ÷ 0.0432 ≈ 1389 毫升<br><br>
+<b>第 6 步 —— 換公升</b><br>
+1389 毫升 ≈ <b>1.4 公升</b><br><br>
+✅ 答案 C。<br>
+<i>小提醒：一層一層算——先算豆漿重（體積×密度），再乘百分比得蛋白質，最後解方程式。</i>`,
+});
+
+// 柔柔版 — 第 6、8 回計算題
+Object.assign(SOFT, {
+"6-3":
+`<b>💛 這題用溶解度算「要放多少溶質」，比例思考。</b><br><br>
+溶解度 20 g/100 g水 = 每 100 克水，最多溶 20 克。<br>
+要配 720 克飽和溶液，問要秤多少溶質。<br><br>
+<b>第 1 步 —— 飽和時的比例</b><br>
+溶質 : 水 = 20 : 100<br>
+所以 溶質 : 整杯溶液 = 20 : (20+100) = <b>20 : 120</b><br><br>
+<b>第 2 步 —— 用比例分 720 克</b><br>
+溶質佔整杯的 20/120。<br>
+溶質 = 720 × (20 ÷ 120) = 720 × (1/6) = <b>120 克</b><br><br>
+✅ 答案 D。<br>
+<i>小提醒：溶解度題先寫「溶質:水:整杯」的比例，再用比例去分你要的總量。</i>`,
+
+"6-4":
+`<b>💛 這題看圖讀溶解度，再算飽和溶液裡的溶質。</b><br><br>
+看圖：50℃ 時溶解度 = 80 g/100 g水。<br>
+問 90 克飽和溶液裡有多少甲。<br><br>
+<b>第 1 步 —— 讀圖得溶解度</b><br>
+50℃ → 每 100 克水溶 80 克甲。<br><br>
+<b>第 2 步 —— 寫比例</b><br>
+溶質 : 整杯 = 80 : (80+100) = <b>80 : 180</b><br><br>
+<b>第 3 步 —— 用比例分 90 克</b><br>
+甲 = 90 × (80 ÷ 180) = 90 × (4/9) = <b>40 克</b><br><br>
+✅ 答案 B。<br>
+<i>小提醒：先從圖讀出溶解度數字，再套「溶質:整杯」比例。讀圖別讀錯溫度那條線。</i>`,
+
+"6-5":
+`<b>💛 這題算「冷卻後掉出多少」，比較前後能溶多少。</b><br><br>
+50℃ 的 90 克飽和溶液，冷卻到 10℃，問析出多少甲。<br>
+（接上題：50℃溶解度80、10℃溶解度20）<br><br>
+<b>第 1 步 —— 先拆出「熱的時候」有多少甲和多少水</b><br>
+上題算過 90 克裡：甲 = 40 克。<br>
+水 = 90 − 40 = <b>50 克</b>。<br><br>
+<b>第 2 步 —— 冷到 10℃，這些水最多還能溶多少甲</b><br>
+10℃ 溶解度 20 g/100 g水。<br>
+我們只有 50 克水 → 最多溶 20 × (50÷100) = <b>10 克</b>。<br><br>
+<b>第 3 步 —— 多出來的就掉出來</b><br>
+本來有 40 克甲，冷了只溶得下 10 克 →<br>
+析出 = 40 − 10 = <b>30 克</b><br><br>
+✅ 答案 D。<br>
+<i>小提醒：析出量 =（原本溶的量）−（冷卻後還能溶的量）。水量不變是關鍵，用水量去算新的溶解上限。</i>`,
+
+"6-6":
+`<b>💛 這題算稀釋後的 pH，先走 pOH 再回來。</b><br><br>
+pH=12 的 KOH（鹼）10 mL，加水稀釋到 1000 mL，問新 pH。<br><br>
+<b>第 1 步 —— 鹼要先看 pOH</b><br>
+pH + pOH = 14。<br>
+pH=12 → pOH = 14 − 12 = 2 → [OH⁻] = 10⁻² M<br><br>
+<b>第 2 步 —— 稀釋幾倍</b><br>
+10 mL → 1000 mL，變大 100 倍 → 濃度變淡 100 倍。<br>
+[OH⁻] = 10⁻² ÷ 100 = 10⁻⁴ M<br><br>
+<b>第 3 步 —— 新的 pOH 和 pH</b><br>
+[OH⁻]=10⁻⁴ → pOH = 4 → pH = 14 − 4 = <b>10</b><br><br>
+<b>第 4 步 —— 檢查合理性</b><br>
+鹼稀釋 → pH 會往 7 靠近（從 12 降到 10）✔，但不會低於 7（鹼加水不會變酸）。<br><br>
+✅ 答案 C（10）。<br>
+<i>小提醒：算鹼的稀釋，先轉成 [OH⁻] 和 pOH 來算，最後再用 pH=14−pOH 換回去。</i>`,
+
+"6-16":
+`<b>💛 這題算「要吃幾次」，一步步很好懂。</b><br><br>
+每片 100 mg，維生素C佔 10%，每次吃 2 片，每天要 60 mg，問吃幾次。<br><br>
+<b>第 1 步 —— 一片有多少維生素C</b><br>
+100 mg × 10% = <b>10 mg</b>／片<br><br>
+<b>第 2 步 —— 一次吃 2 片有多少</b><br>
+10 × 2 = <b>20 mg</b>／次<br><br>
+<b>第 3 步 —— 要湊 60 mg 要幾次</b><br>
+60 ÷ 20 = <b>3 次</b><br><br>
+✅ 答案 C。<br>
+<i>小提醒：層層算下去——一片多少→一次多少→總共要幾次。每步只做一個小動作。</i>`,
+
+"6-18":
+`<b>💛 這題算 pH，用 log 拆開。</b><br><br>
+[H⁺] = 3×10⁻³ M，題目給 log3=0.5，求 pH。<br><br>
+<b>核心：pH = −log[H⁺]</b><br><br>
+<b>第 1 步 —— 代入</b><br>
+pH = −log(3 × 10⁻³)<br><br>
+<b>第 2 步 —— log 相乘可以拆成相加</b><br>
+log(3 × 10⁻³) = log3 + log(10⁻³)<br>
+= 0.5 + (−3)<br>
+= −2.5<br><br>
+<b>第 3 步 —— 前面有負號</b><br>
+pH = −(−2.5) = <b>2.5</b><br><br>
+✅ 答案 A（2.5）。<br>
+<i>小提醒：pH=−log[H⁺]。遇到 a×10⁻ⁿ 就拆成 log a + (−n)，再加負號。log(10⁻³)=−3。</i>`,
+
+"8-4":
+`<b>💛 這題用「數原子」配平，找出 Y 是什麼。</b><br><br>
+方程式：2C₂H₅SH + 9O₂ → 4CO₂ + 2Y + 6H₂O<br>
+已知 Y 由兩種元素組成，求 Y。<br><br>
+<b>第 1 步 —— 數左邊每種原子</b><br>
+2 個 C₂H₅SH：C = 2×2 = 4、H = 2×6 = 12、S = 2×1 = 2<br>
+9 個 O₂：O = 18<br>
+左邊合計：C4、H12、S2、O18<br><br>
+<b>第 2 步 —— 數右邊「已知的部分」</b><br>
+4CO₂：C4、O8<br>
+6H₂O：H12、O6<br>
+已用掉：C4、H12、O(8+6)=14<br><br>
+<b>第 3 步 —— 看左邊還剩什麼沒配</b><br>
+· S：左邊 2，右邊還沒出現 → 2 個 S 要放進 Y<br>
+· O：左邊 18，右邊用了 14，還剩 4 → 4 個 O 要放進 Y<br><br>
+<b>第 4 步 —— 平均分給 2 個 Y</b><br>
+2 個 Y 要裝 S2、O4 → 每個 Y = S1、O2 = <b>SO₂</b><br><br>
+✅ 答案 A（SO₂）。<br>
+<i>小提醒：配平找未知，就是「左邊總數 − 右邊已知 = 剩下的給未知」，再除以未知的個數。</i>`,
+});
+
+// 打勾題（學生考卷上答對、打勾的題號）— 由使用者提供
+const CHECKED = new Set([
+  // 第1回
+  "1-2","1-4","1-6","1-8","1-10","1-12","1-14","1-15",
+  // 第2回
+  "2-2","2-4","2-6","2-8","2-10","2-12","2-14","2-16","2-17","2-18","2-19","2-20","2-21",
+  // 第3回
+  "3-2","3-4","3-6","3-8","3-10","3-11","3-14","3-16",
+  // 第4回
+  "4-2","4-4","4-6","4-8","4-10","4-12","4-14","4-15",
+  // 第5回
+  "5-2","5-4","5-6","5-8","5-10","5-12","5-14","5-16","5-18","5-19","5-20",
+  // 第6回
+  "6-2","6-4","6-6","6-8","6-10","6-12","6-14","6-16","6-17","6-18",
+  // 第7回
+  "7-2","7-4","7-6","7-8","7-10","7-12","7-14","7-16","7-17","7-18","7-19",
+  // 第8回
+  "8-2","8-4","8-6","8-8","8-12","8-14","8-16","8-17"
+]);
+
 </script>
 <script>
 /* ============ 狀態儲存（記憶體，非 localStorage）============ */
-const STORE = {}; // {qid: {answered:true, correct:bool, picked:[]}}
-let streak = 0;
+// STORE[qid] = {learned:bool, everWrong:bool, taught:bool}
+//  learned  = 這題最後有答對（已學會）
+//  everWrong = 曾經答錯過（進錯題本，答對後仍保留紀錄直到訂正）
+//  taught   = 已經看過「先教」內容
+const STORE = {};
+let learnedStreak = 0; // 連續答對（只影響慶祝強度，不顯示壓力數字）
 
 const TOTAL = EXAMS.reduce((s,e)=>s+e.questions.length,0);
 
 /* ============ 工具 ============ */
 const $ = s=>document.querySelector(s);
 const KEYS=["A","B","C","D","E","F"];
-function examStats(ex){
-  let done=0,correct=0;
-  ex.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.answered){done++;if(r.correct)correct++;}});
-  return {done,correct,total:ex.questions.length};
+
+function examLearned(ex){
+  let learned=0;
+  ex.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.learned)learned++;});
+  return {learned,total:ex.questions.length};
 }
-function globalStats(){
-  let done=0,correct=0;
-  EXAMS.forEach(e=>e.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.answered){done++;if(r.correct)correct++;}}));
-  return {done,correct};
+function globalLearned(){
+  let learned=0;
+  EXAMS.forEach(e=>e.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.learned)learned++;}));
+  return learned;
+}
+function wrongList(){
+  // 錯題本：曾經答錯、且目前還沒訂正成功（!learned）的題目
+  const list=[];
+  EXAMS.forEach(e=>e.questions.forEach(q=>{const r=STORE[q.id];if(r&&r.everWrong&&!r.learned)list.push(q);}));
+  return list;
 }
 
 /* ============ 首頁渲染 ============ */
 function renderHome(){
-  const g=globalStats();
-  $("#orbDone").textContent=g.done;
+  $("#orbLearned").textContent=globalLearned();
   $("#orbTotal").textContent=TOTAL;
-  $("#orbAcc").textContent = g.done? Math.round(g.correct/g.done*100)+"%" : "—";
+  $("#orbWrong").textContent=wrongList().length;
   updateStreakChip();
 
   const grid=$("#chapterGrid");
   grid.innerHTML="";
   EXAMS.forEach(ex=>{
-    const st=examStats(ex);
-    const pct=Math.round(st.done/st.total*100);
-    let tagClass="none",tagText="未開始";
-    if(st.done>0&&st.done<st.total){tagClass="part";tagText=st.done+"/"+st.total;}
-    if(st.done===st.total){tagClass="full";tagText="✓ 完成";}
+    const st=examLearned(ex);
+    const pct=Math.round(st.learned/st.total*100);
+    const calcN=ex.questions.filter(q=>CALC.has(q.id)).length;
+    const checkN=ex.questions.filter(q=>CHECKED.has(q.id)).length;
+    let tagClass="none",tagText="還沒開始";
+    if(st.learned>0&&st.learned<st.total){tagClass="part";tagText="學會 "+st.learned+"/"+st.total;}
+    if(st.learned===st.total){tagClass="full";tagText="✓ 全學會";}
     const card=document.createElement("button");
     card.className="chapter";
     card.innerHTML=`
       <span class="badge">${ex.id}</span>
       <span class="done-tag ${tagClass}">${tagText}</span>
       <h3>${ex.title}</h3>
-      <div class="meta">第 ${ex.id} 回 · 編號 ${ex.code} · 共 ${st.total} 題　·　原始得分 ${ex.score}</div>
+      <div class="meta">第 ${ex.id} 回 · 共 ${st.total} 題${checkN?`　·　⭐ ${checkN} 打勾`:""}${calcN?`　·　🧮 ${calcN} 計算`:""}</div>
       <div class="bar"><i style="width:${pct}%"></i></div>`;
     card.onclick=()=>startQuiz(ex.id);
     grid.appendChild(card);
   });
 }
-function updateStreakChip(){$("#streakChip").textContent="🔥 連對 "+streak;}
+function updateStreakChip(){$("#streakChip").textContent="🌟 已學會 "+globalLearned()+" 題";}
 
 /* ============ 測驗流程 ============ */
-let curExam=null, curIdx=0;
+let curExam=null, curIdx=0, curList=[], calcMode=false, modeKind="exam"; // exam | calc | wrong
 
 function startQuiz(examId){
+  calcMode=false; modeKind="exam";
   curExam=EXAMS.find(e=>e.id===examId);
+  curList=curExam.questions;
   curIdx=0;
   $("#home").classList.add("hidden");
   $("#quiz").classList.remove("hidden");
@@ -1312,6 +2030,64 @@ function startQuiz(examId){
   window.scrollTo(0,0);
   renderQuestion();
 }
+
+function startCalcMode(){
+  calcMode=true; modeKind="calc";
+  curExam=null;
+  curList=[];
+  EXAMS.forEach(e=>e.questions.forEach(q=>{ if(CALC.has(q.id)) curList.push(q); }));
+  curIdx=0;
+  $("#home").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#qhTitle").innerHTML=`🧮 計算題特訓<small>全 8 回的計算題 · 共 ${curList.length} 題</small>`;
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+
+function startCheckedMode(){
+  calcMode=false; modeKind="checked";
+  curExam=null;
+  curList=[];
+  EXAMS.forEach(e=>e.questions.forEach(q=>{ if(CHECKED.has(q.id)) curList.push(q); }));
+  curIdx=0;
+  $("#home").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#qhTitle").innerHTML=`⭐ 打勾題複習<small>考卷上答對的題 · 共 ${curList.length} 題</small>`;
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+
+function startUncheckedMode(){
+  calcMode=false; modeKind="unchecked";
+  curExam=null;
+  curList=[];
+  EXAMS.forEach(e=>e.questions.forEach(q=>{ if(!CHECKED.has(q.id)) curList.push(q); }));
+  curIdx=0;
+  $("#home").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#qhTitle").innerHTML=`✏️ 沒打勾題<small>考卷上還沒答對的題 · 共 ${curList.length} 題</small>`;
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+
+function startWrongBook(){
+  const list=wrongList();
+  if(list.length===0){
+    showMega("錯題本是空的！","目前沒有需要訂正的題 🎉");
+    fireConfetti(30);
+    return;
+  }
+  calcMode=false; modeKind="wrong";
+  curExam=null;
+  curList=list;
+  curIdx=0;
+  $("#home").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#qhTitle").innerHTML=`📕 錯題本訂正<small>把之前錯的再學會 · 共 ${curList.length} 題</small>`;
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+
 function backHome(){
   $("#quiz").classList.add("hidden");
   $("#home").classList.remove("hidden");
@@ -1319,50 +2095,127 @@ function backHome(){
   window.scrollTo(0,0);
 }
 
+/* ---- 每題流程：先教 → 再作答 ---- */
 function renderQuestion(){
-  const q=curExam.questions[curIdx];
-  const n=curExam.questions.length;
+  const q=curList[curIdx];
+  const n=curList.length;
   $("#qbar").style.width=((curIdx)/n*100)+"%";
   $("#qcount").textContent=`第 ${curIdx+1} / ${n} 題`;
 
   const typeLabel={single:"單選題",multi:"多選題",essay:"問答題"}[q.type];
+  const isCalc=CALC.has(q.id);
   const mount=$("#cardMount");
   mount.innerHTML="";
   const card=document.createElement("div");
   card.className="card";
 
-  let optHtml="";
-  if(q.type==="essay"){
-    optHtml=`<div id="essayBlock"></div>`;
-  }else{
-    optHtml=`<div class="options" id="opts">`+
-      q.options.map((o,i)=>`
-        <button class="opt" data-k="${KEYS[i]}">
-          <span class="key">${KEYS[i]}</span>
-          <span class="otext">${o}</span>
-          <span class="mark"></span>
-        </button>`).join("")+`</div>`;
-    if(q.type==="multi") optHtml+=`<div class="multi-hint">多選題 · 可選多個答案，選好後按「確認作答」</div>`;
-  }
+  const crossMode = calcMode || modeKind==="wrong" || modeKind==="checked" || modeKind==="unchecked";
+  const roundTag = crossMode ? `<span class="calc-tag">第 ${q.id.split("-")[0]} 回 · 第 ${q.id} 題</span>` : "";
+  const isChecked = CHECKED.has(q.id);
 
+  // 先放題幹（教學階段就看得到題目），選項與作答區稍後才出現
   card.innerHTML=`
     <span class="qtype ${q.type}">${typeLabel}</span>
+    ${isCalc?`<span class="calc-tag">🧮 計算題</span>`:""}
+    ${modeKind==="checked"?`<span class="check-tag">⭐ 考卷打勾</span>`:""}
+    ${modeKind==="unchecked"?`<span class="check-tag" style="background:rgba(123,108,246,.16);color:var(--grape)">✏️ 沒打勾</span>`:""}
+    ${roundTag}
+    ${modeKind==="wrong"?`<span class="calc-tag" style="background:rgba(123,108,246,.14);color:var(--grape)">📕 訂正題</span>`:""}
     <div class="qstem">${q.q}</div>
     ${q.figure?`<div class="figure"><b>◎ 圖片說明</b>${q.figure}</div>`:""}
-    ${optHtml}
+    <div id="teachMount"></div>
+    <div id="answerZone"></div>
     <div class="actions" id="actionRow"></div>
     <div id="explainMount"></div>`;
   mount.appendChild(card);
 
-  // 已作答過 → 直接顯示結果
-  const prev=STORE[q.id];
-  if(prev&&prev.answered){
-    if(q.type==="essay"){ showEssay(q,true); }
-    else { restoreAnswered(q,prev); }
+  showTeachStage(q);
+}
+
+/* 階段一：先教 */
+function showTeachStage(q){
+  const teach=$("#teachMount");
+  // 教學內容：計算題用柔柔版；其他題用詳解＋（若有）白話版
+  let teachHtml="";
+  if(SOFT[q.id]){
+    teachHtml=`
+      <div class="soft-panel" style="margin-top:14px">
+        <div class="shead">🧮 先看老師一步一步教你算</div>
+        <div class="sbody">${SOFT[q.id]}</div>
+      </div>`;
   }else{
-    if(q.type==="essay"){ setupEssay(q); }
-    else { setupChoice(q); }
+    const babyPart = BABY[q.id]? `
+      <div class="baby-panel" style="margin-top:12px">
+        <div class="bhead">🍼 白話版 · 用生活比喻講給你聽</div>
+        <div class="bbody">${BABY[q.id]}</div>
+      </div>`:"";
+    teachHtml=`
+      <div class="explain ok" style="margin-top:14px">
+        <div class="head">📖 先看老師教你這一題</div>
+        <div class="body">${q.explain}</div>
+      </div>${babyPart}`;
   }
+  teach.innerHTML=teachHtml;
+
+  const row=$("#actionRow");
+  if(q.type==="essay"){
+    // 問答題沒有選項，看完教學就算學會
+    row.innerHTML=`<button class="btn primary" id="gotItBtn">我懂了 ✓ 學會這一題</button>`;
+    $("#gotItBtn").onclick=()=>{
+      markLearned(q, false);
+      celebrate(q);
+      revealAfterEssay(q);
+    };
+  }else{
+    row.innerHTML=`<button class="btn primary" id="gotItBtn">我懂了，來試試看 →</button>`;
+    $("#gotItBtn").onclick=()=>{
+      if(STORE[q.id]) STORE[q.id].taught=true; else STORE[q.id]={taught:true};
+      // 收起教學（可再打開）、展開作答
+      collapseTeach(q);
+      showAnswerStage(q);
+    };
+  }
+}
+
+// 把教學收成一顆可再展開的按鈕（乾淨版）
+function collapseTeach(q){
+  const teach=$("#teachMount");
+  const isSoft=!!SOFT[q.id];
+  const label=isSoft?"🧮 再看一次教學":"📖 再看一次教學";
+  const cls=isSoft?"soft-btn":"baby-btn";
+  const savedHtml=teach.innerHTML;
+  teach.innerHTML=`<button class="${cls}" type="button">${label}</button>`;
+  let open=false;
+  const btn=teach.querySelector("button");
+  btn.onclick=()=>{
+    if(!open){
+      const panel=document.createElement("div");
+      panel.innerHTML=savedHtml;
+      teach.innerHTML="";
+      teach.appendChild(btn);
+      teach.appendChild(panel);
+      btn.textContent=isSoft?"🧮 收起教學":"📖 收起教學";
+      open=true;
+    }else{
+      teach.innerHTML=`<button class="${cls}" type="button">${label}</button>`;
+      teach.querySelector("button").onclick=btn.onclick;
+      open=false;
+    }
+  };
+}
+
+/* 階段二：作答 */
+function showAnswerStage(q){
+  const zone=$("#answerZone");
+  zone.innerHTML=`<div class="options" id="opts">`+
+    q.options.map((o,i)=>`
+      <button class="opt" data-k="${KEYS[i]}">
+        <span class="key">${KEYS[i]}</span>
+        <span class="otext">${o}</span>
+        <span class="mark"></span>
+      </button>`).join("")+`</div>`+
+    (q.type==="multi"?`<div class="multi-hint">多選題 · 可選多個答案，選好後按「確認作答」</div>`:"");
+  setupChoice(q);
 }
 
 /* ---- 選擇題互動 ---- */
@@ -1388,11 +2241,20 @@ function setupChoice(q){
   $("#confirmBtn").onclick=()=>gradeChoice(q);
 }
 
+function markLearned(q, cameFromWrong){
+  const prev=STORE[q.id]||{};
+  STORE[q.id]={...prev, learned:true, taught:true};
+  // everWrong 保留（代表曾經錯過），但因為 learned=true，就會離開錯題本
+}
+function markWrong(q){
+  const prev=STORE[q.id]||{};
+  STORE[q.id]={...prev, learned:false, everWrong:true, taught:true};
+}
+
 function gradeChoice(q){
   const correctSet=q.answer.slice().sort().join("");
   const pickSet=picked.slice().sort().join("");
   const isCorrect = correctSet===pickSet;
-  STORE[q.id]={answered:true,correct:isCorrect,picked:picked.slice()};
 
   const opts=[...document.querySelectorAll("#opts .opt")];
   opts.forEach(op=>{
@@ -1403,45 +2265,27 @@ function gradeChoice(q){
     else if(picked.includes(k)){op.classList.add("wrong");mark.textContent="✗";}
   });
 
-  if(isCorrect){streak++;fireBubbles();showToast(pickPraise(),"🎉");}
-  else{streak=0;}
+  if(isCorrect){
+    markLearned(q, modeKind==="wrong");
+    learnedStreak++;
+    celebrate(q);
+  }else{
+    markWrong(q);
+    learnedStreak=0;
+    gentleMiss(q);
+  }
   updateStreakChip();
-
   showExplain(q,isCorrect);
-  buildNextRow();
+  buildNextRow(isCorrect);
 }
 
-function restoreAnswered(q,prev){
-  const opts=[...document.querySelectorAll("#opts .opt")];
-  opts.forEach(op=>{
-    op.classList.add("locked");
-    const k=op.dataset.k;const mark=op.querySelector(".mark");
-    if(q.answer.includes(k)){op.classList.add("correct");mark.textContent="✓";}
-    else if(prev.picked&&prev.picked.includes(k)){op.classList.add("wrong");mark.textContent="✗";}
-  });
-  showExplain(q,prev.correct);
-  buildNextRow();
-}
-
-/* ---- 問答題 ---- */
-function setupEssay(q){
-  const row=$("#actionRow");
-  row.innerHTML=`<button class="btn primary" id="revealBtn">我想好了 · 看解答</button>`;
-  $("#revealBtn").onclick=()=>{
-    STORE[q.id]={answered:true,correct:true,picked:[]}; // 問答題以「已學習」計
-    streak++; updateStreakChip(); fireBubbles(); showToast("學會一題！","📖");
-    showEssay(q,false);
-  };
-}
-function showEssay(q,silent){
-  const eb=$("#essayBlock")||document.createElement("div");
-  const block=$("#cardMount");
+/* ---- 問答題：看完教學即學會（在 showTeachStage 處理），這裡顯示答案 ---- */
+function revealAfterEssay(q){
   $("#actionRow").innerHTML="";
-  const ansHtml=`<div class="essay-ans"><div class="lab">參考答案</div><div class="val">${q.answer.join("；")}</div></div>`;
   const mount=$("#explainMount");
-  mount.innerHTML=ansHtml;
-  showExplain(q,true,true);
-  buildNextRow();
+  mount.innerHTML=`<div class="essay-ans"><div class="lab">參考答案</div><div class="val">${q.answer.join("；")}</div></div>`;
+  updateStreakChip();
+  buildNextRow(true);
 }
 
 /* ---- 詳解 ---- */
@@ -1454,88 +2298,191 @@ function showExplain(q,ok,isEssay){
     ansLine=`<div class="ansline">正解：<em>${q.answer.join("、")}</em></div>`;
   }
   div.innerHTML=`
-    <div class="head">${ok?(isEssay?"📖 學習重點":"✓ 答對了！"):"✗ 再看一次就懂"}</div>
+    <div class="head">${ok?(isEssay?"📖 學習重點":"✓ 答對了！"):"✗ 沒關係，我們再看一次教學"}</div>
     <div class="body">${ansLine}${q.explain}</div>`;
   mount.appendChild(div);
 
-  // 🍼 講白話 按鈕（點了才展開）
-  if(BABY[q.id]){
-    const babyWrap=document.createElement("div");
-    babyWrap.innerHTML=`<button class="baby-btn" type="button">🍼 聽不懂？點我講白話</button>`;
-    const btn=babyWrap.querySelector(".baby-btn");
+  // 答完後，提供「再看一次完整教學」（白話 or 柔柔版），點了才展開
+  const hasTeach = SOFT[q.id] || BABY[q.id];
+  if(hasTeach){
+    const isSoft=!!SOFT[q.id];
+    const cls=isSoft?"soft-btn":"baby-btn";
+    const label=isSoft?"🧮 再看一次一步一步教學":"🍼 再看一次白話版";
+    const wrap=document.createElement("div");
+    wrap.innerHTML=`<button class="${cls}" type="button">${label}</button>`;
+    const btn=wrap.querySelector("button");
+    let open=false;
     btn.onclick=()=>{
-      if(babyWrap.querySelector(".baby-panel")){
-        babyWrap.querySelector(".baby-panel").remove();
-        btn.innerHTML="🍼 聽不懂？點我講白話";
-        return;
+      if(open){
+        const p=wrap.querySelector(".soft-panel,.baby-panel"); if(p)p.remove();
+        btn.innerHTML=label; open=false; return;
       }
       const panel=document.createElement("div");
-      panel.className="baby-panel";
-      panel.innerHTML=`
-        <div class="bhead">🍼 白話版 · 用生活比喻講給你聽</div>
-        <div class="bbody">${BABY[q.id]}</div>`;
-      babyWrap.appendChild(panel);
-      btn.innerHTML="🍼 收起白話版";
+      if(isSoft){
+        panel.className="soft-panel";
+        panel.innerHTML=`<div class="shead">🧮 計算題 · 一步一步慢慢教</div><div class="sbody">${SOFT[q.id]}</div>`;
+      }else{
+        panel.className="baby-panel";
+        panel.innerHTML=`<div class="bhead">🍼 白話版 · 用生活比喻講給你聽</div><div class="bbody">${BABY[q.id]}</div>`;
+      }
+      wrap.appendChild(panel);
+      btn.innerHTML=isSoft?"🧮 收起教學":"🍼 收起白話版";
+      open=true;
     };
-    mount.appendChild(babyWrap);
+    mount.appendChild(wrap);
   }
 }
 
 /* ---- 下一題 / 完成 ---- */
-function buildNextRow(){
+function buildNextRow(wasCorrect){
   const row=$("#actionRow");
-  const isLast=curIdx===curExam.questions.length-1;
+  const isLast=curIdx===curList.length-1;
+  // 答錯時，提供「再試一次這題」
+  let retryBtn="";
+  if(wasCorrect===false){
+    retryBtn=`<button class="btn ghost" id="tryAgainBtn">再試一次這題 🔁</button>`;
+  }
   row.innerHTML=`
-    ${curIdx>0?`<button class="btn ghost" id="prevBtn">← 上一題</button>`:""}
-    <button class="btn primary" id="nextBtn">${isLast?"看成績 🏁":"下一題 →"}</button>`;
-  if($("#prevBtn"))$("#prevBtn").onclick=()=>{curIdx--;renderQuestion();window.scrollTo(0,0);};
+    ${retryBtn}
+    <button class="btn primary" id="nextBtn">${isLast?"完成 🏁":"下一題 →"}</button>`;
+  if($("#tryAgainBtn"))$("#tryAgainBtn").onclick=()=>{renderQuestion();window.scrollTo(0,0);};
   $("#nextBtn").onclick=()=>{
     if(isLast){showFinish();}
     else{curIdx++;renderQuestion();window.scrollTo(0,0);}
   };
 }
 
-/* ---- 完成頁 ---- */
+/* ---- 完成頁（不記分，正向鼓勵）---- */
 function showFinish(){
   $("#qbar").style.width="100%";
   $("#qcount").textContent="全部完成";
-  const st=examStats(curExam);
-  const acc=Math.round(st.correct/st.total*100);
-  let emoji="🎉",msg="太厲害了！";
-  if(acc<40){emoji="💪";msg="別氣餒，詳解都看過了，再刷一次會更好！";}
-  else if(acc<70){emoji="📈";msg="進步中！錯的幾題再回去看一次詳解。";}
-  else if(acc<100){emoji="🌟";msg="很棒！離全對只差一點點。";}
-  else{emoji="🏆";msg="完美通關！這一回你完全掌握了。";}
+  // 統計「這輪學會幾題」（正向），以及還在錯題本的數量
+  let learned=0;
+  curList.forEach(q=>{const r=STORE[q.id];if(r&&r.learned)learned++;});
+  const total=curList.length;
+  const stillWrong=total-learned;
+
+  let emoji="🎉",msg="";
+  if(learned===total){emoji="🏆";msg="這一輪每一題你都學會了，太強了！";}
+  else if(learned>=total*0.7){emoji="🌟";msg=`學會了 ${learned} 題！剩下的收在錯題本，隨時可以回來練。`;}
+  else if(learned>=total*0.4){emoji="📈";msg=`進步中～已經學會 ${learned} 題了，剩下的慢慢來。`;}
+  else{emoji="💪";msg=`已經學會 ${learned} 題，很棒的開始！其他的收進錯題本，再一起攻破。`;}
+
+  let title;
+  if(modeKind==="calc") title="🧮 計算題特訓 完成";
+  else if(modeKind==="wrong") title="📕 錯題本訂正 完成";
+  else if(modeKind==="checked") title="⭐ 打勾題 完成";
+  else if(modeKind==="unchecked") title="✏️ 沒打勾題 完成";
+  else title=`第 ${curExam.id} 回 完成`;
+
+  const retryLabel = modeKind==="calc" ? "再練一次計算題"
+                    : modeKind==="wrong" ? "再訂正一次"
+                    : modeKind==="checked" ? "再複習一次打勾題"
+                    : modeKind==="unchecked" ? "再練一次沒打勾題"
+                    : "再做一次這一回";
 
   const mount=$("#cardMount");
   mount.innerHTML=`
     <div class="finish">
       <div class="emoji">${emoji}</div>
-      <h2>第 ${curExam.id} 回 完成</h2>
-      <div class="scorebox"><span class="big">${st.correct}</span><span class="small">/ ${st.total} 題答對</span></div>
-      <div class="line">${msg}（答對率 ${acc}%）</div>
-      <button class="btn primary" id="retryBtn">重做這一回</button>
-      <button class="btn ghost" id="homeBtn">回目錄選下一回</button>
+      <h2>${title}</h2>
+      <div class="scorebox"><span class="big">${learned}</span><span class="small">/ ${total} 題學會 🌟</span></div>
+      <div class="line">${msg}</div>
+      ${stillWrong>0?`<button class="btn primary" id="fixBtn">📕 去訂正剩下的 ${stillWrong} 題</button>`:""}
+      <button class="btn ghost" id="retryBtn">${retryLabel}</button>
+      <button class="btn ghost" id="homeBtn">回目錄</button>
     </div>`;
-  $("#retryBtn").onclick=()=>{curExam.questions.forEach(q=>delete STORE[q.id]);startQuiz(curExam.id);};
+  if($("#fixBtn"))$("#fixBtn").onclick=()=>{
+    // 只訂正這輪還沒學會的
+    curList=curList.filter(q=>{const r=STORE[q.id];return !(r&&r.learned);});
+    modeKind="wrong"; calcMode=false; curExam=null; curIdx=0;
+    $("#qhTitle").innerHTML=`📕 錯題本訂正<small>把剛剛錯的再學會 · 共 ${curList.length} 題</small>`;
+    renderQuestion(); window.scrollTo(0,0);
+  };
+  $("#retryBtn").onclick=()=>{
+    if(modeKind==="calc")startCalcMode();
+    else if(modeKind==="wrong")startWrongBook();
+    else if(modeKind==="checked")startCheckedMode();
+    else if(modeKind==="unchecked")startUncheckedMode();
+    else startQuiz(curExam.id);
+  };
   $("#homeBtn").onclick=backHome;
-  fireBubbles(28);
+  bigFinishCelebration();
   window.scrollTo(0,0);
 }
 
-/* ============ 鼓勵動畫 ============ */
-const PRAISE=["答對了！","漂亮！","就是這個！","化學魂！","穩！","正解 ✓","太準了！","繼續衝！"];
-function pickPraise(){
-  if(streak>=5)return "連對 "+streak+" 題 🔥";
-  if(streak>=3)return "連續答對！";
-  return PRAISE[Math.floor(Math.random()*PRAISE.length)];
+/* ============ 慶祝 / 鼓勵動畫 ============ */
+const COLORS=["#2ec4b6","#ff9f1c","#e63946","#7b6cf6","#4cc9f0","#43aa8b"];
+const PRAISE=["答對了！","太棒了！","就是這個！","化學魂！","你好強！","完全正確！","太準了！","學會囉！","漂亮！","天才吧！"];
+const PRAISE_SUB=["繼續保持～","你真的懂了 💛","這題你征服了！","越來越厲害","記住這個感覺！"];
+
+function celebrate(q){
+  // 超誇張：大字 + 閃光 + 星星 + 紙屑 + 泡泡
+  let big=PRAISE[Math.floor(Math.random()*PRAISE.length)];
+  let sub=PRAISE_SUB[Math.floor(Math.random()*PRAISE_SUB.length)];
+  if(learnedStreak>=5){big="連對 "+learnedStreak+" 題！🔥";sub="你根本停不下來！";}
+  else if(learnedStreak>=3){big="連對 "+learnedStreak+" 題！";sub="手感超好 ✨";}
+  showMega(big,sub);
+  flashScreen();
+  fireStars(14);
+  fireConfetti(60);
+  fireBubbles(22);
+  showToast(PRAISE[Math.floor(Math.random()*PRAISE.length)],"🎉");
+}
+
+function gentleMiss(q){
+  // 溫柔：不責備、不記分，只提醒收進錯題本
+  showToast("沒關係～收進錯題本，再看一次教學就好 💛","🌱");
+}
+
+function showMega(big,sub){
+  const m=$("#mega");
+  m.querySelector(".big").textContent=big;
+  m.querySelector(".sub").textContent=sub||"";
+  m.classList.remove("show");void m.offsetWidth;m.classList.add("show");
+}
+function flashScreen(){
+  const f=$("#flash");
+  f.classList.remove("show");void f.offsetWidth;f.classList.add("show");
 }
 function showToast(text,icon){
   const t=$("#toast");
   t.innerHTML=`<span>${icon||"🎉"}</span><span>${text}</span>`;
   t.classList.remove("show");void t.offsetWidth;t.classList.add("show");
 }
-const COLORS=["#2ec4b6","#ff9f1c","#e63946","#7b6cf6","#4cc9f0","#43aa8b"];
+function fireStars(count=12){
+  const box=$("#stars");
+  const emojis=["⭐","🌟","✨","💫","🎈","💛"];
+  for(let i=0;i<count;i++){
+    const s=document.createElement("div");
+    s.className="star";
+    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    const ang=(Math.PI*2)*(i/count)+Math.random()*.5;
+    const dist=120+Math.random()*160;
+    s.style.setProperty("--sx",Math.cos(ang)*dist+"px");
+    s.style.setProperty("--sy",Math.sin(ang)*dist+"px");
+    s.style.setProperty("--sr",(Math.random()*180-90)+"deg");
+    s.style.animationDelay=(Math.random()*.15)+"s";
+    box.appendChild(s);
+    setTimeout(()=>s.remove(),1000);
+  }
+}
+function fireConfetti(count=50){
+  const box=$("#confetti");
+  const shapes=["","","","border-radius:50%"];
+  for(let i=0;i<count;i++){
+    const c=document.createElement("div");
+    c.className="conf";
+    c.style.left=(Math.random()*100)+"vw";
+    c.style.background=COLORS[Math.floor(Math.random()*COLORS.length)];
+    c.style.cssText+=shapes[Math.floor(Math.random()*shapes.length)];
+    c.style.animationDuration=(1.8+Math.random()*1.6)+"s";
+    c.style.animationDelay=(Math.random()*.4)+"s";
+    c.style.transform=`rotate(${Math.random()*360}deg)`;
+    box.appendChild(c);
+    setTimeout(()=>c.remove(),3600);
+  }
+}
 function fireBubbles(count=16){
   const box=$("#bubbles");
   for(let i=0;i<count;i++){
@@ -1551,13 +2498,23 @@ function fireBubbles(count=16){
     setTimeout(()=>b.remove(),4500);
   }
 }
+function bigFinishCelebration(){
+  fireConfetti(90);
+  fireStars(20);
+  flashScreen();
+  fireBubbles(30);
+}
 
 /* ============ 綁定 ============ */
 $("#backBtn").onclick=backHome;
+$("#checkedModeBtn").onclick=startCheckedMode;
+$("#uncheckedModeBtn").onclick=startUncheckedMode;
+$("#calcModeBtn").onclick=startCalcMode;
+$("#wrongBookBtn").onclick=startWrongBook;
 $("#resetAll").onclick=()=>{
-  if(confirm("確定要清除所有作答紀錄嗎？")){
+  if(confirm("確定要清除所有學習紀錄嗎？（包含錯題本）")){
     for(const k in STORE)delete STORE[k];
-    streak=0;renderHome();
+    learnedStreak=0;renderHome();
   }
 };
 
