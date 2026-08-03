@@ -1995,21 +1995,21 @@ function renderHome(){
   const grid=$("#chapterGrid");
   grid.innerHTML="";
   EXAMS.forEach(ex=>{
-    const st=examLearned(ex);
-    const pct=Math.round(st.learned/st.total*100);
     const calcN=ex.questions.filter(q=>CALC.has(q.id)).length;
     const checkN=ex.questions.filter(q=>CHECKED.has(q.id)).length;
+    const checkedLearned=ex.questions.filter(q=>CHECKED.has(q.id)&&STORE[q.id]&&STORE[q.id].learned).length;
     let tagClass="none",tagText="還沒開始";
-    if(st.learned>0&&st.learned<st.total){tagClass="part";tagText="學會 "+st.learned+"/"+st.total;}
-    if(st.learned===st.total){tagClass="full";tagText="✓ 全學會";}
+    if(checkedLearned>0&&checkedLearned<checkN){tagClass="part";tagText="學會 "+checkedLearned+"/"+checkN;}
+    if(checkedLearned===checkN&&checkN>0){tagClass="full";tagText="✓ 全學會";}
+    const pctChecked=checkN?Math.round(checkedLearned/checkN*100):0;
     const card=document.createElement("button");
     card.className="chapter";
     card.innerHTML=`
       <span class="badge">${ex.id}</span>
       <span class="done-tag ${tagClass}">${tagText}</span>
       <h3>${ex.title}</h3>
-      <div class="meta">第 ${ex.id} 回 · 共 ${st.total} 題${checkN?`　·　⭐ ${checkN} 打勾`:""}${calcN?`　·　🧮 ${calcN} 計算`:""}</div>
-      <div class="bar"><i style="width:${pct}%"></i></div>`;
+      <div class="meta">第 ${ex.id} 回 · ⭐ 打勾題 ${checkN} 題（複習你答對的）</div>
+      <div class="bar"><i style="width:${pctChecked}%"></i></div>`;
     card.onclick=()=>startQuiz(ex.id);
     grid.appendChild(card);
   });
@@ -2022,11 +2022,12 @@ let curExam=null, curIdx=0, curList=[], calcMode=false, modeKind="exam"; // exam
 function startQuiz(examId){
   calcMode=false; modeKind="exam";
   curExam=EXAMS.find(e=>e.id===examId);
-  curList=curExam.questions;
+  // 只出現這一回的「打勾題」
+  curList=curExam.questions.filter(q=>CHECKED.has(q.id));
   curIdx=0;
   $("#home").classList.add("hidden");
   $("#quiz").classList.remove("hidden");
-  $("#qhTitle").innerHTML=`第 ${curExam.id} 回<small>${curExam.title}</small>`;
+  $("#qhTitle").innerHTML=`第 ${curExam.id} 回 · ⭐ 打勾題<small>${curExam.title}</small>`;
   window.scrollTo(0,0);
   renderQuestion();
 }
@@ -2117,7 +2118,7 @@ function renderQuestion(){
   card.innerHTML=`
     <span class="qtype ${q.type}">${typeLabel}</span>
     ${isCalc?`<span class="calc-tag">🧮 計算題</span>`:""}
-    ${modeKind==="checked"?`<span class="check-tag">⭐ 考卷打勾</span>`:""}
+    ${(modeKind==="checked"||modeKind==="exam")?`<span class="check-tag">⭐ 考卷打勾</span>`:""}
     ${modeKind==="unchecked"?`<span class="check-tag" style="background:rgba(123,108,246,.16);color:var(--grape)">✏️ 沒打勾</span>`:""}
     ${roundTag}
     ${modeKind==="wrong"?`<span class="calc-tag" style="background:rgba(123,108,246,.14);color:var(--grape)">📕 訂正題</span>`:""}
