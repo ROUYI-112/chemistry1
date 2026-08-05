@@ -370,6 +370,12 @@ footer.foot{text-align:center;color:#a8a291;font-size:.72rem;padding:24px 0 10px
         <button class="mode-chip calc" id="calcModeBtn">🧮 只練計算題（34 題）</button>
         <button class="mode-chip" id="wrongBookBtn">📕 我的錯題本</button>
       </div>
+      <div class="mode-row">
+        <button class="mode-chip" id="exportBtn">📤 匯出進度（存檔）</button>
+        <button class="mode-chip" id="importBtn">📥 匯入進度（讀檔）</button>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+      <div id="saveHint" style="font-size:.72rem;color:#8a8676;margin-top:8px">💡 進度只存在這次開啟中，關掉會消失。想保留就按「📤 匯出進度」存成檔案，下次用「📥 匯入進度」讀回來。</div>
     </section>
     <div class="grid" id="chapterGrid"></div>
     <button class="reset-all" id="resetAll">清除所有進度紀錄</button>
@@ -1962,6 +1968,38 @@ const CHECKED = new Set([
 const STORE = {};
 let learnedStreak = 0; // 連續答對（只影響慶祝強度，不顯示壓力數字）
 
+const SAVE_KEY = "chemistry-quest-progress-v1";
+let canAutoSave = false; // 這個瀏覽器能不能用 localStorage（下載到自己裝置打開就能）
+
+// 嘗試從瀏覽器讀回上次進度
+function loadProgress(){
+  try{
+    const raw = window.localStorage.getItem(SAVE_KEY);
+    canAutoSave = true; // 能讀就代表能用
+    if(raw){
+      const data = JSON.parse(raw);
+      const incoming = data.store || data;
+      if(incoming && typeof incoming==="object"){
+        for(const k in incoming){
+          if(incoming[k] && typeof incoming[k]==="object") STORE[k]=incoming[k];
+        }
+      }
+    }
+  }catch(e){
+    canAutoSave = false; // 預覽環境不允許 → 自動關閉，改用匯出/匯入
+  }
+}
+
+// 自動存進瀏覽器（每次答題後呼叫）
+function saveProgress(){
+  if(!canAutoSave) return;
+  try{
+    window.localStorage.setItem(SAVE_KEY, JSON.stringify({
+      app:"chemistry-quest", version:1, savedAt:new Date().toISOString(), store:STORE
+    }));
+  }catch(e){ canAutoSave=false; }
+}
+
 const TOTAL = EXAMS.reduce((s,e)=>s+e.questions.length,0);
 
 /* ============ 工具 ============ */
@@ -2246,10 +2284,12 @@ function markLearned(q, cameFromWrong){
   const prev=STORE[q.id]||{};
   STORE[q.id]={...prev, learned:true, taught:true};
   // everWrong 保留（代表曾經錯過），但因為 learned=true，就會離開錯題本
+  saveProgress();
 }
 function markWrong(q){
   const prev=STORE[q.id]||{};
   STORE[q.id]={...prev, learned:false, everWrong:true, taught:true};
+  saveProgress();
 }
 
 function gradeChoice(q){
@@ -2510,15 +2550,80 @@ function bigFinishCelebration(){
 $("#backBtn").onclick=backHome;
 $("#checkedModeBtn").onclick=startCheckedMode;
 $("#uncheckedModeBtn").onclick=startUncheckedMode;
+
+/* ---- 匯出 / 匯入 進度 ---- */
+$("#exportBtn").onclick=()=>{
+  const payload={
+    app:"chemistry-quest",
+    version:1,
+    savedAt:new Date().toISOString(),
+    store:STORE
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const d=new Date();
+  const stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}_${String(d.getHours()).padStart(2,"0")}${String(d.getMinutes()).padStart(2,"0")}`;
+  a.href=url;
+  a.download=`化學闖關進度_${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("進度已存成檔案 📤","💾");
+};
+
+$("#importBtn").onclick=()=>$("#importFile").click();
+$("#importFile").onchange=(e)=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      const incoming = data.store || data; // 容錯：直接是 store 也能讀
+      if(typeof incoming!=="object"||incoming===null){throw new Error("格式不對");}
+      // 清空後載入
+      for(const k in STORE)delete STORE[k];
+      let n=0;
+      for(const k in incoming){
+        if(incoming[k]&&typeof incoming[k]==="object"){STORE[k]=incoming[k];n++;}
+      }
+      learnedStreak=0;
+      saveProgress();
+      renderHome();
+      showMega("進度讀取成功！","已還原你的錯題本和學習紀錄 📥");
+      fireConfetti(40);
+    }catch(err){
+      alert("讀取失敗：這個檔案不是有效的進度檔。請選擇之前用「📤 匯出進度」存下來的檔案。");
+    }
+    $("#importFile").value=""; // 允許再次選同一個檔
+  };
+  reader.readAsText(file);
+};
 $("#calcModeBtn").onclick=startCalcMode;
 $("#wrongBookBtn").onclick=startWrongBook;
 $("#resetAll").onclick=()=>{
   if(confirm("確定要清除所有學習紀錄嗎？（包含錯題本）")){
     for(const k in STORE)delete STORE[k];
-    learnedStreak=0;renderHome();
+    learnedStreak=0;
+    try{ if(canAutoSave) window.localStorage.removeItem(SAVE_KEY); }catch(e){}
+    renderHome();
   }
 };
 
+loadProgress();
+// 依環境切換提示文字
+(function(){
+  const hint=$("#saveHint");
+  if(hint){
+    if(canAutoSave){
+      hint.innerHTML="✅ 這個裝置會<b>自動記住</b>你的進度，關掉再打開也還在。也可以按「📤 匯出進度」多存一份備份。";
+    }else{
+      hint.innerHTML="💡 目前的環境不會保存進度。把檔案下載到你自己的手機或電腦打開，就會<b>自動記住進度</b>；或用「📤 匯出／📥 匯入」手動保留。";
+    }
+  }
+})();
 renderHome();
 </script>
 </body>
